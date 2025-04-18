@@ -1,3 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Liberation+Sans:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap");
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -42,7 +46,8 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  /* background-color: #1a1a1a; */
+  background-color: white;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -59,10 +64,11 @@ button:focus-visible {
 }
 
 #app {
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  /* background-color: white !important; */
 }
 
 @media (prefers-color-scheme: light) {
@@ -86,4 +92,68 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+@font-face {
+  font-family: "General Sans";
+  src: url("@/assets/font/GeneralSans_Complete/Fonts/WEB/GeneralSans-Regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Liberation Sans";
+  src: url("@/assets/font/LiberationSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Liberation Sans";
+  src: url("@/assets/font/LiberationSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "General Sans";
+  src: url("@/assets/font/GeneralSans_Complete/Fonts/WEB/GeneralSans-Regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  .neuton-extralight {
+    font-family: "Neuton", serif;
+    font-weight: 200;
+    font-style: normal;
+  }
+
+  .neuton-light {
+    font-family: "Neuton", serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  .neuton-regular {
+    font-family: "Neuton", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .neuton-bold {
+    font-family: "Neuton", serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  .neuton-extrabold {
+    font-family: "Neuton", serif;
+    font-weight: 800;
+    font-style: normal;
+  }
+
+  .neuton-regular-italic {
+    font-family: "Neuton", serif;
+    font-weight: 400;
+    font-style: italic;
+  }
 }

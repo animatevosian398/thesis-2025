@@ -1,9 +1,10 @@
-<!-- <template>
-  <div class="headlines-container">
+<template>
+  <div class="relative w-full h-screen bg-black overflow-hidden">
     <div
       v-for="(article, index) in sortedArticles"
       :key="article.id"
-      class="headline-item"
+      class="absolute p-4 max-w-xs bg-white/10 text-white text-sm rounded-xl backdrop-blur-sm shadow-lg transition-all duration-700 ease-in-out"
+      :class="{ 'opacity-0 scale-75': index > visibleCount.value }"
       :style="getArticleStyle(index)"
     >
       {{ article.generated_title }}
@@ -15,52 +16,36 @@
 import { ref, onMounted } from "vue";
 import articlesData from "../assets/articles_with_scraped_dates.json";
 
+const positions = ref([]);
 const sortedArticles = ref([]);
-const visibleCount = ref(0);
+const visibleCount = ref(-1);
 
 const sortArticles = () => {
   sortedArticles.value = [...articlesData.articles].sort(
     (a, b) => new Date(a.publication_date) - new Date(b.publication_date)
   );
+
+  positions.value = sortedArticles.value.map(() => getRandomPosition());
 };
 
-const getRandomPosition = () => {
-  return {
-    top: `${Math.random() * 100}%`,
-    left: `${Math.random() * 100}%`,
-    transform: `rotate(${(Math.random() - 0.5) * 30}deg)`,
-    fontSize: `${Math.random() * 1.5 + 0.8}rem`,
-  };
-};
+const getRandomPosition = () => ({
+  top: `${Math.random() * 80}%`,
+  left: `${Math.random() * 80}%`,
+  transform: `rotate(${(Math.random() - 0.5) * 10}deg)`,
+});
 
 const getArticleStyle = (index) => {
-  // Only style visible articles
-  if (index >= visibleCount.value) return {};
-
-  const baseStyle = getRandomPosition();
-
-  return {
-    ...baseStyle,
-    opacity: 1,
-    transition: `
-      top 0.5s ease, 
-      left 0.5s ease, 
-      transform 0.5s ease, 
-      opacity 0.5s ease,
-      font-size 0.5s ease
-    `,
-    transitionDelay: `${index * 200}ms`,
-  };
+  if (index > visibleCount.value) return {};
+  return positions.value[index];
 };
 
 const animateArticles = () => {
   const interval = setInterval(() => {
     visibleCount.value++;
-
     if (visibleCount.value >= sortedArticles.value.length) {
       clearInterval(interval);
     }
-  }, 200);
+  }, 150);
 };
 
 onMounted(() => {
@@ -69,28 +54,7 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-.headlines-container {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  background-color: black;
-  color: white;
-  overflow: hidden;
-}
-
-.headline-item {
-  position: absolute;
-  opacity: 0;
-  max-width: 300px;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 5px;
-  text-align: center;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-</style> -->
-<template>
+<!-- <template>
   <div class="headlines-container">
     <div class="headline-grid">
       <div
@@ -410,4 +374,4 @@ onMounted(() => {
   background: rgba(0, 0, 0, 0.8);
   position: relative; /* Required for Chart.js responsive behavior */
 }
-</style>
+</style> -->

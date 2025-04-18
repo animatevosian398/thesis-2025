@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <Navbar />
   <router-view></router-view>
 </template>
@@ -11,9 +11,9 @@ import Navbar from "./components/Navbar.vue";
 body {
   overflow-y: scroll;
 }
-</style> -->
+</style>
 
-<template>
+<!-- <template>
   <div class="blur-reveal-container">
     <div id="p5-container" ref="p5Container"></div>
   </div>
@@ -358,4 +358,4 @@ onUnmounted(() => {
 #p5-container canvas {
   cursor: none;
 }
-</style>
+</style> -->

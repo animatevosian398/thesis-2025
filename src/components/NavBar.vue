@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
     <div class="container">
-      <a class="navbar-brand" href="/">Data Viz</a>
+      <a class="navbar-brand" href="/">[Narratives of Truth and Denial]</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -30,5 +30,24 @@
 </template>
 
 <script setup>
-// Component logic if needed
+// No changes needed here
 </script>
+
+<style scoped>
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #fff !important;
+}
+.navbar-brand {
+  margin-left: -40px;
+}
+/* Make sure the navbar's height is properly accounted for in content */
+:deep(.app-container) {
+  padding-top: 56px; /* Adjust based on your navbar's height */
+}
+</style>
