@@ -13,16 +13,18 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="/about">About</a>
+            <router-link to="/Bg1" class="nav-link">Background</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/upload">Upload</a>
+            <a class="nav-link" href="/GovVsComment"
+              >Government Vs. Public Discourse</a
+            >
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <router-link to="/articles-timeline" class="nav-link">
               TR Articles Timeline
             </router-link>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>

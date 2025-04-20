@@ -13,37 +13,23 @@
         </span>
       </div>
     </div>
-
-    <!-- Background section -->
-
-    <div id="background-section" class="background-section">
-      <h1 class="backgroundTitle">Background</h1>
-
-      <h3>
-        On April 24, 1915, hundreds of Armenian leaders and thinkers were
-        rounded up, arrested, and some killed, followed by widespread
-        deportations of ordinary people from their homes to the Syrian and Iraqi
-        deserts. Many died during these brutal marches from starvation, disease,
-        or direct violence. The events were well-documented by journalists,
-        missionaries, and diplomats at the time, with photographs and eyewitness
-        accounts.
-        <br /><br />
-        Despite this evidence, Turkey still refuses to recognize these events as
-        genocide, instead calling them a relocation necessary during wartime.
-        For Armenians worldwide, especially those whose family members survived
-        and fled to other countries, this history remains deeply personal and
-        important to remember.
-      </h3>
-    </div>
   </div>
+  <Bg1 @scrollToBg2="scrollToBg2" />
   <Bg2 />
 </template>
 
 <script setup>
-import Bg2 from "../components/Bg2.vue"; // Import Bg2 component
+import Navbar from "@/components/Navbar.vue";
+import Bg1 from "@/components/Bg1.vue";
+import Bg2 from "@/components/Bg2.vue";
 
 const scrollToBackground = () => {
   const section = document.getElementById("background-section");
+  section?.scrollIntoView({ behavior: "smooth" });
+};
+
+const scrollToBg2 = () => {
+  const section = document.getElementById("bg2-section");
   section?.scrollIntoView({ behavior: "smooth" });
 };
 </script>
@@ -55,10 +41,11 @@ const scrollToBackground = () => {
   max-width: 1600px;
   margin: 0 auto;
   padding: 0;
-  background-color: black;
+  background-color: black !important;
 }
 .app-container {
   padding-top: 10px;
+  background-color: black;
 }
 .backgroundTitle {
   font-family: "Neuton", serif;
@@ -80,7 +67,7 @@ const scrollToBackground = () => {
 
 .background-section {
   height: 100vh;
-  background: black;
+  background-color: black;
   /* background: linear-gradient(to bottom right, #1e1e1e, #3c3c3c); */
   color: white;
   display: block;
@@ -111,20 +98,24 @@ button {
   cursor: pointer; /* Change cursor to pointer */
   transition: all 0.3s ease; /* Smooth transition for hover effects */
 }
+html,
+body {
+  background-color: black !important;
+}
 .start-button {
-  background-color: transparent; /* Transparent fill */
+  background-color: transparent;
   color: white; /* White text */
   border: 2px solid white; /* White outline */
-  border-radius: 25px; /* Rounded corners */
-  padding: 10px 20px; /* Add padding for better size */
-  font-size: 16px; /* Adjust font size */
-  cursor: pointer; /* Change cursor to pointer */
-  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 button:hover {
-  background-color: rgb(255, 255, 255); /* White fill on hover */
-  color: black; /* Black text on hover */
-  border: 2px solid white; /* Keep the white outline */
+  background-color: rgb(255, 255, 255);
+  color: black;
+  border: 2px solid white;
 }
 .tooltip-text {
   visibility: hidden;

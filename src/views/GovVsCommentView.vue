@@ -11,18 +11,53 @@
       </div>
     </div>
 
-    <div class="content-container">
-      <!-- Import the GovernmentText component -->
+    <!-- Add document selector -->
+    <div class="document-selector">
+      <label
+        for="document-select"
+        class="block text-sm font-medium leading-6 text-gray-900"
+      >
+        Choose a government document:
+      </label>
+      <select
+        id="document-select"
+        v-model="activeDocument"
+        @change="handleDocumentChange"
+        class="mt-2 block w-full py-2 px-3 bg-white border border-black rounded-none text-sm text-gray-900 appearance-none cursor-pointer hover:border-gray-500 focus:outline-none focus:border-gray-700"
+      >
+        <option v-for="doc in documents" :key="doc.id" :value="doc">
+          {{ doc.title }}
+        </option>
+      </select>
+    </div>
+
+    <div class="content-container" v-if="activeDocument">
+      <!-- Government text section -->
       <div class="government-text-container">
-        <GovernmentText
+        <!-- Use dynamic component based on activeDocument -->
+        <component
+          :is="activeDocument.component"
+          :documentData="activeDocument"
           @showRelatedComments="showRelatedComments"
           @showAllComments="showAllComments"
         />
       </div>
 
+      <!-- Comments section -->
       <div class="social-media-comments">
         <h3>Real Users' Comments and Replies on YouTube</h3>
-        <h5>Sorted by highest confidence in classification</h5>
+
+        <!-- Add instruction message -->
+        <div v-if="activeStance === 'all'" class="instruction-message">
+          Click on highlighted sections of the government text to view comments
+          that share the sentiment.
+        </div>
+
+        <!-- Show this when stance is selected -->
+        <div v-else class="comments-header">
+          {{ formatStanceForDisplay(activeStance) }} ·
+          {{ visibleComments.length }} comments
+        </div>
 
         <div id="comments-container">
           <!-- Using computed property to filter comments by stance -->
@@ -31,11 +66,8 @@
             :key="'comment-' + index"
             class="comment-card"
             :class="{
-              locked: lockedComments.includes(comment.id), // Apply locked class if the comment is locked
               [getStanceClass(comment.stance)]: true,
             }"
-            @mouseenter="onMouseEnter(comment.stance)"
-            @click="toggleLockComment(comment.index)"
           >
             <div class="comment-header">
               <div class="username-timestamp-container">
@@ -69,7 +101,7 @@
                 </span>
               </div>
             </div>
-            <!-- Add this section for the video source -->
+
             <div class="video-source">
               <span>From: </span>
               <a
@@ -81,11 +113,18 @@
               </a>
             </div>
 
-            <div class="matched-phrases">
+            <div
+              class="matched-phrases"
+              v-if="comment.matchedPhrases && comment.matchedPhrases.length > 0"
+            >
               Matched phrases:
-              <span v-for="(phrase, i) in comment.matchedPhrases" :key="i">{{
-                phrase
-              }}</span>
+              <span
+                v-for="(phrase, i) in comment.matchedPhrases"
+                :key="i"
+                class="matched-phrase"
+              >
+                {{ phrase }}
+              </span>
             </div>
           </div>
         </div>
@@ -102,20 +141,57 @@
 <script>
 import Papa from "papaparse";
 import GovernmentText from "../components/GovernmentText.vue";
+import JustinMcCarthy from "../components/government-documents/JustinMcCarthy.vue";
 import stancePhrases from "../assets/stancePhrases.json";
+
+// Define stance mapping object
+const stanceMapping = {
+  Apology: "apology",
+  Explicit_Denial: "explicit-denial",
+  Historical_Affirmation: "historical-affirmation",
+  Competitive_Victimhood_Historical_Inversion: "competitive-victimhood",
+  Contemporary_Comparison: "contemporary-comparison",
+  Discussion_About_Denial: "discussion-about-denial",
+  Reconciliation_Discourse: "reconciliation-discourse",
+  Justification_Narrative: "justification-narrative",
+  Personal_Testimony: "personal-testimony",
+  Minimization_Reframing: "minimization-and-reframing",
+  Sympathy_Memorial_Commemorative: "sympathy-memorial-commemorative",
+  Procedural_Deflection_Evidence_Archives:
+    "procedural-deflection-using-archives-and-evidence",
+};
 
 export default {
   name: "GovVsCommentView",
   components: {
     GovernmentText,
+    JustinMcCarthy,
   },
   data() {
     return {
       activeStance: "all",
       commentsData: [],
       isLoading: true,
-      lockedComments: [],
       stancePhrases: stancePhrases,
+      // Add documents data
+      documents: [
+        {
+          id: "turkey-mfa",
+          title: "Turkish MFA: The Events of 1915",
+          source: "Republic of Turkey Ministry of Foreign Affairs",
+          sourceUrl:
+            "https://www.mfa.gov.tr/the-events-of-1915-and-the-turkish-armenian-controversy-over-history_-an-overview.en.mfa",
+          component: GovernmentText, // Direct component reference
+        },
+        {
+          id: "justin-mccarthy",
+          title: "Presentation Made by Prof. Justin McCarthy",
+          source: "Republic of Turkey Ministry of Foreign Affairs",
+          sourceUrl: "https://www.mfa.gov.tr/...",
+          component: JustinMcCarthy, // Direct component reference
+        },
+      ],
+      activeDocument: null, // Track which document is currently selected
     };
   },
   computed: {
@@ -141,6 +217,12 @@ export default {
     },
   },
   methods: {
+    // Method to handle document selection change
+    handleDocumentChange() {
+      // Reset stance to "all" when switching documents
+      this.activeStance = "all";
+    },
+
     findPhraseMatches(comment) {
       if (!comment || !comment.text || !comment.stance) {
         return [];
@@ -157,14 +239,16 @@ export default {
 
       // Check for each phrase
       phrases.forEach((phrase) => {
-        // Create a case-insensitive regex for the phrase
-        const phraseRegex = new RegExp(
-          `\\b${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
-          "i"
-        );
+        if (phrase && typeof phrase === "string") {
+          // Create a case-insensitive regex for the phrase
+          const phraseRegex = new RegExp(
+            `\\b${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
+            "i"
+          );
 
-        if (phraseRegex.test(commentText)) {
-          matches.push(phrase);
+          if (phraseRegex.test(commentText)) {
+            matches.push(phrase);
+          }
         }
       });
 
@@ -187,121 +271,185 @@ export default {
         return processedComment;
       });
     },
+
     loadCSV() {
-      console.log("Starting CSV load");
       this.isLoading = true;
-      fetch("/assets/Test_Real_comments_classified_withURL.csv")
-        .then((response) => {
-          console.log("Fetch response:", response);
-          if (!response.ok) {
-            throw new Error(`Fetch failed with status ${response.status}`);
-          }
-          return response.text();
-        })
-        .then((csvText) => {
-          console.log("Raw CSV text:", csvText.slice(0, 10));
-          Papa.parse(csvText, {
-            header: true,
-            skipEmptyLines: true,
-            dynamicTyping: true,
-            complete: (results) => {
-              console.warn("Parse results:", results);
-              console.warn("Number of rows:", results.data.length);
-              console.warn("First row:", results.data[0]);
 
-              // Create comments as you were doing before
-              const comments = results.data.map((row, index) => {
-                const rawDate = row.publish_date;
-                const formattedDate = new Date(rawDate).toLocaleDateString(
-                  "en-US",
-                  {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  }
-                );
+      try {
+        fetch("/assets/Classified_Comments.csv")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("CSV file not found");
+            }
+            return response.text();
+          })
+          .then((csvText) => {
+            Papa.parse(csvText, {
+              header: true,
+              skipEmptyLines: true,
+              complete: (results) => {
+                const comments = results.data
+                  .filter((row) => row.cleaned_text && row.predicted_stance)
+                  .map((row, index) => ({
+                    id: row.comment_id || index,
+                    username: row.author || "Anonymous",
+                    stance: row.predicted_stance, // Keep original capitalization
+                    text: row.cleaned_text,
+                    likes: parseInt(row.like_count) || 0,
+                    videoSource: {
+                      title: row.video_title || "YouTube Video",
+                      url: `https://www.youtube.com/watch?v=${row.video_id}`,
+                    },
+                    date: row.publish_date
+                      ? new Date(row.publish_date).toLocaleDateString()
+                      : "Unknown date",
+                  }));
 
-                return {
-                  id: index, // Add an ID for reference
-                  username: row.author || "Unknown",
-                  stance: row.primary_stance || "unknown",
-                  text: row.text || "",
-                  likes: row.like_count ?? 0,
-                  videoSource: {
-                    title: "YouTube Video",
-                    url: row.video_url || "#",
-                  },
-                  date: formattedDate,
-                  matchedPhrases: [], // Initialize empty matched phrases array
-                };
-              });
-
-              // Process the comments to find matching phrases
-              this.commentsData = this.processCommentsWithPhrases(comments);
-
-              this.isLoading = false;
-            },
-            error: (error) => {
-              console.error("Papa parse error:", error);
-              this.isLoading = false;
-            },
+                this.commentsData = this.processCommentsWithPhrases(comments);
+                this.isLoading = false;
+              },
+              error: (error) => {
+                console.error("Error parsing CSV:", error);
+                this.isLoading = false;
+              },
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching CSV:", error);
+            this.isLoading = false;
           });
-        })
-        .catch((error) => {
-          console.error("Fetch error:", error);
-          this.isLoading = false;
-        });
+      } catch (error) {
+        console.error("Exception in loadCSV:", error);
+        this.isLoading = false;
+      }
     },
+
     showRelatedComments(stance) {
       console.log("Showing comments for stance:", stance);
       this.activeStance = stance;
+
+      // Scroll the comments container to the top after a short delay
+      // to ensure the comments have been updated in the DOM
+      this.$nextTick(() => {
+        const commentsContainer = document.querySelector(
+          ".social-media-comments"
+        );
+        if (commentsContainer) {
+          commentsContainer.scrollTop = 0;
+        }
+      });
     },
+
     showAllComments() {
       console.log("Showing all comments");
       this.activeStance = "all";
     },
+
     formatStanceForDisplay(stance) {
-      return stance ? stance.replace(/_/g, " ") : "";
+      if (!stance || stance === "all") return "All Comments";
+      return stance.replace(/_/g, " ");
     },
+
     getStanceClass(stance) {
-      return stance ? `stance-${stance.replace(/_/g, "-")}` : "";
+      if (!stance) return "";
+
+      // Handle capitalized stance names from CSV
+      return `stance-${stance.toLowerCase().replace(/_/g, "-")}`;
     },
 
     getStanceLabel(stance) {
-      if (stance === "procedural_deflection_using_archives_and_evidence") {
-        return "procedural deflection";
-      }
-
-      return stance.replace(/_/g, " ");
-    },
-    toggleLockComment(commentId) {
-      if (this.lockedComments.includes(commentId)) {
-        // If the comment is already locked, unlock it
-        this.lockedComments = this.lockedComments.filter(
-          (id) => id !== commentId
-        );
-      } else {
-        // If the comment is not locked, lock it
-        this.lockedComments.push(commentId);
-      }
+      if (!stance) return "";
+      // Format capitalized stance for display
+      return stance.toLowerCase().replace(/_/g, " ");
     },
   },
+
   mounted() {
     console.log("Component mounted");
+
+    // Set the first document as active by default
+    this.activeDocument = this.documents[0];
+
+    // Load the CSV data
     this.loadCSV();
   },
 };
 </script>
 
 <style scoped>
+.document-selector {
+  margin-bottom: 20px;
+  padding: 0 0px;
+  text-align: left;
+}
+#document-select {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid #00000067;
+  color: #333333;
+  border-radius: 2px;
+  padding: 5px;
+  font-size: 14px;
+  font-family: "Helvetica", Arial, sans-serif;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px top 50%;
+  background-size: 8px auto;
+  padding-right: 20px;
+}
+
+/* Style dropdown options */
+#document-select option {
+  background-color: white;
+  color: #333333;
+  padding: 12px;
+  font-size: 14px;
+  font-family: "Helvetica", Arial, sans-serif;
+}
+
+#document-select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-focus-ring-color: transparent !important;
+  border-color: #999999 !important;
+}
+
+#document-select:hover {
+  border-color: #cccccc;
+}
+
+#document-select:focus {
+  outline: none;
+  border-color: #999999;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.document-selector label {
+  font-weight: bold;
+  margin-right: 10px;
+  background-color: white;
+}
+
+.document-selector select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 300px;
+}
 .text-visualizer {
   background-color: white;
   color: #111111;
-  font-family: "Helvetica", "Arial", sans-serif;
-  padding: 60px;
-  /* width: 95%; Adjusted width to account for margins */
-  max-width: 1400px; /* Added a max-width for better readability on large screens */
-  margin: 0 auto; /* This is the key for horizontal centering */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+    sans-serif;
+  padding: 40px;
+  width: 100%; /* Full width */
+  max-width: 100%; /* Remove max-width constraint */
+  margin: 0; /* Remove margins */
   box-sizing: border-box;
 }
 
@@ -321,33 +469,89 @@ export default {
 
 .sections {
   display: flex;
-  margin-bottom: 20px;
-  justify-content: flex-start;
+  /* border-top: 1px solid rgba(0, 0, 0, 0.471); */
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.471);
+  justify-content: space-between;
 }
 
 .section-label {
-  padding: 5px 15px;
+  text-transform: uppercase;
+  font-weight: 500;
   font-size: 14px;
-  font-weight: bold;
-  margin-right: 20px;
-  color: white;
+  letter-spacing: 0.05em;
 }
 
 .government {
-  background-color: #333;
+  color: rgb(0, 0, 0);
 }
 
 .social-media {
-  background-color: #333;
-  margin-left: auto;
+  color: rgb(0, 0, 0);
 }
 
 .content-container {
   display: flex;
-  height: 700px;
-  overflow: auto;
+  height: calc(100vh - 120px);
+  width: 100%;
+  overflow: hidden;
   padding-bottom: 10px;
   box-sizing: border-box;
+  background-color: white;
+}
+
+.government-text-container {
+  width: 55%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.social-media-comments {
+  width: 45%;
+  padding-left: 20px;
+  border-left: 1px solid #ddd;
+  text-align: left;
+  overflow: hidden;
+  height: 100%;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+#comments-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
+  padding: 10px;
+}
+
+.comment-card {
+  min-height: 0;
+  padding: 10px;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.comment-header {
+  margin-bottom: 2px;
+}
+
+.username,
+.comment-timestamp {
+  font-size: 11px;
+}
+
+.comment-card p {
+  margin: 4px 0;
+  font-size: 12px;
+}
+
+.video-source {
+  font-size: 10px;
+  margin-top: 2px;
 }
 
 .government-text-container {
@@ -362,7 +566,7 @@ export default {
   border-left: 1px solid #ddd;
   text-align: left;
   overflow-y: auto;
-  overflow-x: none;
+  overflow-x: hidden;
   height: 100%;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   box-sizing: border-box;
@@ -371,21 +575,43 @@ export default {
 
 .social-media-comments h3 {
   font-size: 20px;
-  margin-bottom: 15px;
+  margin-bottom: 6px;
   color: #333;
   text-align: left;
   position: sticky;
   top: 0;
   background-color: white;
   z-index: 10;
-  padding-bottom: 10px;
+  padding-bottom: 6px;
   margin-top: 0;
 }
+
+.comments-header {
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 5px;
+  padding-left: 10px;
+  font-family: "Roboto", sans-serif;
+}
+
+h5 {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 0.5em;
+  text-align: left;
+  font-family: "Helvetica", "Arial", sans-serif;
+  position: sticky;
+  top: 35px;
+  background-color: white;
+  z-index: 9;
+  padding-bottom: 8px;
+}
+
 .comment-card {
   margin-bottom: 5px;
   padding: 15px;
   border-radius: 1px;
-  background-color: #f9f9f9e3;
+  background-color: #f9f9f900;
   border-left: 3px solid #ddd;
   text-align: left;
 }
@@ -416,7 +642,7 @@ export default {
 
 .comment-card p {
   margin: 0 0 8px 0;
-  font-size: 14px;
+  font-size: 12px;
   color: #333;
   text-align: left;
 }
@@ -425,9 +651,10 @@ export default {
   font-size: 11px;
   color: #777;
   text-align: left;
+  margin-top: 1px;
 }
 
-.matched-phrases span {
+.matched-phrase {
   background-color: #fff9c4;
   padding: 1px 3px;
   margin-right: 3px;
@@ -450,13 +677,12 @@ export default {
   background-color: #ff9800;
 }
 
-.stance-competitive-victimhood {
-  border-left-color: #778b33d8; /* purple */
-  color: white;
+.stance-competitive-victimhood-historical-inversion {
+  border-left-color: #778b33d8;
 }
-.stance-competitive-victimhood .stance-label {
+.stance-competitive-victimhood-historical-inversion .stance-label {
   background-color: #778b33d8;
-  color: black;
+  color: rgb(255, 255, 255);
 }
 
 .stance-historical-affirmation {
@@ -465,32 +691,19 @@ export default {
 .stance-historical-affirmation .stance-label {
   background-color: #673ab7;
 }
-.stance-historical-inversion {
-  border-left-color: #faff6b;
-}
-.stance-historical-inversion .stance-label {
-  background-color: #faff6b;
-  color: rgba(0, 0, 0, 0.814);
-}
 
-.stance-memory-of-victims {
+.stance-sympathy-memorial-commemorative {
   border-left-color: #4caf50; /* green */
 }
-.stance-memory-of-victims .stance-label {
+.stance-sympathy-memorial-commemorative .stance-label {
   background-color: #4caf50;
 }
-.stance-minimization-and-reframing {
+
+.stance-minimization-reframing {
   border-left-color: #87b2c2;
 }
-.stance-minimization-and-reframing .stance-label {
+.stance-minimization-reframing .stance-label {
   background-color: #87b2c2;
-}
-
-.stance-explicit-denial {
-  border-left-color: #d50000;
-}
-.stance-explicit-denial .stance-label {
-  background-color: #d50000;
 }
 
 .stance-reconciliation-discourse {
@@ -500,26 +713,19 @@ export default {
   background-color: #527c7995;
 }
 
+.stance-procedural-deflection-evidence-archives,
 .stance-procedural-deflection-using-archives-and-evidence {
-  /* border-left-color: #9c27b0;  */
   border-left-color: #5d3a6cd9;
-  /* purple */
 }
+.stance-procedural-deflection-evidence-archives .stance-label,
 .stance-procedural-deflection-using-archives-and-evidence .stance-label {
   background-color: #5d3a6cd9;
-}
-
-/* Instructions style */
-.instructions {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 10px;
-  text-align: left;
 }
 
 .video-source {
   font-size: 11px;
   color: grey;
+  margin-top: 5px;
 }
 
 .video-link {
@@ -577,51 +783,32 @@ export default {
   bottom: 0;
   right: 0;
   font-family: Georgia, "Times New Roman", Times, serif;
-  /* background: rgba(0, 0, 0, 0.7); */
   color: rgb(0, 0, 0);
   padding: 10px;
   z-index: 1000;
   font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 5px;
 }
 
-h5 {
-  /* font-size: 80%;
-  color: grey; */
-  font-size: 0.85em;
+.instruction-message {
   color: #666;
-  margin-top: 0.5em;
-  text-align: left;
-  font-family: "Helvetica", "Arial", sans-serif;
+  font-size: 14px;
+  padding: 20px;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  border-left: 3px solid #ddd;
+  background-color: #f9f9f9;
+  margin: 20px 0;
+}
 
-  /* position: sticky;
-  top: 40px;
+/* Ensure body and app container are also full width */
+:root,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
   background-color: white;
-  z-index: 9;
-  margin-top: 0;
-  padding-bottom: 8px;*/
-}
-.sections {
-  display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-
-.section-label {
-  font-family: "Mulish", sans-serif;
-  font-weight: 600;
-  font-size: 0.9rem;
-  padding: 0.5rem 1rem;
-  border-radius: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: white;
-}
-
-.section-label.government {
-  background-color: #000000;
-}
-
-.section-label.social-media {
-  background-color: #000000;
 }
 </style>

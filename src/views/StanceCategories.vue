@@ -486,7 +486,7 @@ body {
 }
 
 .category-card.dark {
-  border: white 1px dotted;
+  border: white 1px solid;
 }
 
 .card-inner {

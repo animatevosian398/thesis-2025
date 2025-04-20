@@ -1,0 +1,19 @@
+.government-text {
+  width: 100%;
+  padding-right: 20px;
+  line-height: 1.6;
+  font-size: 18px;
+  text-align: left;
+  font-family: "Times New Roman", Times, serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.highlight {
+  cursor: pointer;
+  padding: 2px 0;
+  transition: background-color 0.2s;
+}

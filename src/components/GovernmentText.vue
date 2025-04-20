@@ -32,8 +32,13 @@
 
     <p>
       <span
-        class="highlight-explicit-denial"
-        @mouseenter="onMouseEnter('explicit_denial')"
+        class="highlight highlight-explicit-denial"
+        :class="{
+          'highlight-active': isHovered === 'Explicit_Denial',
+          'highlight-selected': activeStance === 'Explicit_Denial',
+        }"
+        @mouseenter="onMouseEnter('Explicit_Denial')"
+        @click="toggleActiveStance('Explicit_Denial')"
       >
         The Armenian view of history, however, selects the Armenian suffering,
         embellishes it in several ways and presents it as a genocide – a crime
@@ -48,14 +53,25 @@
         accompanied by anti-Turkish rhetoric and vilification of Turkish history
         and ancestry.
         <span
-          class="highlight-competitive-victimhood"
-          @mouseenter="onMouseEnter('competitive_victimhood')"
+          class="highlight highlight-competitive-victimhood"
+          :class="{
+            'highlight-active':
+              isHovered === 'Competitive_Victimhood_Historical_Inversion',
+            'highlight-selected':
+              activeStance === 'Competitive_Victimhood_Historical_Inversion',
+          }"
+          @mouseenter="
+            onMouseEnter('Competitive_Victimhood_Historical_Inversion')
+          "
+          @click="
+            toggleActiveStance('Competitive_Victimhood_Historical_Inversion')
+          "
           >During the 1970s and onwards, such nationalistic zeal led to a terror
           campaign that took the lives of 31 Turkish diplomats and their family
           members, as well as 43 people from Turkish and other nationalities,
           and wounded many.</span
-        ></span
-      >
+        >
+      </span>
     </p>
 
     <p>
@@ -68,8 +84,13 @@
       – from their common history and renew their friendship.
 
       <span
-        class="highlight-reconciliation-discourse"
-        @mouseenter="onMouseEnter('reconciliation_discourse')"
+        class="highlight highlight-reconciliation"
+        :class="{
+          'highlight-active': isHovered === 'Reconciliation_Discourse',
+          'highlight-selected': activeStance === 'Reconciliation_Discourse',
+        }"
+        @mouseenter="onMouseEnter('Reconciliation_Discourse')"
+        @click="toggleActiveStance('Reconciliation_Discourse')"
       >
         That is why Turkey has initiated a process aimed at an honest and open
         dialogue with Armenia. Successful conclusion of this process will not
@@ -82,16 +103,22 @@
       Turkey does not deny the suffering of Armenians, including the loss of
       many innocent lives, during the First World War.
       <span
-        class="highlight-competitive-victimhood"
-        @mouseenter="onMouseEnter('competitive_victimhood')"
+        class="highlight highlight-competitive-victimhood"
+        :class="{
+          'highlight-active':
+            isHovered === 'Competitive_Victimhood_Historical_Inversion',
+          'highlight-selected':
+            activeStance === 'Competitive_Victimhood_Historical_Inversion',
+        }"
+        @mouseenter="
+          onMouseEnter('Competitive_Victimhood_Historical_Inversion')
+        "
+        @click="
+          toggleActiveStance('Competitive_Victimhood_Historical_Inversion')
+        "
       >
-        However, greater numbers of Turks died
-      </span>
-      <span
-        class="highlight-historical-inversion"
-        @mouseenter="onMouseEnter('historical_inversion')"
-      >
-        or were killed in the years leading to and during the War.
+        However, greater numbers of Turks died or were killed in the years
+        leading to and during the War.
       </span>
 
       <span
@@ -103,41 +130,54 @@
 
     <p>
       <span
-        class="highlight-procedural-deflection-using-archives-and-evidence"
-        @mouseenter="
-          onMouseEnter('procedural_deflection_using_archives_and_evidence')
-        "
-        @click="
-          toggleLockComment('procedural_deflection_using_archives_and_evidence')
-        "
-        >Turkey's views are based on available archival documents, academic
+        class="highlight highlight-procedural"
+        :class="{
+          'highlight-active':
+            isHovered === 'Procedural_Deflection_Evidence_Archives',
+          'highlight-selected':
+            activeStance === 'Procedural_Deflection_Evidence_Archives',
+        }"
+        @mouseenter="onMouseEnter('Procedural_Deflection_Evidence_Archives')"
+        @click="toggleActiveStance('Procedural_Deflection_Evidence_Archives')"
+      >
+        Turkey's views are based on available archival documents, academic
         research, oral history, knowledge of late 19th and early 20th century
         dynamics of major power rivalries in Europe, the recognition of the
         effects of nationalistic fervor among ethnic groups that formed the
         multi-national fabric of the Empire, as well as Turkey's own collective
         national memory including family histories of many Turks. These do not
-        support the Armenian narrative. Rather,</span
-      >
+        support the Armenian narrative.
+      </span>
       <span
-        class="highlight-genocide-justification"
-        @mouseenter="onMouseEnter('justification_narrative')"
+        class="highlight highlight-justification"
+        :class="{
+          'highlight-active': isHovered === 'Justification_Narrative',
+          'highlight-selected': activeStance === 'Justification_Narrative',
+        }"
+        @mouseenter="onMouseEnter('Justification_Narrative')"
+        @click="toggleActiveStance('Justification_Narrative')"
       >
-        they point to an empire at the verge of collapse fighting for survival
-        on various fronts, major European powers strategizing, at least since
-        the 1870s, to exploit the spoils, including the manipulation of ethnic
-        groups like the Ottoman Armenians, politically-motivated missionary
-        activities within Ottoman Turkey, radicalization and militarization of
-        nationalistic Armenian groups, some of whom joined forces with the
-        invading Russian army in the hope of creating an ethnically homogenous
-        Armenian homeland.
+        Rather, they point to an empire at the verge of collapse fighting for
+        survival on various fronts, major European powers strategizing, at least
+        since the 1870s, to exploit the spoils, including the manipulation of
+        ethnic groups like the Ottoman Armenians, politically-motivated
+        missionary activities within Ottoman Turkey, radicalization and
+        militarization of nationalistic Armenian groups, some of whom joined
+        forces with the invading Russian army in the hope of creating an
+        ethnically homogenous Armenian homeland.
       </span>
       <span
         >An Armenian leader of that time, Katchaznouni, who became the first
         Prime Minister of the short lived independent Armenian Democratic
         Republic stated the following in 1923:
         <span
-          class="highlight-genocide-justification"
-          @mouseenter="onMouseEnter('justification_narrative')"
+          class="highlight highlight-justification"
+          :class="{
+            'highlight-active': isHovered === 'Justification_Narrative',
+            'highlight-selected': activeStance === 'Justification_Narrative',
+          }"
+          @mouseenter="onMouseEnter('Justification_Narrative')"
+          @click="toggleActiveStance('Justification_Narrative')"
           >In the fall of 1914 Armenian volunteer units organized themselves and
           fought against the Turks</span
         >…We had no doubt that the war would end with the complete victory of
@@ -147,8 +187,13 @@
 
     <p>
       <span
-        class="highlight-justification-narrative"
-        @mouseenter="onMouseEnter('justification_narrative')"
+        class="highlight highlight-justification"
+        :class="{
+          'highlight-active': isHovered === 'Justification_Narrative',
+          'highlight-selected': activeStance === 'Justification_Narrative',
+        }"
+        @mouseenter="onMouseEnter('Justification_Narrative')"
+        @click="toggleActiveStance('Justification_Narrative')"
       >
         In response, the Ottoman Government ordered in 1915 the Armenian
         population residing in or near the war zone to be relocated to the
@@ -164,8 +209,13 @@
         >Ottoman Government took a number of measures for safe transfer during
         the relocation. However, under war-time conditions
         <span
-          class="highlight-minimization-and-reframing"
-          @mouseenter="onMouseEnter('minimization_and_reframing')"
+          class="highlight highlight-minimization"
+          :class="{
+            'highlight-active': isHovered === 'Minimization_Reframing',
+            'highlight-selected': activeStance === 'Minimization_Reframing',
+          }"
+          @mouseenter="onMouseEnter('Minimization_Reframing')"
+          @click="toggleActiveStance('Minimization_Reframing')"
         >
           exacerbated by internal strife, local groups seeking revenge,
           banditry, famine, epidemics, and a failing state apparatus (including
@@ -176,8 +226,13 @@
         Nevertheless,</span
       >
       <span
-        class="highlight-explicit-denial"
-        @mouseenter="onMouseEnter('explicit_denial')"
+        class="highlight highlight-explicit-denial"
+        :class="{
+          'highlight-active': isHovered === 'Explicit_Denial',
+          'highlight-selected': activeStance === 'Explicit_Denial',
+        }"
+        @mouseenter="onMouseEnter('Explicit_Denial')"
+        @click="toggleActiveStance('Explicit_Denial')"
       >
         no authentic evidence exists to support the claim that there was a
         premeditated plan by the Ottoman Government to kill off Armenians.
@@ -188,8 +243,13 @@
         >Loss of life, regardless of numbers and regardless of possible guilt on
         the part of the victims, is tragic and must be remembered. However,
         <span
-          class="highlight-explicit-denial"
-          @mouseenter="onMouseEnter('explicit_denial')"
+          class="highlight highlight-explicit-denial"
+          :class="{
+            'highlight-active': isHovered === 'Explicit_Denial',
+            'highlight-selected': activeStance === 'Explicit_Denial',
+          }"
+          @mouseenter="onMouseEnter('Explicit_Denial')"
+          @click="toggleActiveStance('Explicit_Denial')"
         >
           it is factually problematic, morally unsound and legally unfounded to
           call this episode a "genocide."</span
@@ -205,15 +265,20 @@
       archives of Turkey and Armenia and all other relevant archives in the
       third countries and to share their findings with the international public.
       Moreover the Protocols signed in October 2009 between Turkey and Armenia
-      stipulates to “implement a dialogue on the historical dimension with the
+      stipulates to "implement a dialogue on the historical dimension with the
       aim to restore mutual confidence between the two nations, including an
       impartial scientific examination of the historical records and archives to
-      define existing problems and formulate recommendations.”
+      define existing problems and formulate recommendations."
       <span
-        class="highlight-procedural-deflection-using-archives-and-evidence"
-        @mouseenter="
-          onMouseEnter('procedural_deflection_using_archives_and_evidence')
-        "
+        class="highlight highlight-procedural"
+        :class="{
+          'highlight-active':
+            isHovered === 'Procedural_Deflection_Evidence_Archives',
+          'highlight-selected':
+            activeStance === 'Procedural_Deflection_Evidence_Archives',
+        }"
+        @mouseenter="onMouseEnter('Procedural_Deflection_Evidence_Archives')"
+        @click="toggleActiveStance('Procedural_Deflection_Evidence_Archives')"
       >
         This represents an opportunity for replacing the language of national
         conviction with the language of impartial knowledge. Once the relevant
@@ -248,9 +313,15 @@
     </p>
     <p>
       <span
-        class="highlight-reconciliation-discourse"
-        @mouseenter="onMouseEnter('reconciliation_discourse')"
-        >Turks and Armenians should work to rebuild their historical friendship
+        class="highlight highlight-reconciliation"
+        :class="{
+          'highlight-active': isHovered === 'Reconciliation_Discourse',
+          'highlight-selected': activeStance === 'Reconciliation_Discourse',
+        }"
+        @mouseenter="onMouseEnter('Reconciliation_Discourse')"
+        @click="toggleActiveStance('Reconciliation_Discourse')"
+      >
+        Turks and Armenians should work to rebuild their historical friendship
         without forgetting the difficult periods in their common past. But in
         this endeavor, all sides must be honest and open-minded. Third countries
         can help this by supporting the normalization process between Turkey and
@@ -258,41 +329,62 @@
       >
       and by resisting those who want
       <span
-        class="highlight-explicit-denial"
-        @mouseenter="onMouseEnter('explicit_denial')"
-        >their version of history be adopted as uncontested truth.</span
+        class="highlight highlight-explicit-denial"
+        :class="{
+          'highlight-active': isHovered === 'Explicit_Denial',
+          'highlight-selected': activeStance === 'Explicit_Denial',
+        }"
+        @mouseenter="onMouseEnter('Explicit_Denial')"
+        @click="toggleActiveStance('Explicit_Denial')"
+      >
+        their version of history be adopted as uncontested truth.</span
       >
     </p>
   </div>
 </template>
 
-<script setup>
-// Define props and emits
-const props = defineProps({
-  // You can add props here if needed
-});
+<script>
+export default {
+  name: "GovernmentText",
+  props: {
+    // Add this prop to receive the document data
+    documentData: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      isHovered: null,
+      activeStance: null,
+    };
+  },
+  methods: {
+    onMouseEnter(stance) {
+      // Only update visual hover effect
+      this.isHovered = stance;
+      // No event emission on hover
+    },
 
-const emit = defineEmits(["showRelatedComments", "showAllComments"]);
+    onMouseLeave() {
+      // Only clear hover state
+      this.isHovered = null;
+      // No event emission on mouse leave
+    },
 
-// Event handlers
-function onMouseEnter(stance) {
-  emit("showRelatedComments", stance);
-}
-
-function toggleLockComment(stance) {
-  // Logic for locking/unlocking comments
-  if (this.lockedComment === stance) {
-    this.lockedComment = null; // Unlock if the same stance is clicked again
-  } else {
-    this.lockedComment = stance; // Lock the comment section
-  }
-  console.log(`Locked comment: ${this.lockedComment}`);
-}
-function onMouseLeave() {
-  if (!this.lockedComment) {
-    emit("showAllComments");
-  }
-}
+    toggleActiveStance(stance) {
+      if (this.activeStance === stance) {
+        // If clicking the same stance again, deselect it
+        this.activeStance = null;
+        this.$emit("showAllComments");
+      } else {
+        // Otherwise, select the new stance
+        this.activeStance = stance;
+        this.$emit("showRelatedComments", stance);
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -300,12 +392,9 @@ function onMouseLeave() {
   width: 100%;
   padding-right: 20px;
   line-height: 1.6;
-  font-size: 15px;
+  font-size: 18px;
   text-align: left;
-  /* font-family:'Courier New', Courier, monospace; */
-  /* font-family: "Vollkorn", serif; */
   font-family: "Times New Roman", Times, serif;
-  /* font-family:"Mulish"; */
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
@@ -316,9 +405,8 @@ function onMouseLeave() {
 h3 {
   font-size: 20px;
   background-color: white;
-  /* font-weight: bold; */
   font-family: "Vollkorn", serif;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   color: #333;
   text-align: left;
   position: sticky;
@@ -330,58 +418,98 @@ h3 {
   text-align: left;
 }
 
-/* Highlight colors for different rhetorical strategies */
-
-.highlight-explicit-denial {
-  background-color: #f3130fb8;
+/* Base highlight styles with lower opacity */
+.highlight {
+  transition: background-color 0.2s ease;
   cursor: pointer;
-  color: white;
+  padding: 2px 0;
+  border-radius: 2px;
 }
 
-.highlight-reconciliation-discourse {
+/* The default state with lower opacity */
+.highlight-explicit-denial {
+  background-color: rgba(237, 45, 42, 0.62);
+}
+
+.highlight-reconciliation {
   background-color: #527c7995;
-  /* background-color: #43a047; */
-  cursor: pointer;
-  /* color:white; */
 }
 
 .highlight-competitive-victimhood {
-  background-color: #839d2bd9;
-  cursor: pointer;
+  background-color: rgba(131, 157, 43, 0.4);
 }
 
-.highlight-historical-inversion {
-  background-color: #faff6b;
-  cursor: pointer;
-  /* color:white; */
-}
-.highlight-procedural-deflection-using-archives-and-evidence {
-  /* background-color: #e1bee7; */
-  background-color: #5d3a6c78;
-  cursor: pointer;
-  /* color:white; */
+.highlight-procedural {
+  background-color: rgba(93, 58, 108, 0.4);
 }
 
-.highlight-genocide-justification,
-.highlight-justification-narrative {
-  background-color: #ff9900b3;
-  cursor: pointer;
+.highlight-justification {
+  background-color: rgba(255, 153, 0, 0.4);
 }
 
-.highlight-minimization-and-reframing {
-  background-color: #87b2c2;
-  cursor: pointer;
+.highlight-minimization {
+  background-color: rgba(135, 178, 194, 0.4);
 }
-.highlight-explicit-denial {
-  background-color: #e53935;
-  cursor: pointer;
+
+/* Hover state with higher opacity */
+.highlight-active.highlight-explicit-denial {
+  background-color: rgba(229, 57, 53, 0.8);
+}
+
+.highlight-active.highlight-reconciliation {
+  background-color: rgba(82, 124, 121, 0.8);
+}
+
+.highlight-active.highlight-competitive-victimhood {
+  background-color: rgba(131, 157, 43, 0.8);
+}
+
+.highlight-active.highlight-procedural {
+  background-color: rgba(93, 58, 108, 0.8);
+  color: white;
+}
+
+.highlight-active.highlight-justification {
+  background-color: rgba(255, 153, 0, 0.8);
+}
+
+.highlight-active.highlight-minimization {
+  background-color: rgba(135, 178, 194, 0.8);
+}
+
+/* Selected/clicked state with full opacity */
+.highlight-selected.highlight-explicit-denial {
+  background-color: rgba(229, 57, 53, 1);
+  color: white;
+}
+
+.highlight-selected.highlight-reconciliation {
+  background-color: #527c79be;
+  color: white;
+}
+
+.highlight-selected.highlight-competitive-victimhood {
+  background-color: rgba(131, 157, 43, 0.8);
+}
+
+.highlight-selected.highlight-procedural {
+  background-color: rgba(93, 58, 108, 0.8);
+  color: white;
+}
+
+.highlight-selected.highlight-justification {
+  background-color: rgba(255, 153, 0, 0.8);
+}
+
+.highlight-selected.highlight-minimization {
+  background-color: rgba(135, 178, 194, 0.8);
 }
 
 .source-note,
 .footnote {
   font-size: 0.85em;
   color: #666;
-  margin-top: 0.5em;
+  margin-top: 0.1em;
   text-align: left;
 }
 

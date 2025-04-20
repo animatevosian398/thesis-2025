@@ -41,8 +41,7 @@
             suffered immensely.</span
           >
           <span
-            class="highlight-whataboutism"
-            @mouseenter="showRelatedComments('whataboutism')"
+          
           >
             This period needs to be understood in its entirety and the memory of
             so many lives lost has to be properly respected.
