@@ -20,6 +20,9 @@
               >Government Vs. Public Discourse</a
             >
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/Archive.vue">Archive</a>
+          </li>
           <!-- <li class="nav-item">
             <router-link to="/articles-timeline" class="nav-link">
               TR Articles Timeline
@@ -43,13 +46,48 @@
   right: 0;
   width: 100%;
   z-index: 1000;
-  background-color: #fff !important;
+  background-color: #00000037 !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
+
 .navbar-brand {
-  margin-left: -40px;
+  margin-left: 0;
+  color: #333;
 }
-/* Make sure the navbar's height is properly accounted for in content */
+
 :deep(.app-container) {
   padding-top: 56px; /* Adjust based on your navbar's height */
+}
+
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: #333;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #000;
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Active state */
+.router-link-active::after {
+  transform: scaleX(1);
 }
 </style>

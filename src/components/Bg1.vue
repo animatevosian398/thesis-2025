@@ -7,8 +7,10 @@
         class="background-image"
         ref="bgImage"
       />
+      <div class="citation-container">
+        <p class="citation">Source: Norwegian Royal Archives Collection</p>
+      </div>
     </div>
-    <p class="citation">Source: Norwegian Royal Archives Collection</p>
     <h1 class="backgroundTitle">Background</h1>
     <div class="content-text">
       <h3>
@@ -78,7 +80,7 @@ onMounted(() => {
 
 <style scoped>
 .background-section {
-  height: 100vh;
+  height: 110vh;
   background-color: black;
   color: white;
   position: relative;
@@ -93,9 +95,9 @@ onMounted(() => {
 .backgroundTitle {
   position: relative;
   z-index: 2;
-  margin-top: 50px; /* Reduced margin */
-  margin-bottom: 0px;
-  margin-left: 0%;
+  margin-top: 90px; /* Reduced from 90px */
+  margin-bottom: -10px; /* Added to maintain some spacing */
+  margin-left: 2%;
   font-size: calc(3.6rem + 1vw); /* Responsive font size */
   width: 50%; /* Control width */
   text-align: left; /* Ensure left alignment */
@@ -104,17 +106,20 @@ onMounted(() => {
 .image-container {
   position: absolute;
   top: 24%; /* Moved higher */
-  right: -4%;
+  left: 50%;
+  transform: translateX(-50%);
   width: 80%;
   height: 75%;
   z-index: 1;
   overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .background-image {
-  width: 90%;
+  width: 100%;
   height: 100%;
-
   object-fit: cover;
   mix-blend-mode: difference;
   will-change: transform, opacity;
@@ -124,34 +129,41 @@ onMounted(() => {
   position: relative;
   z-index: 2;
   max-width: 65%; /* Slightly narrower */
-  margin-top: 50px; /* Adjusted spacing */
+  margin-top: 20px; /* Reduced from 50px */
   color: rgb(255, 255, 255);
   display: flex;
-  margin-left: 17%;
+  margin-left: 20%;
+  font-family: aktiv-grotesk, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-style: normal;
   padding: 10px;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between; /* Change to space-between */
+  min-height: 100%; /* Ensure full height */
+  overflow: visible; /* Allow content to be visible */
 }
 
 .content-text h3 {
-  font-size: calc(1rem + 0.3vw); /* Responsive font size */
+  font-size: calc(1rem + 0.5vw); /* Responsive font size */
   line-height: 1.8; /* Increase line spacing */
-  letter-spacing: normal; /* Slight letter spacing */
-  font-weight: normal; /* Less heavy */
+  letter-spacing: -0.01em; /* Slight letter spacing */
+  font-weight: 500;
+  font-family: "aktiv-grotesk", "General Sans", sans-serif;
   margin: 0;
-
   margin-top: 100px; /* Increased margin */
   margin-left: -220px;
 }
 
 .citation {
-  position: absolute;
-  bottom: 5%;
-  right: 1%;
   font-size: 0.8em;
-  color: #474747;
-  z-index: 2;
+  color: #919090;
   text-align: right;
+  margin: 0;
+  padding: 5px 0;
+  background-color: transparent;
 }
 
 /* Added additional media queries for better responsiveness */
@@ -180,11 +192,19 @@ onMounted(() => {
     width: 90%;
     right: -5%;
   }
+}
 
-  .citation {
-    right: 5%;
-    bottom: 5%;
-    font-size: 0.7em;
-  }
+.citation-container {
+  position: absolute;
+  bottom: -40px; /* Move further down */
+  right: 10%;
+  z-index: 3; /* Increase z-index */
+  width: 90%; /* Match image width */
+}
+
+/* Container should allow scrolling if needed */
+.container {
+  overflow-y: auto;
+  height: 100%;
 }
 </style>

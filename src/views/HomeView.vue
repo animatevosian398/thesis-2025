@@ -16,12 +16,18 @@
   </div>
   <Bg1 @scrollToBg2="scrollToBg2" />
   <Bg2 />
+  <Bg3 />
+  <MediaCoveragePast />
+  <Framing />
 </template>
 
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import Bg1 from "@/components/Bg1.vue";
 import Bg2 from "@/components/Bg2.vue";
+import Bg3 from "../components/Bg3.vue";
+import MediaCoveragePast from "../components/MediaCoveragePast.vue";
+import Framing from "../components/Framing.vue";
 
 const scrollToBackground = () => {
   const section = document.getElementById("background-section");

@@ -5,49 +5,41 @@
         How are the official government stances <em>echoed</em> in public
         discourse online?
       </div>
+
       <div class="sections">
         <div class="section-label government">GOVERNMENT</div>
         <div class="section-label social-media">ONLINE DISCOURSE</div>
       </div>
     </div>
 
-    <!-- Add document selector -->
-    <div class="document-selector">
-      <label
-        for="document-select"
-        class="block text-sm font-medium leading-6 text-gray-900"
-      >
-        Choose a government document:
-      </label>
-      <select
-        id="document-select"
-        v-model="activeDocument"
-        @change="handleDocumentChange"
-        class="mt-2 block w-full py-2 px-3 bg-white border border-black rounded-none text-sm text-gray-900 appearance-none cursor-pointer hover:border-gray-500 focus:outline-none focus:border-gray-700"
-      >
-        <option v-for="doc in documents" :key="doc.id" :value="doc">
-          {{ doc.title }}
-        </option>
-      </select>
-    </div>
-
     <div class="content-container" v-if="activeDocument">
       <!-- Government text section -->
       <div class="government-text-container">
-        <!-- Use dynamic component based on activeDocument -->
+        <div class="document-header">
+          <h3>Select Document:</h3>
+          <select
+            class="document-title-select"
+            v-model="activeDocument"
+            @change="handleDocumentChange"
+          >
+            <option v-for="doc in documents" :key="doc.id" :value="doc">
+              {{ doc.title }}
+            </option>
+          </select>
+        </div>
+        <!-- Just keep the component -->
         <component
           :is="activeDocument.component"
           :documentData="activeDocument"
           @showRelatedComments="showRelatedComments"
           @showAllComments="showAllComments"
         />
+        <!-- Add instructlon message -->
       </div>
 
       <!-- Comments section -->
       <div class="social-media-comments">
-        <h3>Real Users' Comments and Replies on YouTube</h3>
-
-        <!-- Add instruction message -->
+        <h3 class="social-media-side-title">Users' Statements on YouTube</h3>
         <div v-if="activeStance === 'all'" class="instruction-message">
           Click on highlighted sections of the government text to view comments
           that share the sentiment.
@@ -58,7 +50,6 @@
           {{ formatStanceForDisplay(activeStance) }} ·
           {{ visibleComments.length }} comments
         </div>
-
         <div id="comments-container">
           <!-- Using computed property to filter comments by stance -->
           <div
@@ -141,8 +132,10 @@
 <script>
 import Papa from "papaparse";
 import GovernmentText from "../components/GovernmentText.vue";
+import ErdoganLetter2025 from "../components/government-documents/ErdoganLetter2025.vue";
 import JustinMcCarthy from "../components/government-documents/JustinMcCarthy.vue";
 import stancePhrases from "../assets/stancePhrases.json";
+import AnadoluAgencyCounter from "../components/government-documents/AnadoluAgencyCounter.vue";
 
 // Define stance mapping object
 const stanceMapping = {
@@ -166,6 +159,7 @@ export default {
   components: {
     GovernmentText,
     JustinMcCarthy,
+    ErdoganLetter2025,
   },
   data() {
     return {
@@ -184,11 +178,31 @@ export default {
           component: GovernmentText, // Direct component reference
         },
         {
-          id: "justin-mccarthy",
-          title: "Presentation Made by Prof. Justin McCarthy",
+          id: "erdogan-letter-2025",
+          title:
+            "The Letter President Erdoğan Sent to Armenian Patriarch (2025)",
           source: "Republic of Turkey Ministry of Foreign Affairs",
-          sourceUrl: "https://www.mfa.gov.tr/...",
+          sourceUrl:
+            "The Letter President Recep Tayyip Erdoğan Sent to Armenian Patriarch of Turkey, Reverend Sahak Maşalyan (2025)",
+          component: ErdoganLetter2025, // Direct component reference
+        },
+
+        {
+          id: "justin-mccarthy",
+          title: "Presentation by Prof. Justin McCarthy (2001)",
+          source: "Republic of Turkey Ministry of Foreign Affairs",
+          sourceUrl:
+            "https://www.mfa.gov.tr/presentation-made-by-prof_-justin-mccarthy-_seminar-on-turkish-armenian-relations-organized-by-the-democratic-principles-association-15-march-2001-_istanbul_.en.mfa",
           component: JustinMcCarthy, // Direct component reference
+        },
+        {
+          id: "anadolu-agency-counter",
+          title:
+            "Turkish community in Washington holds counter-protest against Armenian demonstrators over 1915 events (2024)",
+          source: "by Diyar Güldoğan of Anadolu Agency (April 25, 2024)",
+          sourceUrl:
+            "https://www.aa.com.tr/en/turkiye/turkish-community-in-washington-holds-counter-protest-against-armenian-demonstrators-over-1915-events/3201645",
+          component: AnadoluAgencyCounter,
         },
       ],
       activeDocument: null, // Track which document is currently selected
@@ -377,69 +391,66 @@ export default {
 </script>
 
 <style scoped>
-.document-selector {
-  margin-bottom: 20px;
-  padding: 0 0px;
+.social-media-comments h3,
+.document-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #000000;
   text-align: left;
+  font-family: "Vollkorn", serif;
 }
-#document-select {
-  background-color: rgb(255, 255, 255);
-  border: 1px solid #00000067;
-  color: #333333;
-  border-radius: 2px;
-  padding: 5px;
+
+.content-container {
+  display: flex;
+  height: calc(100vh - 120px);
+  width: 100%;
+  overflow: hidden;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  background-color: white;
+}
+.government-text-container .document-header h3 {
+  color: black;
+}
+.document-header {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  color: black;
+  margin-bottom: 8px; /* Reduced from 15px */
+  padding-bottom: 5px; /* Reduced from 10px */
+}
+
+.document-header h3 {
   font-size: 14px;
-  font-family: "Helvetica", Arial, sans-serif;
-  transition: all 0.2s ease;
+  color: #717171;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.document-title-select {
+  flex-grow: 1;
+  font-size: 20px;
+  font-family: "Vollkorn", serif;
+  color: #333;
+  text-align: left;
+  border: none;
+  background-color: transparent;
   cursor: pointer;
+  padding: 0 25px 0 0;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+
+  /* Ensure dropdown arrow is visible */
+  /* background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E"); */
   background-repeat: no-repeat;
-  background-position: right 12px top 50%;
-  background-size: 8px auto;
-  padding-right: 20px;
+  background-position: right center;
+  background-size: 12px auto;
 }
 
-/* Style dropdown options */
-#document-select option {
-  background-color: white;
-  color: #333333;
-  padding: 12px;
-  font-size: 14px;
-  font-family: "Helvetica", Arial, sans-serif;
-}
-
-#document-select:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  -webkit-focus-ring-color: transparent !important;
-  border-color: #999999 !important;
-}
-
-#document-select:hover {
-  border-color: #cccccc;
-}
-
-#document-select:focus {
+.document-title-select:focus {
   outline: none;
-  border-color: #999999;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.document-selector label {
-  font-weight: bold;
-  margin-right: 10px;
-  background-color: white;
-}
-
-.document-selector select {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  min-width: 300px;
 }
 .text-visualizer {
   background-color: white;
@@ -458,12 +469,13 @@ export default {
 }
 
 .title {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: bold;
-  padding: 10px;
+  padding: 0px;
+  margin-top: 40px;
   font-family: "General Sans", sans-serif;
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   text-align: center;
 }
 
@@ -779,27 +791,18 @@ h5 {
 }
 
 .debug-panel {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  font-family: Georgia, "Times New Roman", Times, serif;
-  color: rgb(0, 0, 0);
-  padding: 10px;
-  z-index: 1000;
-  font-size: 14px;
-  background-color: rgba(255, 255, 255, 0.7);
-  border-radius: 5px;
+  display: none;
 }
 
 .instruction-message {
   color: #666;
   font-size: 14px;
-  padding: 20px;
+  padding: 10px;
   text-align: center;
   font-family: "Roboto", sans-serif;
-  border-left: 3px solid #ddd;
-  background-color: #f9f9f9;
-  margin: 20px 0;
+  border-left: 1px solid #ddd;
+  background-color: #f9f9f9e7;
+  margin: 0px 2px 0px 10px;
 }
 
 /* Ensure body and app container are also full width */
@@ -810,5 +813,95 @@ body,
   padding: 0;
   width: 100%;
   background-color: white;
+}
+
+.document-title-select {
+  font-size: 18px;
+  font-family: "Vollkorn", serif;
+  color: #333;
+  width: 100%;
+  text-align: left;
+  border: none;
+  margin-bottom: 4px; /* Reduced from default */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: white;
+  cursor: pointer;
+  padding: 0px 0px 0px 0; /* Increase right padding */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23333333' d='M0 2l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 10px) center;
+  background-size: 8px;
+}
+
+.document-title-select:focus {
+  outline: none;
+  border-bottom-color: rgba(0, 0, 0, 0.3);
+}
+
+.document-title-select:hover {
+  border-bottom-color: rgba(0, 0, 0, 0.3);
+}
+
+.document-title-select:focus {
+  outline: none;
+  border-bottom-color: rgba(0, 0, 0, 0.5);
+}
+
+.document-title-select option {
+  font-family: "Vollkorn", serif;
+  font-size: 16px;
+}
+
+.social-media-comments h3 span.comment-count {
+  font-size: 0.9em;
+  color: #000000;
+  font-weight: normal;
+  margin-left: 4px;
+}
+.comments-header {
+  font-size: 0.9em;
+  color: #4d4d4d;
+  font-weight: normal;
+  margin-left: 0px;
+}
+.social-media-comments h3.social-media-side-title {
+  font-family: "Roboto", sans-serif;
+  margin-left: 9px;
+}
+
+/* Most specific selector to override all others */
+.government-text-container .document-header .document-title-select {
+  font-size: 20px;
+  font-family: "Vollkorn", serif;
+  color: #333;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: white;
+  cursor: pointer;
+  padding: 10px 0;
+  margin-bottom: 8px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23333333' d='M0 2l4 4 4-4z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 8px !important;
+}
+
+/* Remove any conflicting styles */
+.document-title-select {
+  background: none;
+}
+
+.source-note {
+  margin-top: 4px; /* Reduced spacing */
+  font-size: 0.85em;
+  color: #666;
 }
 </style>

@@ -13,8 +13,10 @@ import CategoryBreakdown from "../components/CategoryBreakdown.vue";
 import StackedOverTime from "../components/StackedOverTime.vue";
 import DensityDot from "../components/DensityDot.vue";
 import Bg1 from "../components/Bg1.vue";
-// Import Background component - adjust the path if needed
-// If Bg1 is your background component, you don't need to import it again
+import Bg3 from "../components/Bg3.vue";
+import Framing from "../components/Framing.vue";
+import BubbleChart from "../components/BubbleChart.vue";
+import StanceView from "../views/StanceView.vue"; // Import StanceView component
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,6 +90,23 @@ const router = createRouter({
       path: "/density-dot",
       name: "density-dot",
       component: DensityDot,
+    },
+    {
+      path: "/Bg3",
+      name: "Background3",
+      component: Bg3,
+    },
+    {
+      path: "/Framing",
+      name: "Framing",
+      component: Framing,
+    },
+    { path: "/BubbleChart", name: "BubbleChart", component: BubbleChart },
+    {
+      path: "/stance/:stance",
+      name: "stance-details",
+      component: StanceView,
+      props: true,
     },
   ],
   // This ensures smooth scrolling to the hash destination

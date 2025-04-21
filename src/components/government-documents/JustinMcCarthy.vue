@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>{{ documentData.title }}</h3>
+    <!-- <h3>{{ documentData.title }}</h3> -->
     <p class="source-note">
       Published by
       <a :href="documentData.sourceUrl" target="_blank">{{
@@ -151,7 +151,7 @@
           countries.
         </span>
         <span
-          class="highlight highlight-procedural"
+          class="highlight-procedural"
           :class="{
             'highlight-active':
               isHovered === 'Procedural_Deflection_Evidence_Archives',
@@ -174,7 +174,6 @@
 export default {
   name: "JustinMcCarthy",
   props: {
-    // Match the same props interface as GovernmentText
     documentData: {
       type: Object,
       required: true,
@@ -184,21 +183,13 @@ export default {
   },
   methods: {
     onMouseEnter(stance) {
-      // Emit the same events as GovernmentText
-      this.$emit("mouseEnter", stance);
+      this.$emit("showRelatedComments", stance);
     },
     onMouseLeave() {
-      this.$emit("mouseLeave");
+      this.$emit("showAllComments");
     },
     toggleActiveStance(stance) {
-      // This matches the function name in your GovernmentText component
-      if (this.activeStance === stance) {
-        // If clicking the same stance again, deselect it
-        this.$emit("toggleStance", null);
-      } else {
-        // Otherwise, select the new stance
-        this.$emit("toggleStance", stance);
-      }
+      this.$emit("showRelatedComments", stance);
     },
   },
 };

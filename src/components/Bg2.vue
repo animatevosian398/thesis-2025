@@ -105,7 +105,8 @@ export default {
 }
 
 .backgroundTitle {
-  font-family: "Helvetica";
+  /* font-family: "Helvetica"; */
+  font-family: "aktiv-grotesk", "General Sans", sans-serif;
   padding-top: 80px;
   padding-bottom: 10px;
 }
