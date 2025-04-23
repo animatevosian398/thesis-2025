@@ -3,7 +3,7 @@
     The Events of 1915 and the Turkish-Armenian Controversy over History:
     <br />An Overview
   </h3> -->
-  <p class="source-note">
+  <!-- <p class="source-note">
     Translated from Turkish. Original text published by
     <a
       href="https://www.mfa.gov.tr/the-events-of-1915-and-the-turkish-armenian-controversy-over-history_-an-overview.en.mfa"
@@ -11,7 +11,7 @@
     >
       the Republic of Turkey Ministry of Foreign Affairs.
     </a>
-  </p>
+  </p> -->
 
   <div class="government-text" @mouseleave="onMouseLeave">
     <!-- <select
@@ -431,11 +431,12 @@ export default {
 h3 {
   font-size: 20px;
   background-color: white;
-  font-family: "Vollkorn", serif;
+  /* font-family: "Vollkorn", serif; */
   margin-bottom: 8px;
   color: #333;
   text-align: left;
   position: sticky;
+  overflow: visible;
   top: 0;
 }
 
@@ -529,18 +530,6 @@ h3 {
 
 .highlight-selected.highlight-minimization {
   background-color: rgba(135, 178, 194, 0.8);
-}
-
-.source-note,
-.footnote {
-  font-size: 0.9em;
-  color: #666666c6;
-  text-align: left;
-  font-family: "Times New Roman", Times, serif;
-}
-
-.source-note a {
-  color: grey;
 }
 
 /* .document-title-select {

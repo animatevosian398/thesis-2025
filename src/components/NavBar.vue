@@ -1,5 +1,6 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom"> -->
     <div class="container">
       <a class="navbar-brand" href="/">[Narratives of Truth and Denial]</a>
       <button
@@ -22,6 +23,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/Archive.vue">Archive</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/bubble-chart">Bubble Chart</a>
           </li>
           <!-- <li class="nav-item">
             <router-link to="/articles-timeline" class="nav-link">
@@ -46,8 +50,8 @@
   right: 0;
   width: 100%;
   z-index: 1000;
-  background-color: #00000037 !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  /* background-color: #00000037 !important; */
+  /* border-bottom: 1px solid rgba(0, 0, 0, 0.1); */
 }
 
 .navbar-brand {

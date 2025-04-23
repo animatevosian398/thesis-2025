@@ -1,13 +1,36 @@
 <template>
   <div class="text-visualizer">
     <div class="header">
-      <div class="title">
+      <div class="document-header">
+        <div class="title">
+          <h3>Select a Document:</h3>
+          <div class="select-wrapper">
+            <select
+              class="document-title-select"
+              v-model="activeDocument"
+              @change="handleDocumentChange"
+            >
+              <option v-for="doc in documents" :key="doc.id" :value="doc">
+                {{ doc.title }}
+              </option>
+            </select>
+            <svg class="select-arrow" width="12" height="8" viewBox="0 0 12 8">
+              <path
+                d="M1.41 0.295044L6 4.87504L10.59 0.295044L12 1.70504L6 7.70504L0 1.70504L1.41 0.295044Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="title">
         How are the official government stances <em>echoed</em> in public
         discourse online?
-      </div>
+      </div> -->
 
       <div class="sections">
         <div class="section-label government">GOVERNMENT</div>
+
         <div class="section-label social-media">ONLINE DISCOURSE</div>
       </div>
     </div>
@@ -15,17 +38,16 @@
     <div class="content-container" v-if="activeDocument">
       <!-- Government text section -->
       <div class="government-text-container">
-        <div class="document-header">
-          <h3>Select Document:</h3>
-          <select
-            class="document-title-select"
-            v-model="activeDocument"
-            @change="handleDocumentChange"
-          >
-            <option v-for="doc in documents" :key="doc.id" :value="doc">
-              {{ doc.title }}
-            </option>
-          </select>
+        <div class="document-title">
+          <h3>{{ activeDocument.title }}</h3>
+          <div>
+            <a
+              :href="activeDocument.sourceUrl"
+              target="_blank"
+              class="document-link"
+              >{{ activeDocument.source }}</a
+            >
+          </div>
         </div>
         <!-- Just keep the component -->
         <component
@@ -33,13 +55,16 @@
           :documentData="activeDocument"
           @showRelatedComments="showRelatedComments"
           @showAllComments="showAllComments"
+          @mouseleave="handleMouseLeave"
         />
         <!-- Add instructlon message -->
       </div>
 
       <!-- Comments section -->
       <div class="social-media-comments">
-        <h3 class="social-media-side-title">Users' Statements on YouTube</h3>
+        <h3 class="social-media-side-title">
+          Echoing Statements from Users on YouTube
+        </h3>
         <div v-if="activeStance === 'all'" class="instruction-message">
           Click on highlighted sections of the government text to view comments
           that share the sentiment.
@@ -171,7 +196,8 @@ export default {
       documents: [
         {
           id: "turkey-mfa",
-          title: "Turkish MFA: The Events of 1915",
+          title:
+            "The Events of 1915 and the Turkish-Armenian Controversy over History: An Overview",
           source: "Republic of Turkey Ministry of Foreign Affairs",
           sourceUrl:
             "https://www.mfa.gov.tr/the-events-of-1915-and-the-turkish-armenian-controversy-over-history_-an-overview.en.mfa",
@@ -356,8 +382,15 @@ export default {
 
     showAllComments() {
       console.log("Showing all comments");
-      this.activeStance = "all";
+      this.activeStance = "all"; // Reset to show all comments instead of defaulting to explicit denial
     },
+
+    // handleMouseLeave() {
+    //   // Only reset if not locked
+    //   if (!this.isLocked) {
+    //     this.showAllComments();
+    //   }
+    // },
 
     formatStanceForDisplay(stance) {
       if (!stance || stance === "all") return "All Comments";
@@ -391,62 +424,119 @@ export default {
 </script>
 
 <style scoped>
+.document-title {
+  font-size: 20px;
+  margin: 0;
+  text-align: left;
+  font-weight: 500;
+  top: 0;
+  background-color: rgb(255, 255, 255);
+}
+.document-title h3 {
+  font-size: 20px;
+  /* font-weight: 500; */
+  margin: 0;
+  top: 0;
+  z-index: 5;
+  width: 100;
+  text-align: left;
+  font-family: "Georgia", serif;
+  line-height: 1.4;
+}
+.document-title h3,
+.social-media-comments h3.social-media-side-title {
+  font-size: 20px;
+  margin-top: 10;
+  margin-bottom: 10px;
+  position: sticky;
+  padding: 8px 0;
+  text-align: left;
+  font-family: "Georgia", serif;
+  line-height: 1.4;
+  height: 35px; /* Fixed height to ensure alignment */
+  align-items: center;
+}
+
+/* Add spacing for the source */
+.document-title > div {
+  margin-top: 30px;
+  margin-bottom: 15px; /* Add more space below the source */
+}
+.document-link {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 10px;
+  text-decoration: none;
+  font-family: "Georgia", serif;
+
+  /* font-family: "Times New Roman", Times, serif; */
+}
+
+.document-link:hover {
+  text-decoration: underline;
+}
 .social-media-comments h3,
 .document-header h3 {
-  margin: 0;
+  margin: 10;
+  padding: 10px;
   font-size: 20px;
   color: #000000;
-  text-align: left;
-  font-family: "Vollkorn", serif;
+  text-align: center;
+  /* font-family: "Vollkorn", serif; */
 }
 
 .content-container {
   display: flex;
-  height: calc(100vh - 120px);
   width: 100%;
-  overflow: hidden;
-  padding-bottom: 10px;
-  box-sizing: border-box;
+  height: calc(100vh - 200px);
+  margin: 0 0 40px 0;
+  padding: 0;
+  gap: 2rem;
   background-color: white;
+  box-sizing: border-box;
+  min-height: 80vh; /* Ensure there's enough height for scrolling */
 }
 .government-text-container .document-header h3 {
   color: black;
 }
 .document-header {
   display: flex;
+  flex-direction: column;
   align-items: baseline;
   gap: 15px;
+  align-items: center;
   color: black;
   margin-bottom: 8px; /* Reduced from 15px */
   padding-bottom: 5px; /* Reduced from 10px */
+  width: 100%; /* Ensure full width */
+  text-align: center; /* Center text */
+  /* border-bottom: black 1px solid; */ /*for divide between headers and bottom text*/
 }
 
 .document-header h3 {
   font-size: 14px;
   color: #717171;
   margin: 0;
+  padding: 20px;
   flex-shrink: 0;
 }
 
 .document-title-select {
   flex-grow: 1;
   font-size: 20px;
-  font-family: "Vollkorn", serif;
+  /* font-family: "Vollkorn", serif; */
+  font-family: "Georgia", serif;
   color: #333;
-  text-align: left;
+  text-align: center;
   border: none;
   background-color: transparent;
   cursor: pointer;
-  padding: 0 25px 0 0;
+  padding: 0 30px 0 0; /* Increased right padding for arrow */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-
-  /* Ensure dropdown arrow is visible */
-  /* background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E"); */
-  background-repeat: no-repeat;
-  background-position: right center;
-  background-size: 12px auto;
+  white-space: normal; /* Allow text wrapping */
+  min-height: 50px; /* Ensure height for wrapped text */
 }
 
 .document-title-select:focus {
@@ -455,28 +545,30 @@ export default {
 .text-visualizer {
   background-color: white;
   color: #111111;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-    sans-serif;
-  padding: 40px;
-  width: 100%; /* Full width */
-  max-width: 100%; /* Remove max-width constraint */
-  margin: 0; /* Remove margins */
+  padding: 40px 80px 60px 80px;
+  width: 100%;
   box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .header {
   margin-bottom: 20px;
 }
 
-.title {
-  font-size: 22px;
+.title h3 {
+  font-size: 25px;
   font-weight: bold;
-  padding: 0px;
+  padding: 20px;
   margin-top: 40px;
   font-family: "General Sans", sans-serif;
   color: #333;
   margin-bottom: 0px;
   text-align: center;
+  display: flex;
+  flex-direction: column; /* Change to column layout */
+  align-items: center; /* Center items */
+  width: 100%; /* Ensure full width */
 }
 
 .sections {
@@ -484,7 +576,7 @@ export default {
   /* border-top: 1px solid rgba(0, 0, 0, 0.471); */
   padding-top: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.471);
+  /* border-bottom: 1px solid rgba(0, 0, 0, 0.471); */
   justify-content: space-between;
 }
 
@@ -503,20 +595,14 @@ export default {
   color: rgb(0, 0, 0);
 }
 
-.content-container {
-  display: flex;
-  height: calc(100vh - 120px);
-  width: 100%;
-  overflow: hidden;
-  padding-bottom: 10px;
-  box-sizing: border-box;
-  background-color: white;
-}
-
 .government-text-container {
   width: 55%;
   box-sizing: border-box;
   overflow: hidden;
+  padding-bottom: 30px; /* Add padding at the bottom */
+  max-height: 80vh; /* Set a maximum height to ensure scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
 .social-media-comments {
@@ -530,6 +616,10 @@ export default {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  padding-bottom: 30px; /* Add padding at the bottom */
+  max-height: 80vh; /* Set a maximum height to ensure scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
 #comments-container {
@@ -806,34 +896,38 @@ h5 {
 }
 
 /* Ensure body and app container are also full width */
-:root,
+/* :root,
 body,
-#app {
+/* #app {
   margin: 0;
   padding: 0;
-  width: 100%;
+  width: 10;
   background-color: white;
-}
-
+} */
 .document-title-select {
-  font-size: 18px;
-  font-family: "Vollkorn", serif;
+  font-family: "Georgia", serif;
   color: #333;
   width: 100%;
   text-align: left;
   border: none;
-  margin-bottom: 4px; /* Reduced from default */
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: white;
   cursor: pointer;
-  padding: 0px 0px 0px 0; /* Increase right padding */
+  padding: 10px 30px 10px 0; /* Added right padding for arrow */
+  margin-bottom: 8px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23333333' d='M0 2l4 4 4-4z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: calc(100% - 10px) center;
-  background-size: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.select-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  overflow: visible;
 }
 
 .document-title-select:focus {
@@ -853,6 +947,8 @@ body,
 .document-title-select option {
   font-family: "Vollkorn", serif;
   font-size: 16px;
+  white-space: normal;
+  padding: 10px;
 }
 
 .social-media-comments h3 span.comment-count {
@@ -883,15 +979,32 @@ body,
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: white;
   cursor: pointer;
-  padding: 10px 0;
+  padding: 10px 40px 10px 10px;
   margin-bottom: 8px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23333333' d='M0 2l4 4 4-4z'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 8px center !important;
-  background-size: 8px !important;
+  white-space: normal;
+  min-height: auto;
+  line-height: 1.4;
+}
+
+.select-wrapper {
+  position: relative;
+  width: 80%;
+  max-width: 600px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #1e1e1e;
+  transition: transform 0.2s ease;
 }
 
 /* Remove any conflicting styles */
@@ -899,9 +1012,33 @@ body,
   background: none;
 }
 
-.source-note {
-  margin-top: 4px; /* Reduced spacing */
+/* .source-note {
+  margin-top: 4px;
   font-size: 0.85em;
   color: #666;
+} */
+/* Ensure the last items in each container have margin to create space */
+#comments-container .comment-card:last-child,
+.government-text-container > div:last-child {
+  margin-bottom: 30px;
+}
+
+.document-title h3 {
+  font-size: 20px;
+  margin: 0;
+  position: sticky;
+  text-align: left;
+  font-family: "Georgia", serif;
+  line-height: 1.4;
+  white-space: normal; /* Allow text to wrap */
+  overflow: visible; /* Show all content */
+  min-height: auto; /* Adjust height automatically */
+  padding: 10px 0;
+}
+
+.document-title {
+  width: 100%;
+  margin-bottom: 15px;
+  position: sticky;
 }
 </style>

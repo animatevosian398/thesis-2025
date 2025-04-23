@@ -43,12 +43,12 @@ const scrollToBg2 = () => {
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Neuton:ital,wght@0,200;0,300;0,400;0,700;0,800;1,400&display=swap");
 
-#app {
+/* #app {
   max-width: 1600px;
   margin: 0 auto;
   padding: 0;
-  background-color: black !important;
-}
+  background-color: rgb(255, 255, 255) !important;
+} */
 .app-container {
   padding-top: 10px;
   background-color: black;

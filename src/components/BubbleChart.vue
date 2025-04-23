@@ -12,8 +12,11 @@
           :style="commentsPosition"
           @mouseenter="keepCommentsVisible = true"
           @mouseleave="handleCommentsLeave"
+          counts="{d.count}"
         >
           <h3 class="comments-title">{{ formatStance(activeStance) }}</h3>
+          <div class="stance-count">{{ getActiveCount() }} comments</div>
+
           <div class="comments-container">
             <p
               v-for="(comment, index) in activeComments"
@@ -36,7 +39,7 @@
         </div>
       </transition>
     </div>
-    <div class="legend-container">
+    <!-- <div class="legend-container">
       <button
         v-for="(item, index) in data"
         :key="index"
@@ -49,7 +52,7 @@
         ></div>
         <span class="legend-text">{{ formatStance(item.stance) }}</span>
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -57,6 +60,8 @@
 import { ref, onMounted, onUnmounted, reactive, watch } from "vue";
 import * as d3 from "d3";
 import { useRouter } from "vue-router"; // Import Vue Router
+import { stanceColors } from "../config/colors";
+import { stanceDisplayNames } from "../config/labels";
 
 // Get router instance
 const router = useRouter();
@@ -186,27 +191,12 @@ const data = [
 
 // Format stance names for better readability
 const formatStance = (stance) => {
-  return stance.replace(/_/g, " ");
-};
-const stanceColors = {
-  Apology: "#717E8F",
-  Historical_Affirmation: "#ff7f0e",
-  Competitive_Victimhood_Historical_Inversion: "#2ca02c",
-  Explicit_Denial: "#d62728",
-  Justification_Narrative: "#9467bd",
-  Personal_Testimony: "#8c564b",
-  Contemporary_Comparison: "#e377c2",
-  Discussion_About_Denial: "#7f7f7f",
-  Minimization_Reframing: "#bcbd22",
-  Reconciliation_Discourse: "#17becf",
-  Sympathy_Memorial_Commemorative: "#aec7e8",
-  Procedural_Deflection_Evidence_Archives: "#ffbb78",
+  return stanceDisplayNames[stance] || stance.replace(/_/g, " ");
 };
 
 // Get color for a stance
 const getColor = (stance, index) => {
-  // Using d3's category10 colors with index fallback
-  return stanceColors[stance];
+  return stanceColors[stance] || "#cccccc"; // Fallback color
 };
 
 // Handle comments panel leaving
@@ -229,180 +219,7 @@ let tooltip = null;
 
 // Create and render the bubble chart
 onMounted(() => {
-  const renderChart = () => {
-    if (!chartContainer.value) return;
-
-    // Clear any existing SVG content
-    d3.select(chartContainer.value).selectAll("*").remove();
-
-    // Set dimensions
-    const width = chartContainer.value.clientWidth || 800;
-    const height = chartContainer.value.clientHeight || 600;
-    const margin = { top: 40, right: 40, bottom: 40, left: 40 };
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    // Create SVG
-    const svg = d3
-      .select(chartContainer.value)
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    // Create color scale
-    const colorScale = d3
-      .scaleOrdinal()
-      .domain(data.map((d) => d.stance))
-      .range(d3.schemeCategory10);
-
-    // Create size scale for bubbles
-    const maxCount = d3.max(data, (d) => d.count);
-    const sizeScale = d3.scaleSqrt().domain([0, maxCount]).range([20, 100]);
-
-    // Create simulation
-    simulation = d3
-      .forceSimulation(data)
-      .force("x", d3.forceX(innerWidth / 2).strength(0.05))
-      .force("y", d3.forceY(innerHeight / 2).strength(0.05))
-      .force(
-        "collide",
-        d3.forceCollide((d) => sizeScale(d.count) + 2)
-      )
-      .force("charge", d3.forceManyBody().strength(-30));
-
-    // Create tooltip
-    tooltip = d3
-      .select("body")
-      .append("div")
-      .attr("class", "tooltip")
-      .style("position", "absolute")
-      .style("background-color", "white")
-      .style("border", "1px solid #ddd")
-      .style("border-radius", "4px")
-      .style("padding", "8px")
-      .style("box-shadow", "0 2px 4px rgba(0,0,0,0.1)")
-      .style("pointer-events", "none")
-      .style("opacity", 0)
-      .style("z-index", 10);
-
-    // Add bubbles
-    const bubbles = svg
-      .selectAll(".bubble")
-      .data(data)
-      .enter()
-      .append("circle")
-      .attr("class", "bubble")
-      .attr("r", (d) => sizeScale(d.count))
-      .attr("fill", (d) => colorScale(d.stance))
-      .attr("fill-opacity", 0.9)
-      //   .attr("stroke", (d) => d3.color(colorScale(d.stance)).darker())
-      //   .attr("stroke-width", 1)
-      .style("cursor", "pointer")
-      .on("mouseenter", function (event, d) {
-        // Store reference to indicate bubble is being hovered
-        hoveredBubble.value = d;
-
-        // Highlight the bubble
-        d3.select(this).attr("stroke-width", 2).attr("fill-opacity", 0.9);
-
-        // Show tooltip
-        tooltip.style("opacity", 1).html(`
-              <div style="font-weight: bold">${formatStance(d.stance)}</div>
-              <div>Count: ${d.count}</div>
-            `);
-
-        // Show comments for this stance
-        if (commentsByStance[d.stance]) {
-          activeStance.value = d.stance;
-          activeComments.value = commentsByStance[d.stance];
-
-          // Position the comments overlay near the bubble
-          const rect = chartContainer.value.getBoundingClientRect();
-          const bubbleX = d.x + margin.left;
-          const bubbleY = d.y + margin.top;
-          const bubbleRadius = sizeScale(d.count);
-
-          // Determine if we should position the panel to the left or right
-          const shouldPositionLeft = bubbleX > width / 2;
-
-          if (shouldPositionLeft) {
-            commentsPosition.left = `${bubbleX - bubbleRadius - 320}px`;
-          } else {
-            commentsPosition.left = `${bubbleX + bubbleRadius + 20}px`;
-          }
-
-          commentsPosition.top = `${Math.max(20, bubbleY - 100)}px`;
-          commentsPosition.width = `${Math.max(300, bubbleRadius * 3)}px`;
-        }
-      })
-      .on("mousemove", function (event) {
-        tooltip
-          .style("left", event.pageX + 10 + "px")
-          .style("top", event.pageY - 10 + "px");
-      })
-      .on("mouseleave", function () {
-        // Clear the bubble reference
-        hoveredBubble.value = null;
-
-        d3.select(this).attr("stroke-width", 1).attr("fill-opacity", 0.7);
-
-        tooltip.style("opacity", 0);
-
-        // Only hide comments if user isn't hovering the comments panel
-        if (!keepCommentsVisible.value) {
-          setTimeout(() => {
-            if (!keepCommentsVisible.value && !hoveredBubble.value) {
-              activeStance.value = "";
-            }
-          }, 300);
-        }
-      })
-      .on("click", function (event, d) {
-        // Navigate to detailed page for this stance
-        navigateToStancePage(d.stance);
-      });
-
-    // Add labels to larger bubbles
-    const labels = svg
-      .selectAll(".label")
-      .data(data)
-      .enter()
-      .append("text")
-      .attr("class", "label")
-      .attr("text-anchor", "middle")
-      .attr("fill", "white")
-      .attr("pointer-events", "none")
-      .attr("dy", ".35em")
-      .attr("font-size", (d) => Math.min(sizeScale(d.count) / 3, 12))
-      .text((d) =>
-        sizeScale(d.count) > 25 ? formatStance(d.stance).split(" ")[0] : ""
-      );
-
-    // Update positions on tick
-    simulation.on("tick", () => {
-      bubbles
-        .attr("cx", (d) => {
-          d.x = Math.max(
-            sizeScale(d.count),
-            Math.min(innerWidth - sizeScale(d.count), d.x)
-          );
-          return d.x;
-        })
-        .attr("cy", (d) => {
-          d.y = Math.max(
-            sizeScale(d.count),
-            Math.min(innerHeight - sizeScale(d.count), d.y)
-          );
-          return d.y;
-        });
-
-      labels.attr("x", (d) => d.x).attr("y", (d) => d.y);
-    });
-  };
-
-  // Render chart initially
+  // Initial render
   renderChart();
 
   // Add resize handler
@@ -415,6 +232,184 @@ onMounted(() => {
     if (tooltip) tooltip.remove();
   });
 });
+
+const renderChart = () => {
+  if (!chartContainer.value) return;
+
+  // Clear any existing SVG content
+  d3.select(chartContainer.value).selectAll("*").remove();
+
+  // Set dimensions
+  const width = chartContainer.value.clientWidth || 800;
+  const height = chartContainer.value.clientHeight || 600;
+  const margin = { top: 40, right: 40, bottom: 40, left: 40 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  // Create SVG
+  const svg = d3
+    .select(chartContainer.value)
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // Create color scale
+  const colorScale = d3
+    .scaleOrdinal()
+    .domain(data.map((d) => d.stance))
+    .range(data.map((d) => stanceColors[d.stance] || "#cccccc"));
+
+  // Create size scale for bubbles
+  const maxCount = d3.max(data, (d) => d.count);
+  const sizeScale = d3.scaleSqrt().domain([0, maxCount]).range([20, 120]);
+
+  // Create simulation
+  simulation = d3
+    .forceSimulation(data)
+    .force("x", d3.forceX(innerWidth / 2).strength(0.04))
+    .force("y", d3.forceY(innerHeight / 2).strength(0.05))
+    .force(
+      "collide",
+      d3.forceCollide((d) => sizeScale(d.count) + 2)
+    )
+    .force("charge", d3.forceManyBody().strength(-30));
+
+  //   // Create tooltip
+  //   tooltip = d3
+  //     .select("body")
+  //     .append("div")
+  //     .attr("class", "tooltip")
+  //     .style("position", "absolute")
+  //     .style("background-color", "white")
+  //     .style("border", "1px solid #ddd")
+  //     .style("border-radius", "4px")
+  //     .style("padding", "8px")
+  //     .style("box-shadow", "0 2px 4px rgba(0,0,0,0.1)")
+  //     .style("pointer-events", "none")
+  //     .style("opacity", 0)
+  //     .style("z-index", 10);
+
+  // Add bubbles
+  const bubbles = svg
+    .selectAll(".bubble")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("class", "bubble")
+    .attr("r", (d) => sizeScale(d.count))
+    .attr("fill", (d) => stanceColors[d.stance] || "#cccccc")
+    .attr("fill-opacity", 0.9)
+    .style("cursor", "pointer")
+    .on("mouseenter", function (event, d) {
+      // Store reference to indicate bubble is being hovered
+      hoveredBubble.value = d;
+
+      // Highlight the bubble
+      d3.select(this).attr("stroke-width", 2).attr("fill-opacity", 0.9);
+
+      //   // Show tooltip
+      //   tooltip.style("opacity", 1).html(`
+      //         <div style="font-weight: bold">${formatStance(d.stance)}</div>
+      //         <div>Count: ${d.count}</div>
+      //       `);
+
+      // Show comments for this stance
+      if (commentsByStance[d.stance]) {
+        activeStance.value = d.stance;
+        activeComments.value = commentsByStance[d.stance];
+
+        // Position the comments overlay near the bubble
+        const rect = chartContainer.value.getBoundingClientRect();
+        const bubbleX = d.x + margin.left;
+        const bubbleY = d.y + margin.top;
+        const bubbleRadius = sizeScale(d.count);
+
+        // Determine if we should position the panel to the left or right
+        const shouldPositionLeft = bubbleX > width / 2;
+
+        if (shouldPositionLeft) {
+          commentsPosition.left = `${bubbleX - bubbleRadius - 320}px`;
+        } else {
+          commentsPosition.left = `${bubbleX + bubbleRadius + 20}px`;
+        }
+
+        commentsPosition.top = `${Math.max(20, bubbleY - 100)}px`;
+        commentsPosition.width = `${Math.max(300, bubbleRadius * 3)}px`;
+      }
+    })
+    .on("mousemove", function (event) {
+      tooltip
+        .style("left", event.pageX + 10 + "px")
+        .style("top", event.pageY - 10 + "px");
+    })
+    .on("mouseleave", function () {
+      // Clear the bubble reference
+      hoveredBubble.value = null;
+
+      d3.select(this).attr("stroke-width", 1).attr("fill-opacity", 0.7);
+
+      tooltip.style("opacity", 0);
+
+      // Only hide comments if user isn't hovering the comments panel
+      if (!keepCommentsVisible.value) {
+        setTimeout(() => {
+          if (!keepCommentsVisible.value && !hoveredBubble.value) {
+            activeStance.value = "";
+          }
+        }, 300);
+      }
+    })
+    .on("click", function (event, d) {
+      // Navigate to detailed page for this stance
+      navigateToStancePage(d.stance);
+    });
+
+  // Add labels to larger bubbles
+  const getTextColor = (stance) => {
+    return ["Justification_Narrative"].includes(stance) ? "#636363" : "#fff";
+  };
+
+  const labels = svg
+    .selectAll(".label")
+    .data(data)
+    .enter()
+    .append("text")
+    .attr("class", "label")
+    .attr("text-anchor", "middle")
+    .attr("alignment-baseline", "middle")
+    .attr("fill", (d) => getTextColor(d.stance))
+    .each(function (d) {
+      if (sizeScale(d.count) > 25) {
+        const words = stanceDisplayNames[d.stance].split(" ");
+
+        d3.select(this)
+          .append("tspan")
+          .attr("x", 0)
+          .attr("dy", "0em")
+          .text(words[0]);
+
+        d3.select(this)
+          .append("tspan")
+          .attr("x", 0)
+          .attr("dy", "1.1em")
+          .text(words.slice(1).join(" "));
+      }
+    });
+
+  // Update positions on tick
+  simulation.on("tick", () => {
+    bubbles.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+
+    labels.attr("transform", (d) => `translate(${d.x},${d.y})`);
+  });
+};
+
+const getActiveCount = () => {
+  const activeData = data.find((d) => d.stance === activeStance.value);
+  return activeData ? activeData.count.toLocaleString() : 0;
+};
 </script>
 
 <style scoped>
@@ -441,7 +436,7 @@ onMounted(() => {
   border-radius: 0.5rem;
   padding: 2px;
   top: 10%;
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(228, 228, 228);
   position: relative;
 }
 
@@ -455,7 +450,7 @@ onMounted(() => {
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
   width: 100%;
-  max-width: 36rem;
+  max-width: 50px;
   /* margin-top: 1rem; */
   font-size: 0.875rem;
 }
@@ -500,7 +495,7 @@ onMounted(() => {
   background-color: rgba(255, 255, 255, 0.95);
   border-radius: 0.5rem;
   padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
   z-index: 5;
   max-height: 400px;
   overflow: hidden;
@@ -512,12 +507,20 @@ onMounted(() => {
   font-weight: bold;
   margin-bottom: 0.5rem;
   text-align: center;
-  border-bottom: 1px solid #e2e8f0;
   padding-bottom: 0.5rem;
 }
 
+.stance-count {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-family: "aktiv-grotesk", sans-serif;
+}
+
 .comments-container {
-  overflow-y: auto;
+  overflow-y: hidden;
+  overflow-x: hidden;
   max-height: 320px;
   position: relative;
 }
@@ -536,7 +539,6 @@ onMounted(() => {
   color: #3182ce;
   margin-top: 0.5rem;
   cursor: pointer;
-  border-top: 1px solid #e2e8f0;
   padding-top: 0.5rem;
 }
 
@@ -553,5 +555,33 @@ onMounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.overlay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.comment-overlay {
+  position: fixed;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  pointer-events: auto;
+  max-height: 300px;
+  overflow: hidden;
+}
+
+.bubble-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 </style>

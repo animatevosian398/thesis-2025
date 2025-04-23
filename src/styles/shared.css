@@ -1,0 +1,179 @@
+/* Government Text Styles */
+.government-text {
+  width: 100%;
+  padding-right: 20px;
+  line-height: 1.6;
+  font-size: 18px;
+  text-align: left;
+  font-family: "Georgia", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.government-text p {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.source-note {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 0.1em;
+  margin-bottom: 2.5em;
+  text-align: left;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.source-note a {
+  color: grey;
+  text-decoration: none;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.source-note a:hover {
+  text-decoration: underline;
+}
+
+.government-text {
+  width: 100%;
+  padding-right: 20px;
+  line-height: 1.6;
+  font-size: 18px;
+  text-align: left;
+  font-family: "Georgia", serif;
+  /* font-family: "Times New Roman", Times, serif; */
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+h3 {
+  font-size: 20px;
+  background-color: white;
+  font-family: "Vollkorn", serif;
+  margin-bottom: 8px;
+  color: #333;
+  text-align: left;
+  position: sticky;
+  top: 0;
+}
+
+.government-text p {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+/* Base highlight styles with lower opacity */
+.highlight {
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+  padding: 2px 0;
+  border-radius: 2px;
+}
+
+/* The default state with lower opacity */
+.highlight-explicit-denial {
+  background-color: rgba(237, 45, 42, 0.62);
+}
+
+.highlight-reconciliation {
+  background-color: #527c7995;
+}
+
+.highlight-competitive-victimhood {
+  background-color: rgba(131, 157, 43, 0.4);
+}
+
+.highlight-procedural {
+  background-color: rgba(93, 58, 108, 0.4);
+}
+
+.highlight-justification {
+  background-color: rgba(255, 153, 0, 0.4);
+}
+
+.highlight-minimization {
+  background-color: rgba(135, 178, 194, 0.4);
+}
+
+/* Hover state with higher opacity */
+.highlight-active.highlight-explicit-denial {
+  background-color: rgba(229, 57, 53, 0.8);
+}
+
+.highlight-active.highlight-reconciliation {
+  background-color: rgba(82, 124, 121, 0.8);
+}
+
+.highlight-active.highlight-competitive-victimhood {
+  background-color: rgba(131, 157, 43, 0.8);
+}
+
+.highlight-active.highlight-procedural {
+  background-color: rgba(93, 58, 108, 0.8);
+  color: white;
+}
+
+.highlight-active.highlight-justification {
+  background-color: rgba(255, 153, 0, 0.8);
+}
+
+.highlight-active.highlight-minimization {
+  background-color: rgba(135, 178, 194, 0.8);
+}
+
+/* Selected/clicked state with full opacity */
+.highlight-selected.highlight-explicit-denial {
+  background-color: rgba(229, 57, 53, 1);
+  color: white;
+}
+
+.highlight-selected.highlight-reconciliation {
+  background-color: #527c79be;
+  color: white;
+}
+
+.highlight-selected.highlight-competitive-victimhood {
+  background-color: rgba(131, 157, 43, 0.8);
+}
+
+.highlight-selected.highlight-procedural {
+  background-color: rgba(93, 58, 108, 0.8);
+  color: white;
+}
+
+.highlight-selected.highlight-justification {
+  background-color: rgba(255, 153, 0, 0.8);
+}
+
+.highlight-selected.highlight-minimization {
+  background-color: rgba(135, 178, 194, 0.8);
+}
+
+.source-note {
+  font-size: 0.85em;
+  color: #6e2424;
+  margin-top: 0.1em;
+  margin-bottom: 2em;
+  text-align: left;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.source-note a {
+  color: grey;
+  text-decoration: none;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.source-note a:hover {
+  text-decoration: underline;
+}
+
+.source-note a {
+  color: grey;
+}

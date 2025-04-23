@@ -1,15 +1,36 @@
 <template>
   <Navbar />
   <router-view></router-view>
+  <StanceLegend />
 </template>
 
 <script setup>
 import Navbar from "./components/Navbar.vue";
+import StanceLegend from "./components/StanceLegend.vue";
 </script>
 
 <style>
+html,
 body {
-  overflow-y: scroll;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+.router-view {
+  height: calc(100vh - var(--nav-height));
+  overflow: hidden;
 }
 </style>
 

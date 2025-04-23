@@ -47,7 +47,7 @@ const router = createRouter({
       component: HeadlinesFrame,
     },
     {
-      path: "/stance-categories",
+      path: "/StanceCategories",
       name: "stance-categories",
       component: StanceCategories,
     },
@@ -101,7 +101,7 @@ const router = createRouter({
       name: "Framing",
       component: Framing,
     },
-    { path: "/BubbleChart", name: "BubbleChart", component: BubbleChart },
+    { path: "/bubble-chart", name: "bubble-chart", component: BubbleChart },
     {
       path: "/stance/:stance",
       name: "stance-details",

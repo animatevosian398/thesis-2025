@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- <h3>{{ documentData.title }}</h3> -->
-    <p class="source-note">
+    <!-- <p class="source-note">
       Published by
       <a :href="documentData.sourceUrl" target="_blank">{{
         documentData.source
       }}</a>
-    </p>
+    </p> -->
 
-    <div class="government-text" @mouseleave="onMouseLeave">
+    <div class="government-text">
       <p>
         <!-- <span
           class="highlight highlight-explicit-denial"
@@ -122,13 +122,17 @@ export default {
 </script>
 
 <style scoped>
+/* @import "./styles/shared.css"; */
+/* @import "./styles/shared.css"; */
+
 .government-text {
   width: 100%;
   padding-right: 20px;
   line-height: 1.6;
   font-size: 18px;
   text-align: left;
-  font-family: "Times New Roman", Times, serif;
+  font-family: "Georgia", serif;
+  /* font-family: "Times New Roman", Times, serif; */
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
@@ -239,12 +243,23 @@ h3 {
   background-color: rgba(135, 178, 194, 1);
 }
 
-.source-note,
-.footnote {
+.source-note {
   font-size: 0.85em;
-  color: #666;
+  color: #d61717;
   margin-top: 0.1em;
+  margin-bottom: 2em;
   text-align: left;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.source-note a {
+  color: grey;
+  text-decoration: none;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.source-note a:hover {
+  text-decoration: underline;
 }
 
 .source-note a {
