@@ -14,11 +14,17 @@
       </div>
     </div>
   </div>
-  <Bg1 @scrollToBg2="scrollToBg2" />
-  <Bg2 />
-  <Bg3 />
-  <MediaCoveragePast />
-  <Framing />
+  <div class="home-container">
+    <Bg1 @scrollToBg2="scrollToBg2" />
+    <div id="bg2-section">
+      <Bg2 @scrollToBg3="scrollToBg3" />
+    </div>
+    <div id="bg3-section">
+      <Bg3 />
+    </div>
+    <MediaCoveragePast />
+    <Framing />
+  </div>
 </template>
 
 <script setup>
@@ -35,8 +41,19 @@ const scrollToBackground = () => {
 };
 
 const scrollToBg2 = () => {
-  const section = document.getElementById("bg2-section");
-  section?.scrollIntoView({ behavior: "smooth" });
+  const section = document.querySelector("#bg2-section");
+  section?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+};
+
+const scrollToBg3 = () => {
+  const section = document.querySelector("#bg3-section");
+  section?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
 };
 </script>
 
@@ -144,5 +161,43 @@ button:hover {
   visibility: visible;
   opacity: 1;
   color: white;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  height: 100%;
+  overflow-y: visible;
+}
+
+.home-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+.content-section {
+  position: relative;
+  height: auto;
+  min-height: 100vh;
+  overflow: visible;
+  z-index: 1;
+}
+
+.component-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  z-index: 2;
+}
+
+#bg2-section,
+#bg3-section {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
 }
 </style>

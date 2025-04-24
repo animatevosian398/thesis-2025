@@ -14,23 +14,24 @@ html,
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  overflow: hidden;
+  height: 100%;
+  overflow-y: auto !important; /* Allow scrolling */
+  overflow-x: hidden;
 }
 
 #app {
   width: 100%;
-  height: 100vh;
+  height: auto;
   margin: 0;
   padding: 0;
-  background-color: white;
-  overflow: hidden;
+  background-color: black;
+  overflow: visible !important; /* Allow content to be visible */
   position: relative;
 }
 
 .router-view {
-  height: calc(100vh - var(--nav-height));
-  overflow: hidden;
+  height: auto;
+  overflow: visible;
 }
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="background-section" ref="bgSection">
+  <div id="bg3-section" class="background-section" ref="bgSection">
     <div class="image-container" ref="imageContainer">
       <!-- <img
         src="/src/assets/images/un-genocide-convention.jpg"

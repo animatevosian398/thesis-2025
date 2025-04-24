@@ -85,7 +85,6 @@ onMounted(() => {
   color: white;
   position: relative;
   padding: 80px 0 0 8%; /* Increased top padding */
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   scroll-margin-top: 0;
@@ -142,7 +141,7 @@ onMounted(() => {
   padding: 10px;
   flex-direction: column;
   justify-content: space-between; /* Change to space-between */
-  min-height: 100%; /* Ensure full height */
+  min-height: auto; /* Changed from 100% */
   overflow: visible; /* Allow content to be visible */
 }
 
@@ -206,5 +205,17 @@ onMounted(() => {
 .container {
   overflow-y: auto;
   height: 100%;
+}
+
+.background-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: visible;
+}
+
+.router-view {
+  height: auto;
+  overflow-y: visible;
 }
 </style>

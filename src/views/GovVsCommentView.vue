@@ -3,7 +3,7 @@
     <div class="header">
       <div class="document-header">
         <div class="title">
-          <h3>Select a Document:</h3>
+          <!-- <h3>Select a Document:</h3> -->
           <div class="select-wrapper">
             <select
               class="document-title-select"
@@ -55,7 +55,6 @@
           :documentData="activeDocument"
           @showRelatedComments="showRelatedComments"
           @showAllComments="showAllComments"
-          @mouseleave="handleMouseLeave"
         />
         <!-- Add instructlon message -->
       </div>
@@ -155,8 +154,10 @@
 </template>
 
 <script>
+import { markRaw } from "vue";
+
 import Papa from "papaparse";
-import GovernmentText from "../components/GovernmentText.vue";
+import GovernmentText from "../components/government-documents/GovernmentText.vue";
 import ErdoganLetter2025 from "../components/government-documents/ErdoganLetter2025.vue";
 import JustinMcCarthy from "../components/government-documents/JustinMcCarthy.vue";
 import stancePhrases from "../assets/stancePhrases.json";
@@ -201,7 +202,7 @@ export default {
           source: "Republic of Turkey Ministry of Foreign Affairs",
           sourceUrl:
             "https://www.mfa.gov.tr/the-events-of-1915-and-the-turkish-armenian-controversy-over-history_-an-overview.en.mfa",
-          component: GovernmentText, // Direct component reference
+          component: markRaw(GovernmentText), // Direct component reference
         },
         {
           id: "erdogan-letter-2025",
@@ -210,7 +211,7 @@ export default {
           source: "Republic of Turkey Ministry of Foreign Affairs",
           sourceUrl:
             "The Letter President Recep Tayyip Erdoğan Sent to Armenian Patriarch of Turkey, Reverend Sahak Maşalyan (2025)",
-          component: ErdoganLetter2025, // Direct component reference
+          component: markRaw(ErdoganLetter2025), // Direct component reference
         },
 
         {
@@ -219,7 +220,7 @@ export default {
           source: "Republic of Turkey Ministry of Foreign Affairs",
           sourceUrl:
             "https://www.mfa.gov.tr/presentation-made-by-prof_-justin-mccarthy-_seminar-on-turkish-armenian-relations-organized-by-the-democratic-principles-association-15-march-2001-_istanbul_.en.mfa",
-          component: JustinMcCarthy, // Direct component reference
+          component: markRaw(JustinMcCarthy), // Direct component reference
         },
         {
           id: "anadolu-agency-counter",
@@ -228,12 +229,13 @@ export default {
           source: "by Diyar Güldoğan of Anadolu Agency (April 25, 2024)",
           sourceUrl:
             "https://www.aa.com.tr/en/turkiye/turkish-community-in-washington-holds-counter-protest-against-armenian-demonstrators-over-1915-events/3201645",
-          component: AnadoluAgencyCounter,
+          component: markRaw(AnadoluAgencyCounter),
         },
       ],
       activeDocument: null, // Track which document is currently selected
     };
   },
+
   computed: {
     visibleComments() {
       // If the active stance is "all", show all comments
@@ -339,6 +341,7 @@ export default {
                     videoSource: {
                       title: row.video_title || "YouTube Video",
                       url: `https://www.youtube.com/watch?v=${row.video_id}`,
+                      url: `https://www.youtube.com/watch?v=${row.video_id}`,
                     },
                     date: row.publish_date
                       ? new Date(row.publish_date).toLocaleDateString()
@@ -385,13 +388,6 @@ export default {
       this.activeStance = "all"; // Reset to show all comments instead of defaulting to explicit denial
     },
 
-    // handleMouseLeave() {
-    //   // Only reset if not locked
-    //   if (!this.isLocked) {
-    //     this.showAllComments();
-    //   }
-    // },
-
     formatStanceForDisplay(stance) {
       if (!stance || stance === "all") return "All Comments";
       return stance.replace(/_/g, " ");
@@ -409,16 +405,24 @@ export default {
       // Format capitalized stance for display
       return stance.toLowerCase().replace(/_/g, " ");
     },
+    // handleMouseLeave() {
+    //   console.log("Mouse left component");
+    // },
   },
 
   mounted() {
-    console.log("Component mounted");
+    const defaultDoc = this.documents.find((doc) => doc.id === "turkey-mfa");
+
+    console.log("GovVsCommentView component mounted");
 
     // Set the first document as active by default
-    this.activeDocument = this.documents[0];
+    this.activeDocument = defaultDoc;
+    console.log("Active document:", this.activeDocument?.title);
+    this.activeStance = "all";
 
     // Load the CSV data
     this.loadCSV();
+    console.log("Number of comments loaded:", this.commentsData.length);
   },
 };
 </script>
@@ -427,22 +431,12 @@ export default {
 .document-title {
   font-size: 20px;
   margin: 0;
-  text-align: left;
+  text-align: center;
   font-weight: 500;
   top: 0;
   background-color: rgb(255, 255, 255);
 }
-.document-title h3 {
-  font-size: 20px;
-  /* font-weight: 500; */
-  margin: 0;
-  top: 0;
-  z-index: 5;
-  width: 100;
-  text-align: left;
-  font-family: "Georgia", serif;
-  line-height: 1.4;
-}
+
 .document-title h3,
 .social-media-comments h3.social-media-side-title {
   font-size: 20px;
@@ -450,7 +444,7 @@ export default {
   margin-bottom: 10px;
   position: sticky;
   padding: 8px 0;
-  text-align: left;
+  text-align: center;
   font-family: "Georgia", serif;
   line-height: 1.4;
   height: 35px; /* Fixed height to ensure alignment */
@@ -459,8 +453,10 @@ export default {
 
 /* Add spacing for the source */
 .document-title > div {
-  margin-top: 30px;
-  margin-bottom: 15px; /* Add more space below the source */
+  margin-top: 12px;
+  text-align: center;
+  padding-bottom: 20px;
+  margin-bottom: 36px; /* Add more space below the source */
 }
 .document-link {
   font-size: 0.8rem;
@@ -481,7 +477,7 @@ export default {
   padding: 10px;
   font-size: 20px;
   color: #000000;
-  text-align: center;
+  text-align: left;
   /* font-family: "Vollkorn", serif; */
 }
 
@@ -506,10 +502,10 @@ export default {
   gap: 15px;
   align-items: center;
   color: black;
-  margin-bottom: 8px; /* Reduced from 15px */
-  padding-bottom: 5px; /* Reduced from 10px */
+  margin-bottom: 12px; /* Reduced from 15px */
+  padding-bottom: 15px; /* Reduced from 10px */
   width: 100%; /* Ensure full width */
-  text-align: center; /* Center text */
+  text-align: left; /* Center text */
   /* border-bottom: black 1px solid; */ /*for divide between headers and bottom text*/
 }
 
@@ -527,7 +523,7 @@ export default {
   /* font-family: "Vollkorn", serif; */
   font-family: "Georgia", serif;
   color: #333;
-  text-align: center;
+  text-align: left;
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -564,7 +560,7 @@ export default {
   font-family: "General Sans", sans-serif;
   color: #333;
   margin-bottom: 0px;
-  text-align: center;
+  text-align: left;
   display: flex;
   flex-direction: column; /* Change to column layout */
   align-items: center; /* Center items */
@@ -574,10 +570,11 @@ export default {
 .sections {
   display: flex;
   /* border-top: 1px solid rgba(0, 0, 0, 0.471); */
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 0;
   /* border-bottom: 1px solid rgba(0, 0, 0, 0.471); */
   justify-content: space-between;
+  width: 100%;
+  margin-top: 50px;
 }
 
 .section-label {
@@ -693,6 +690,7 @@ export default {
   font-size: 13px;
   margin-bottom: 5px;
   padding-left: 10px;
+  text-align: center;
   font-family: "Roboto", sans-serif;
 }
 
@@ -915,19 +913,23 @@ body,
   cursor: pointer;
   padding: 10px 30px 10px 0; /* Added right padding for arrow */
   margin-bottom: 8px;
+  line-height: 1.4;
+  min-height: 50px; /* Ensure height for wrapped text */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   white-space: nowrap;
-  overflow: hidden;
+  overflow: visible;
   text-overflow: ellipsis;
 }
 
 .select-wrapper {
   position: relative;
   width: 100%;
+  top: 60px;
   margin: 0 auto;
   overflow: visible;
+  min-height: 60px;
 }
 
 .document-title-select:focus {
@@ -974,7 +976,7 @@ body,
   font-family: "Vollkorn", serif;
   color: #333;
   width: 100%;
-  text-align: left;
+  text-align: center;
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: white;
@@ -994,7 +996,7 @@ body,
   width: 80%;
   max-width: 600px;
   margin: 0 auto;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .select-arrow {
@@ -1027,7 +1029,7 @@ body,
   font-size: 20px;
   margin: 0;
   position: sticky;
-  text-align: left;
+  text-align: center;
   font-family: "Georgia", serif;
   line-height: 1.4;
   white-space: normal; /* Allow text to wrap */

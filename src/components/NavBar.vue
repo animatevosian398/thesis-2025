@@ -18,7 +18,7 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/GovVsComment"
-              >Government Vs. Public Discourse</a
+              >Government + Public Discourse</a
             >
           </li>
           <li class="nav-item">
@@ -60,7 +60,7 @@
 }
 
 :deep(.app-container) {
-  padding-top: 56px; /* Adjust based on your navbar's height */
+  padding-top: 50px; /* Adjust based on your navbar's height */
 }
 
 .nav-link {

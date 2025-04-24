@@ -368,14 +368,14 @@
 <script>
 export default {
   props: {
-    documents: {
-      type: Array,
-      required: true,
-    },
-    activeDocument: {
+    documentData: {
       type: Object,
       required: true,
     },
+    // activeDocument: {
+    //   type: Object,
+    //   required: true,
+    // },
   },
   name: "GovernmentText",
   data() {
@@ -399,15 +399,7 @@ export default {
     },
 
     toggleActiveStance(stance) {
-      if (this.activeStance === stance) {
-        // If clicking the same stance again, deselect it
-        this.activeStance = null;
-        this.$emit("showAllComments");
-      } else {
-        // Otherwise, select the new stance
-        this.activeStance = stance;
-        this.$emit("showRelatedComments", stance);
-      }
+      this.$emit("showRelatedComments", stance);
     },
   },
 };
@@ -431,12 +423,11 @@ export default {
 h3 {
   font-size: 20px;
   background-color: white;
-  /* font-family: "Vollkorn", serif; */
+  font-family: "Vollkorn", serif;
   margin-bottom: 8px;
   color: #333;
   text-align: left;
   position: sticky;
-  overflow: visible;
   top: 0;
 }
 

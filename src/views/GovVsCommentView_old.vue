@@ -101,7 +101,7 @@
 
 <script>
 import Papa from "papaparse";
-import GovernmentText from "../components/GovernmentText.vue";
+import GovernmentText from "../components/government-documents/GovernmentText.vue";
 import stancePhrases from "../assets/stancePhrases.json";
 
 export default {

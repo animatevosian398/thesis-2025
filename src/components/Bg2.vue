@@ -1,5 +1,5 @@
 <template>
-  <div id="background-section-2" class="background-section-2" ref="bg2Section">
+  <div id="bg2-section" class="background-section-2" ref="bg2Section">
     <h1 class="backgroundTitle" ref="title">Post-1915</h1>
     <h3 ref="content">
       Turkey's official stance on the genocide evolved from silence, to a more
