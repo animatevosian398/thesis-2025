@@ -440,23 +440,29 @@ export default {
 .document-title h3,
 .social-media-comments h3.social-media-side-title {
   font-size: 20px;
-  margin-top: 10;
-  margin-bottom: 10px;
+  margin: 0 0 8px 0;
   position: sticky;
   padding: 8px 0;
   text-align: center;
   font-family: "Georgia", serif;
   line-height: 1.4;
-  height: 35px; /* Fixed height to ensure alignment */
+  height: auto; /* Remove fixed height */
+  min-height: 35px; /* Min height instead of fixed */
   align-items: center;
+  background-color: white;
+  z-index: 100;
+  top: 0;
 }
 
 /* Add spacing for the source */
 .document-title > div {
-  margin-top: 12px;
+  position: sticky;
+  top: 30px; /* Position below the title */
+  background-color: white;
+  z-index: 95; /* Lower than title but higher than content */
+  margin-top: 0;
+  padding: 0px 0 20px 0;
   text-align: center;
-  padding-bottom: 20px;
-  margin-bottom: 36px; /* Add more space below the source */
 }
 .document-link {
   font-size: 0.8rem;
@@ -464,6 +470,9 @@ export default {
   margin-top: 10px;
   text-decoration: none;
   font-family: "Georgia", serif;
+  display: block;
+  position: relative;
+  z-index: 90;
 
   /* font-family: "Times New Roman", Times, serif; */
 }
@@ -1014,11 +1023,6 @@ body,
   background: none;
 }
 
-/* .source-note {
-  margin-top: 4px;
-  font-size: 0.85em;
-  color: #666;
-} */
 /* Ensure the last items in each container have margin to create space */
 #comments-container .comment-card:last-child,
 .government-text-container > div:last-child {
@@ -1041,6 +1045,9 @@ body,
 .document-title {
   width: 100%;
   margin-bottom: 15px;
+  margin: 0;
+  z-index: 10;
+  top: 0;
   position: sticky;
 }
 </style>
