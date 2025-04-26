@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom"> -->
     <div class="container">
-      <a class="navbar-brand" href="/">[Narratives of Truth and Denial]</a>
+      <a class="navbar-brand" href="/">Narratives of Truth and Denial</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -22,7 +22,7 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/Archive.vue">Archive</a>
+            <a class="nav-link" href="/Archive">Archive</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/bubble-chart">Bubble Chart</a>
@@ -50,26 +50,79 @@
   right: 0;
   width: 100%;
   z-index: 1000;
-  /* background-color: #00000037 !important; */
-  /* border-bottom: 1px solid rgba(0, 0, 0, 0.1); */
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: white;
 }
 
+/* Container for navbar content */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px; /* Set a consistent max width */
+  padding: 0 24px; /* Consistent padding on both sides */
+  margin: 0 auto;
+}
+
+/* Brand styling - aligned far left */
 .navbar-brand {
-  margin-left: 0;
   color: #333;
+  margin-right: auto; /* Push brand to the far left */
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  margin-left: -28%;
+  font-weight: 500;
+  text-decoration: none;
 }
 
-:deep(.app-container) {
-  padding-top: 50px; /* Adjust based on your navbar's height */
+/* Navigation items - aligned right */
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-item {
+  margin-left: 15px; /* Space between nav items */
 }
 
 .nav-link {
-  position: relative;
-  text-decoration: none;
+  padding: 0.5rem 0.5rem;
+  font-size: 0.9rem;
   color: #333;
-  transition: color 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap; /* Prevent wrapping */
+  position: relative; /* This is critical for absolute positioning of ::after */
+  display: inline-block; /* This ensures the link only takes up necessary space */
 }
 
+/* For mobile responsiveness */
+@media (max-width: 992px) {
+  .container {
+    flex-wrap: wrap;
+  }
+
+  .navbar-nav {
+    margin-top: 0.5rem;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .nav-item {
+    margin-left: 10px;
+  }
+
+  .nav-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Underline animation */
 .nav-link::after {
   content: "";
   position: absolute;
@@ -79,9 +132,13 @@
   left: 0;
   background-color: #333;
   transform: scaleX(0);
+  transform-origin: bottom left;
   transition: transform 0.3s ease;
 }
-
+/* Active state */
+.router-link-active::after {
+  transform: scaleX(1);
+}
 .nav-link:hover {
   color: #000;
 }
@@ -93,5 +150,53 @@
 /* Active state */
 .router-link-active::after {
   transform: scaleX(1);
+}
+
+.select-wrapper {
+  position: relative;
+  width: 100%;
+  top: 60px;
+  margin: 0 auto;
+}
+
+.document-title-select {
+  font-family: "Georgia", serif;
+  color: #333;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: white;
+  cursor: pointer;
+  padding: 20px 30px 10px 0px; /* Added right padding for arrow */
+  margin-bottom: 30px;
+  line-height: 1.4;
+  min-height: 70px; /* Increased height for wrapped text */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  white-space: normal; /* Changed from nowrap to normal to allow wrapping */
+  overflow: visible;
+  text-overflow: ellipsis;
+  height: auto; /* Allow height to adjust based on content */
+}
+
+/* Style for option elements in dropdown */
+option {
+  white-space: normal; /* Allow options to wrap */
+  line-height: 1.4;
+  padding: 10px;
+}
+
+/* Add custom arrow indicator */
+.select-wrapper::after {
+  content: "▼";
+  font-size: 0.7em;
+  color: #666;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 </style>

@@ -1,8 +1,18 @@
 <template>
   <div class="chart-container">
-    <h2 class="chart-title">Narratives</h2>
+    <h2 class="chart-title">
+      Narratives of Armenian Genocide Discourse Online
+    </h2>
+    <h4>
+      The size of the bubble represents the number of comments out of the sample
+      of 10,000
+    </h4>
     <div class="chart-wrapper">
       <div ref="chartContainer" class="vis-container"></div>
+      <!-- Add disclaimer here -->
+      <div class="chart-disclaimer">
+        * Not found in Turkish government stances
+      </div>
 
       <!-- Comments overlay with hover detection -->
       <transition name="fade">
@@ -12,7 +22,6 @@
           :style="commentsPosition"
           @mouseenter="keepCommentsVisible = true"
           @mouseleave="handleCommentsLeave"
-          counts="{d.count}"
         >
           <h3 class="comments-title">{{ formatStance(activeStance) }}</h3>
           <div class="stance-count">{{ getActiveCount() }} comments</div>
@@ -39,20 +48,6 @@
         </div>
       </transition>
     </div>
-    <!-- <div class="legend-container">
-      <button
-        v-for="(item, index) in data"
-        :key="index"
-        class="legend-item"
-        @click="navigateToStancePage(item.stance)"
-      >
-        <div
-          class="legend-color"
-          :style="{ backgroundColor: getColor(item.stance, index) }"
-        ></div>
-        <span class="legend-text">{{ formatStance(item.stance) }}</span>
-      </button>
-    </div> -->
   </div>
 </template>
 
@@ -401,7 +396,6 @@ const renderChart = () => {
   // Update positions on tick
   simulation.on("tick", () => {
     bubbles.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
-
     labels.attr("transform", (d) => `translate(${d.x},${d.y})`);
   });
 };
@@ -412,7 +406,18 @@ const getActiveCount = () => {
 };
 </script>
 
-<style scoped>
+<style>
+#app {
+  background-color: white !important;
+  color: black;
+}
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
 .chart-container {
   display: flex;
   flex-direction: column;
@@ -421,28 +426,28 @@ const getActiveCount = () => {
   max-width: 1200px;
   margin: 0 auto;
   padding-top: 80px;
+  padding-bottom: 40px; /* Add padding at bottom */
+  background-color: white;
+  min-height: calc(100vh - 120px); /* Subtract header/footer height */
+  height: auto; /* Allow container to adjust to content */
+  overflow: visible; /* Ensure content doesn't get cut off */
 }
-
 .chart-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: white;
+  margin-bottom: 30px; /* Add margin to title */
 }
 
 .chart-wrapper {
   width: 100%;
-  border: 1px solid #e2e8f0;
   border-radius: 0.5rem;
   padding: 2px;
   top: 10%;
-  background-color: rgb(228, 228, 228);
   position: relative;
+  background-color: white;
 }
 
 .vis-container {
   width: 100%;
-  height: 600px;
+  height: 750px;
 }
 
 .legend-container {
@@ -508,6 +513,7 @@ const getActiveCount = () => {
   margin-bottom: 0.5rem;
   text-align: center;
   padding-bottom: 0.5rem;
+  background-color: transparent;
 }
 
 .stance-count {
@@ -583,5 +589,20 @@ const getActiveCount = () => {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+svg {
+  background-color: white;
+}
+
+.bubble-chart-container {
+  background-color: white;
+  width: 100%;
+  height: auto; /* Let it adjust to content */
+  min-height: 600px; /* Set a minimum height */
+  max-height: 80vh; /* Cap the height */
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
 }
 </style>

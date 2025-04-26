@@ -29,6 +29,7 @@ export const stanceColors = {
   Sympathy_Memorial_Commemorative: "#40414A",
   Apology: "#2738EC",
   Discussion_About_Denial: "#841A26",
+  //   Reconciliation_Discourse: "#005477",
   Reconciliation_Discourse: "#005477",
 };
 // #4CAE4F, recognition,
@@ -43,3 +44,4 @@ export const stanceColors = {
 // #40414A,sympathy
 // #2738EC,apology
 // #841A26, discussion denial
+//reconciliation

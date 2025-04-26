@@ -14,12 +14,12 @@
 // };
 
 export const stanceDisplayNames = {
-  Apology: "Apology",
-  Historical_Affirmation: "Armenian Genocide Recognition",
+  Apology: "Apology*",
+  Historical_Affirmation: "Armenian Genocide Recognition*",
   Competitive_Victimhood_Historical_Inversion: "Historical Inversion",
   Explicit_Denial: "Explicit Denial",
   Justification_Narrative: "Justification",
-  Personal_Testimony: "Personal Testimony",
+  Personal_Testimony: "Personal Testimony*",
   Contemporary_Comparison: "Modern Comparisons",
   Discussion_About_Denial: "Discussion of Denial",
   Minimization_Reframing: "Minimization & Reframing",

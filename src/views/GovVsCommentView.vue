@@ -38,15 +38,17 @@
     <div class="content-container" v-if="activeDocument">
       <!-- Government text section -->
       <div class="government-text-container">
-        <div class="document-title">
-          <h3>{{ activeDocument.title }}</h3>
-          <div>
-            <a
-              :href="activeDocument.sourceUrl"
-              target="_blank"
-              class="document-link"
-              >{{ activeDocument.source }}</a
-            >
+        <div class="header-and-source">
+          <div class="document-title">
+            <h3>{{ activeDocument.title }}</h3>
+            <div>
+              <a
+                :href="activeDocument.sourceUrl"
+                target="_blank"
+                class="document-link"
+                >{{ activeDocument.source }}</a
+              >
+            </div>
           </div>
         </div>
         <!-- Just keep the component -->
@@ -428,15 +430,6 @@ export default {
 </script>
 
 <style scoped>
-.document-title {
-  font-size: 20px;
-  margin: 0;
-  text-align: center;
-  font-weight: 500;
-  top: 0;
-  background-color: rgb(255, 255, 255);
-}
-
 .document-title h3,
 .social-media-comments h3.social-media-side-title {
   font-size: 20px;
@@ -456,23 +449,23 @@ export default {
 
 /* Add spacing for the source */
 .document-title > div {
-  position: sticky;
-  top: 30px; /* Position below the title */
+  position: relative;
+  top: 0px; /* Position below the title */
   background-color: white;
   z-index: 95; /* Lower than title but higher than content */
   margin-top: 0;
-  padding: 0px 0 20px 0;
+  padding: 0px 0 10px 0;
   text-align: center;
 }
 .document-link {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 10px;
+  font-size: 0.9rem;
+  margin-top: 0px;
   text-decoration: none;
   font-family: "Georgia", serif;
   display: block;
   position: relative;
   z-index: 90;
+  color: black;
 
   /* font-family: "Times New Roman", Times, serif; */
 }
@@ -506,6 +499,8 @@ export default {
 }
 .document-header {
   display: flex;
+  font-family: "Georgia", serif;
+
   flex-direction: column;
   align-items: baseline;
   gap: 15px;
@@ -516,14 +511,6 @@ export default {
   width: 100%; /* Ensure full width */
   text-align: left; /* Center text */
   /* border-bottom: black 1px solid; */ /*for divide between headers and bottom text*/
-}
-
-.document-header h3 {
-  font-size: 14px;
-  color: #717171;
-  margin: 0;
-  padding: 20px;
-  flex-shrink: 0;
 }
 
 .document-title-select {
@@ -579,7 +566,7 @@ export default {
 .sections {
   display: flex;
   /* border-top: 1px solid rgba(0, 0, 0, 0.471); */
-  padding: 10px 0;
+  padding: 20px 0;
   /* border-bottom: 1px solid rgba(0, 0, 0, 0.471); */
   justify-content: space-between;
   width: 100%;
@@ -920,8 +907,8 @@ body,
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: white;
   cursor: pointer;
-  padding: 10px 30px 10px 0; /* Added right padding for arrow */
-  margin-bottom: 8px;
+  padding: 20px 30px 10px 0px; /* Added right padding for arrow */
+  margin-bottom: 30px;
   line-height: 1.4;
   min-height: 50px; /* Ensure height for wrapped text */
   -webkit-appearance: none;
@@ -929,18 +916,18 @@ body,
   appearance: none;
   white-space: nowrap;
   overflow: visible;
-  text-overflow: ellipsis;
+  text-overflow: clip;
 }
 
 .select-wrapper {
   position: relative;
-  width: 100%;
-  top: 60px;
+  width: 80%;
+  max-width: 600px;
   margin: 0 auto;
   overflow: visible;
+  top: 65px;
   min-height: 60px;
 }
-
 .document-title-select:focus {
   outline: none;
   border-bottom-color: rgba(0, 0, 0, 0.3);
@@ -960,6 +947,7 @@ body,
   font-size: 16px;
   white-space: normal;
   padding: 10px;
+  max-width: none;
 }
 
 .social-media-comments h3 span.comment-count {
@@ -975,8 +963,16 @@ body,
   margin-left: 0px;
 }
 .social-media-comments h3.social-media-side-title {
+  font-size: 20px;
+  margin: 0;
+  padding: 8px 0;
+  position: sticky;
+  text-align: center;
   font-family: "Roboto", sans-serif;
-  margin-left: 9px;
+  line-height: 1.4;
+  background-color: white;
+  z-index: 100;
+  top: 0;
 }
 
 /* Most specific selector to override all others */
@@ -1000,14 +996,6 @@ body,
   line-height: 1.4;
 }
 
-.select-wrapper {
-  position: relative;
-  width: 80%;
-  max-width: 600px;
-  margin: 0 auto;
-  overflow: visible;
-}
-
 .select-arrow {
   position: absolute;
   right: 10px;
@@ -1021,6 +1009,7 @@ body,
 /* Remove any conflicting styles */
 .document-title-select {
   background: none;
+  white-space: normal; /* Allow text to wrap */
 }
 
 /* Ensure the last items in each container have margin to create space */
@@ -1039,15 +1028,21 @@ body,
   white-space: normal; /* Allow text to wrap */
   overflow: visible; /* Show all content */
   min-height: auto; /* Adjust height automatically */
-  padding: 10px 0;
+  padding: 0px 0 18px 0; /* Reduced bottom padding */
 }
 
 .document-title {
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 0px;
   margin: 0;
   z-index: 10;
+  padding-bottom: 10px;
   top: 0;
   position: sticky;
+}
+.header-and-source {
+  background-color: white;
+  position: sticky;
+  top: 0;
 }
 </style>

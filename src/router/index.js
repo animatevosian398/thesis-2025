@@ -108,6 +108,7 @@ const router = createRouter({
       component: StanceView,
       props: true,
     },
+    // { path: "/archive-table", name: "archive-table", component: ArchiveTable },
   ],
   // This ensures smooth scrolling to the hash destination
   scrollBehavior(to, from, savedPosition) {
