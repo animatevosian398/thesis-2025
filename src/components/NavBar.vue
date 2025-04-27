@@ -50,9 +50,9 @@
   right: 0;
   width: 100%;
   z-index: 1000;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding: 0.5rem 0;
   background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
 }
 
 /* Container for navbar content */
@@ -64,17 +64,18 @@
   max-width: 1200px; /* Set a consistent max width */
   padding: 0 24px; /* Consistent padding on both sides */
   margin: 0 auto;
+  box-sizing: border-box; /* Include padding in width calculations */
 }
 
 /* Brand styling - aligned far left */
 .navbar-brand {
   color: #333;
-  margin-right: auto; /* Push brand to the far left */
   padding: 0.5rem 0;
   font-size: 1rem;
-  margin-left: -28%;
   font-weight: 500;
   text-decoration: none;
+  margin-left: 0; /* Remove negative margin */
+  margin-right: 2rem; /* Add proper spacing between brand and nav items */
 }
 
 /* Navigation items - aligned right */
@@ -104,6 +105,12 @@
 @media (max-width: 992px) {
   .container {
     flex-wrap: wrap;
+    padding: 0 15px;
+  }
+
+  .navbar-brand {
+    margin-right: auto; /* Push to left */
+    font-size: 0.9rem; /* Slightly smaller */
   }
 
   .navbar-nav {
@@ -119,6 +126,25 @@
   .nav-link {
     padding: 0.25rem 0.5rem;
     font-size: 0.8rem;
+  }
+}
+
+/* Add specific mobile adjustments for smaller screens */
+@media (max-width: 576px) {
+  .navbar-brand {
+    font-size: 0.85rem;
+    width: 55%; /* Keep brand from wrapping too early */
+  }
+
+  .navbar-nav {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .nav-item {
+    margin-left: 0;
+    margin-right: 10px;
+    margin-bottom: 5px;
   }
 }
 

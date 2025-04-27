@@ -68,15 +68,43 @@ const commentsPosition = reactive({ left: "0px", top: "0px", width: "300px" });
 const keepCommentsVisible = ref(false);
 const hoveredBubble = ref(null);
 
+// Create a mapping between your data stance names and your exact file names
+const stanceToRoutePath = {
+  Historical_Affirmation: "HistoricalAffirmation",
+  Personal_Testimony: "PersonalTestimony",
+  Explicit_Denial: "ExplicitDenial",
+  Minimization_Reframing: "MinimizationReframing",
+  Justification_Narrative: "JustificationNarrative",
+  Contemporary_Comparison: "ContemporaryComparison",
+  Procedural_Deflection_Evidence_Archives: "ProceduralDeflection",
+  Competitive_Victimhood_Historical_Inversion: "HistoricalInversion",
+  Sympathy_Memorial_Commemorative: "SympathyMemorial",
+  Apology: "Apology",
+  Discussion_About_Denial: "DiscussionAboutDenial",
+  Reconciliation_Discourse: "ReconciliationDiscourse",
+};
+
 // Function to navigate to stance page
 const navigateToStancePage = (stance) => {
   // Navigate to the stance details page
   console.log("Navigating to stance:", stance);
 
-  router.push({
-    name: "stance-details",
-    params: { stance: stance },
-  });
+  // Get the correct route path for this stance
+  const routePath = stanceToRoutePath[stance];
+
+  if (routePath) {
+    // Navigate using the mapped path
+    router.push({
+      path: `/stance/${routePath}`,
+    });
+  } else {
+    console.error(`No mapping found for stance: ${stance}`);
+    // Fallback to generic stance view with parameter
+    router.push({
+      name: "stance-details",
+      params: { stance: stance },
+    });
+  }
 };
 
 // Sample comments for each stance

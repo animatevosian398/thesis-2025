@@ -1,7 +1,7 @@
 <template>
   <Navbar />
   <router-view></router-view>
-  <StanceLegend />
+  <!-- <StanceLegend /> -->
 </template>
 
 <script setup>
@@ -15,6 +15,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+
   overflow-y: auto !important; /* Allow scrolling */
   overflow-x: hidden;
 }
@@ -26,12 +27,16 @@ body {
   padding: 0;
   background-color: black;
   overflow: visible !important; /* Allow content to be visible */
-  position: relative;
 }
 
 .router-view {
   height: auto;
   overflow: visible;
+}
+.app-container {
+  margin: 0;
+  padding: 0;
+  height: auto;
 }
 </style>
 

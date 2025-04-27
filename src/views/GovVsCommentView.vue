@@ -486,13 +486,13 @@ export default {
 .content-container {
   display: flex;
   width: 100%;
-  height: calc(100vh - 200px);
-  margin: 0 0 40px 0;
+  height: calc(100vh - 220px); /* Adjust height calculation */
+  margin: 0 0 0px 0;
   padding: 0;
   gap: 2rem;
   background-color: white;
   box-sizing: border-box;
-  min-height: 80vh; /* Ensure there's enough height for scrolling */
+  min-height: 500px; /* Set a minimum height */
 }
 .government-text-container .document-header h3 {
   color: black;
@@ -552,7 +552,7 @@ export default {
   font-size: 25px;
   font-weight: bold;
   padding: 20px;
-  margin-top: 40px;
+  margin-top: 30px;
   font-family: "General Sans", sans-serif;
   color: #333;
   margin-bottom: 0px;
@@ -566,7 +566,7 @@ export default {
 .sections {
   display: flex;
   /* border-top: 1px solid rgba(0, 0, 0, 0.471); */
-  padding: 20px 0;
+  padding: 10px 0;
   /* border-bottom: 1px solid rgba(0, 0, 0, 0.471); */
   justify-content: space-between;
   width: 100%;
@@ -591,7 +591,8 @@ export default {
 .government-text-container {
   width: 55%;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding-bottom: 30px; /* Add padding at the bottom */
   max-height: 80vh; /* Set a maximum height to ensure scrolling */
   scrollbar-width: none; /* Firefox */

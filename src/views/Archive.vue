@@ -114,99 +114,97 @@
       <div class="comments-column">
         <!-- Search bar at top of comments section -->
         <div class="search-container">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Search 10,394 comments..."
-            class="search-input"
-            @input="handleSearch"
-          />
-          <button class="search-button" @click="handleSearch">
-            <svg
-              class="search-icon-svg"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="10" cy="10" r="7"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Results counter below search -->
-        <div class="results-counter">
-          <span>{{ filteredComments.length }} comments found</span>
-          <span v-if="filteredComments.length !== comments.length">
-            (filtered from {{ comments.length }} total)
-          </span>
+          <div class="search-row">
+            <input
+              type="text"
+              v-model="searchQuery"
+              placeholder="Search 10,394 comments..."
+              class="search-input"
+              @input="handleSearch"
+            />
+            <button class="search-button" @click="handleSearch">
+              <svg
+                class="search-icon-svg"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="10" cy="10" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+          <!-- Results counter below search -->
+          <div class="results-counter">
+            <span>{{ filteredComments.length }} comments found</span>
+            <span v-if="filteredComments.length !== comments.length"> </span>
+          </div>
         </div>
 
         <div v-if="isLoading" class="loading">
           <div class="loading-text">Loading comments...</div>
         </div>
 
-        <!-- Make this scrollable container -->
-        <div class="comments-container">
-          <div class="comments-grid">
-            <div
-              v-for="comment in filteredComments"
-              :key="comment.id"
-              class="comment-item"
-              :style="{
-                minHeight: `${Math.max(200, comment.emotionalStrength * 2)}px`,
-              }"
-            >
-              <div class="flex flex-col gap-4">
-                <div class="comment-header">
-                  <div class="comment-author">{{ comment.author }}</div>
-                  <div class="comment-date">{{ formatDate(comment.date) }}</div>
-                </div>
-                <div class="comment-content">
-                  {{ comment.content }}
-                </div>
-                <div class="comment-footer">
-                  <div class="meta-line">
-                    <div class="comment-tags">
-                      <span
-                        v-for="tag in comment.tags"
-                        :key="tag"
-                        class="comment-tag"
-                        :style="{
-                          backgroundColor: getTagColor(tag),
-                          color: getTextColorForTag(tag),
-                          borderColor: getTagColor(tag),
-                        }"
-                      >
-                        {{ tag.replace(/-/g, " ") }}
-                      </span>
-                    </div>
-
-                    <span class="video-source-text"
-                      >From video:
-                      <a
-                        v-if="comment.videoUrl"
-                        :href="comment.videoUrl"
-                        target="_blank"
-                        rel="noopener"
-                        class="video-link"
-                      >
-                        {{ comment.videoSource || "YouTube Video" }}
-                      </a>
-                      <span v-else>{{ comment.videoSource || "Unknown" }}</span>
+        <!-- <div class="comments-container"> -->
+        <div class="comments-grid">
+          <div
+            v-for="comment in filteredComments"
+            :key="comment.id"
+            class="comment-item"
+            :style="{
+              minHeight: `${Math.max(200, comment.emotionalStrength * 2)}px`,
+            }"
+          >
+            <div class="flex flex-col gap-4">
+              <div class="comment-header">
+                <div class="comment-author">{{ comment.author }}</div>
+                <div class="comment-date">{{ formatDate(comment.date) }}</div>
+              </div>
+              <div class="comment-content">
+                {{ comment.content }}
+              </div>
+              <div class="comment-footer">
+                <div class="meta-line">
+                  <div class="comment-tags">
+                    <span
+                      v-for="tag in comment.tags"
+                      :key="tag"
+                      class="comment-tag"
+                      :style="{
+                        backgroundColor: getTagColor(tag),
+                        color: getTextColorForTag(tag),
+                        borderColor: getTagColor(tag),
+                      }"
+                    >
+                      {{ tag.replace(/-/g, " ") }}
                     </span>
                   </div>
 
-                  <div class="comment-meta">
-                    <span
-                      >Emotion/Toxicity?: {{ comment.emotionalStrength }}%</span
+                  <span class="video-source-text"
+                    >From video:
+                    <a
+                      v-if="comment.videoUrl"
+                      :href="comment.videoUrl"
+                      target="_blank"
+                      rel="noopener"
+                      class="video-link"
                     >
-                    <span>Likes: {{ comment.likes }}</span>
-                  </div>
+                      {{ comment.videoSource || "YouTube Video" }}
+                    </a>
+                    <span v-else>{{ comment.videoSource || "Unknown" }}</span>
+                  </span>
+                </div>
+
+                <div class="comment-meta">
+                  <span
+                    >Emotion/Toxicity?: {{ comment.emotionalStrength }}%</span
+                  >
+                  <span>Likes: {{ comment.likes }}</span>
+                  <!-- </div> -->
                 </div>
               </div>
             </div>
@@ -596,7 +594,9 @@ a:hover {
   max-width: 100%;
   padding: 0 20px;
   width: 100%;
-  height: calc(100vh - 110px); /* Full height minus navbar */
+  height: calc(
+    100vh - 150px
+  ); /* Increased height - adjust the 150px as needed */
   overflow: hidden; /* Prevent overall scrolling */
 }
 
@@ -618,62 +618,38 @@ a:hover {
   padding-left: 0px;
   height: 100%; /* Take full height */
   display: flex;
+  overflow-y: auto;
+  position: relative;
   flex-direction: column;
-  background-color: white; /* Ensure white background */
+  background-color: white; /* Change from red to white */
 }
-
-/* Make the comments container scrollable with styled scrollbar */
 .comments-container {
   flex: 1;
   overflow-y: auto; /* Enable vertical scrolling */
-  height: 100%; /* Take remaining height */
-  padding-right: 10px; /* Room for scrollbar */
-  margin-bottom: 20px;
-  overflow-x: hidden;
-  background-color: white; /* White background for scrollbar area */
+  height: calc(100% - 80px); /* Account for search bar and results counter */
+  width: 100%;
+  padding-right: 10px;
+  background-color: white;
 }
-
-/* Custom scrollbar styling */
-.comments-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-.comments-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 1px;
-}
-
-.comments-container::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 1px;
-}
-
-.comments-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
 .comments-grid {
-  display: flex; /* Change from flex to grid */
+  display: flex;
   flex-direction: column;
-  /* grid-template-columns: repeat(2, 1fr); 2 columns */
-  /* gap: 20px; */
-  gap: 0.4rem;
+  gap: 1rem;
   width: 100%;
   padding: 20px;
 }
-
 .comment-item {
   background: white;
   padding: 1rem;
   position: relative;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
-  min-height: 200px;
+  min-height: 200px; /* Reduced height */
   width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  text-align: left; /* Ensure left alignment */
+  text-align: left;
 }
 
 /* Fix header layout */
@@ -692,7 +668,6 @@ a:hover {
   color: #333;
   font-size: 14px;
 }
-
 .comment-date {
   color: #606060;
   font-size: 12px;
@@ -701,7 +676,7 @@ a:hover {
 /* Content area */
 .comment-content {
   flex-grow: 1;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   padding-bottom: 6px;
   text-align: left;
 }
@@ -732,7 +707,6 @@ a:hover {
   gap: 4px;
   opacity: 0.8;
 }
-
 .comment-tag {
   border-radius: 4px;
   font-size: 0.7rem;
@@ -749,7 +723,6 @@ a:hover {
   color: #065fd4;
   text-decoration: none;
 }
-
 .video-link:hover {
   text-decoration: underline;
 }
@@ -759,12 +732,12 @@ a:hover {
     .main-content {
       flex-direction: column;
     }
-  
+
     .filters-column,
     .comments-column {
       width: 100%;
     }
-  
+
     .filters-column {
       width: 100%;
       padding-right: 0;
@@ -774,15 +747,17 @@ a:hover {
       margin-bottom: 1.5rem;
       padding-bottom: 1.5rem;
     }
-  
+
     .comments-grid {
       grid-template-columns: 1fr;
     }
-  
+
     .archive {
       padding-top: 60px;
     } */
-/* } */
+.archive {
+  padding-top: 60px;
+}
 
 /* Ensure proper spacing */
 .filter-section {
@@ -812,11 +787,9 @@ a:hover {
   opacity: 0.6;
   transition: opacity 0.2s ease;
 }
-
 .tag-button:hover {
   opacity: 0.7 !important;
 }
-
 .tag-button.active {
   opacity: 1 !important; /* Full opacity when active */
   font-weight: 500;
@@ -828,7 +801,6 @@ a:hover {
   width: 100%;
   color: black;
 }
-
 .sort-button {
   width: 100%;
   background: white;
@@ -854,7 +826,6 @@ a:hover {
   color: black;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 .sort-option {
   display: block;
   width: 100%;
@@ -864,13 +835,11 @@ a:hover {
   border: none;
   border-bottom: 1px solid #e5e5e5;
   cursor: pointer;
-  color: black;
 }
 
 .sort-option:last-child {
   border-bottom: none;
 }
-
 .sort-option.active {
   background-color: #f0f0f0;
   font-weight: 500;
@@ -879,7 +848,6 @@ a:hover {
 .arrow {
   font-size: 0.8rem;
 }
-
 /* Add styling for video links */
 .video-link {
   color: #065fd4; /* YouTube blue link color */
@@ -887,7 +855,6 @@ a:hover {
   text-decoration: none;
   transition: color 0.2s;
 }
-
 .video-link:hover {
   text-decoration: underline;
   color: #004499;
@@ -907,7 +874,6 @@ a:hover {
   gap: 8px;
   margin-bottom: 8px;
 }
-
 /* Footer layout */
 .comment-footer {
   margin-top: auto;
@@ -921,8 +887,8 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+  opacity: 0.8;
 }
-
 .comment-tag {
   padding: 2px 8px;
   border-radius: 4px;
@@ -946,7 +912,6 @@ a:hover {
   text-decoration: none;
   transition: color 0.2s;
 }
-
 .video-link:hover {
   text-decoration: underline;
   color: #004499;
@@ -962,27 +927,37 @@ a:hover {
   color: #606060;
 }
 
-/* Search bar styling */
 .search-container {
   display: flex;
-  margin-bottom: 10px;
-  width: 96%;
-  margin-top: 10px;
-  margin-left: 20px;
-}
-
-.search-input {
-  flex: 1;
-  height: 38px;
-  padding: 0 12px;
-  border: 1px solid grey;
-  border-radius: 1px 0 0 1px;
-  font-size: 14px;
-  font-family: "Space Mono", monospace;
+  position: sticky;
+  top: 0;
+  z-index: 100;
   background-color: white;
-  color: black;
+  padding: 10px 0;
+  width: 96%;
+  margin: 0 0 5px 20px;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #f0f0f0;
 }
-
+.search-button {
+  width: 40px;
+  height: 38px;
+  background: white;
+  border: 1px solid #aaa;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+/* Add a wrapper div for the search row if needed */
+.search-row {
+  display: flex;
+  width: 100%;
+}
 .search-button {
   width: 40px;
   height: 38px;
@@ -996,15 +971,9 @@ a:hover {
   justify-content: center;
 }
 
-.search-button:hover {
-  background: black;
-  color: white;
-}
-
 .search-icon {
   font-size: 16px;
 }
-
 .search-input:focus,
 .search-button:focus {
   outline: none;
@@ -1017,7 +986,6 @@ a:hover {
   margin-top: 10px;
   margin-left: 20px;
 }
-
 /* Input styling */
 .search-input {
   flex: 1;
@@ -1031,11 +999,10 @@ a:hover {
   color: black;
 }
 
-/* Button styling with SVG icon instead of emoji */
+/* Button styling with SVG icon */
 .search-button {
   width: 40px;
   height: 38px;
-  background: white;
   border: 1px solid #aaa; /* Match input border */
   border-left: none;
   border-radius: 0 4px 4px 0;
@@ -1043,43 +1010,26 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
 }
 
+/* Fix the hover state for the search button */
 .search-button:hover {
-  background: #f0f0f0;
   background-color: black;
-  color: white;
 }
 
-/* Replace the emoji with a custom SVG icon */
-.search-icon {
-  position: relative;
+/* Fix the SVG icon color on hover - CORRECTED VERSION */
+.search-button:hover .search-icon-svg {
+  stroke: rgb(255, 255, 255);
+}
+
+/* SVG icon styling - ensure proper attributes */
+.search-icon-svg {
   width: 16px;
   height: 16px;
-}
-
-.search-icon::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  border: 2px solid #666;
-  border-radius: 1%;
-}
-
-.search-icon::after {
-  content: "";
-  position: absolute;
-  top: 10px;
-  left: 11px;
-  width: 2px;
-  height: 6px;
-  background-color: #666;
-  transform: rotate(45deg);
-  transform-origin: 0 0;
+  stroke: currentColor;
+  fill: none; /* Explicitly set fill to none */
+  transition: stroke 0.2s ease;
 }
 
 /* Focus states */
@@ -1092,184 +1042,25 @@ a:hover {
 .search-icon-svg {
   width: 18px;
   height: 18px;
+  background-color: transparent;
   color: #666; /* Icon color */
 }
-h2 {
-  text-align: left;
-  font-size: 26px;
-  padding-bottom: 10px;
-}
 
-/* Sort controls layout */
-.sort-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.sort-dropdown {
-  flex-grow: 1;
-}
-
-/* Direction toggle button */
-.direction-toggle {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  background-color: white;
-  border: 1px solid black;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.direction-toggle:hover {
-  background-color: #f0f0f0;
-}
-
-/* Sort and Year dropdown styling */
-.sort-dropdown {
-  position: relative;
-  width: 100%;
-  color: black;
-}
-
-.sort-button {
-  width: 100%;
-  background: white;
-  border: 1px solid black;
-  padding: 0.5rem;
-  text-align: left;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  color: black;
-}
-
-.sort-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background: white;
-  border: 1px solid #e5e5e5;
-  border-top: none;
-  z-index: 10;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.sort-option {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 0.5rem;
-  background: none;
-  border: none;
-  border-bottom: 1px solid #e5e5e5; /* Add this border-bottom */
-  cursor: pointer;
-}
-
-.sort-option:last-child {
-  border-bottom: none; /* Remove border from last item */
-}
-
-.sort-option.active {
-  background-color: #f0f0f0;
-  font-weight: 500;
-}
-
-/* Direction toggle */
-.direction-toggle {
-  width: 38px;
-  height: 38px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.direction-toggle:hover {
-  background-color: #f0f0f0;
-}
-
-/* Filter section styling */
-.filter-section {
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e5e5;
-  color: black;
-}
-
-h2 {
-  margin-bottom: 0.75rem;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-/* Results counter styling */
-.results-counter {
-  font-size: 14px;
-  color: #606060;
-  margin: 0 0 15px 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
-}
-
-/* Input styling */
-.search-input {
-  flex: 1;
-  height: 38px;
-  padding: 0 12px;
-  border: 1px solid #aaa;
-  border-radius: 4px 0 0 4px;
-  font-size: 14px;
-  font-family: "Space Mono", monospace;
-  background-color: white;
-  color: black;
-}
-
-/* Button styling with SVG icon */
-.search-button {
-  width: 40px;
-  height: 38px;
-  background: white;
-  border: 1px solid #aaa; /* Match input border */
-  border-left: none;
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-/* Make icon white on hover */
-.search-button:hover {
-  background-color: black;
-}
-
-.search-button:hover .search-icon-svg {
-  stroke: white; /* Change SVG stroke color to white on hover */
-}
-
-/* SVG icon styling */
-.search-icon-svg {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor; /* This will inherit the current text color */
-  transition: stroke 0.2s ease;
-}
 .title {
   color: black;
   font-size: 50px;
   padding-bottom: 8px;
   text-align: left;
   margin-left: 18px;
+}
+/* Override any auto-sizing/height calculations */
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.gap-4 {
+  gap: 1rem;
 }
 </style>

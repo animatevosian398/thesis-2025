@@ -2,7 +2,7 @@
   <div>
     <!-- Button at bottom left of screen -->
     <button class="legend-toggle-button" @click="toggleLegend">
-      {{ isCollapsed ? "Show Legend" : "Hide Legend" }}
+      {{ isCollapsed ? "Legend" : "Hide Legend" }}
     </button>
 
     <!-- Legend panel also appears from bottom left -->
@@ -88,7 +88,7 @@ export default {
   position: fixed;
   left: 30px;
   bottom: 20px;
-  background: rgba(255, 255, 255, 0.593);
+  background: rgba(255, 255, 255, 0.7);
   color: rgb(38, 37, 37);
   font-family: "General Sans", sans-serif;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -97,52 +97,55 @@ export default {
   cursor: pointer;
   z-index: 1001;
   font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Legend panel also at bottom left */
 .legend-container {
   position: fixed;
   left: 20px;
-  bottom: 70px; /* Positioned above the button */
-  background: rgba(0, 0, 0, 0.054);
+  bottom: 70px;
+  background: rgba(255, 255, 255, 0.196); /* More visible background */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(5px);
   border-radius: 8px;
-  padding: 1rem;
-  color: white;
+  padding: 1.5rem;
+  color: black;
   z-index: 1000;
   transition: transform 0.3s ease, opacity 0.3s ease;
-  width: 300px;
+  width: 380px; /* Wider panel */
+  max-width: calc(100vw - 40px);
   opacity: 1;
+  max-height: 80vh;
+  overflow-y: auto;
+  min-height: 200px; /* Ensure minimum height */
+  height: auto; /* Allow content to determine height */
+  display: block; /* Ensure proper display */
 }
 
 .collapsed {
   transform: translateY(20px);
   opacity: 0;
-  pointer-events: none; /* Prevents interaction when hidden */
+  pointer-events: none;
 }
 
 .legend-content {
   width: 100%;
-  max-height: 60vh; /* Prevent it from being too tall */
-  overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-}
-
-.legend-content::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
 }
 
 .stance-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .stance-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  padding: 4px 0;
+  min-height: 24px;
 }
 
 .color-box {
@@ -150,13 +153,17 @@ export default {
   height: 16px;
   border-radius: 4px;
   flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .stance-label {
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 0.7rem;
+  font-weight: 500;
+  opacity: 1;
   font-family: "Courier New", Courier, monospace;
   color: rgb(29, 29, 29);
+  word-break: normal;
+  white-space: normal;
 }
 
 h3 {
@@ -165,5 +172,45 @@ h3 {
   color: rgb(29, 29, 29);
   margin-bottom: 1rem;
   font-family: "Courier New", Courier, monospace;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stance-list {
+    grid-template-columns: 1fr; /* Single column on smaller screens */
+  }
+
+  .legend-container {
+    width: 320px;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .legend-toggle-button {
+    left: 15px;
+    bottom: 15px;
+    padding: 8px 12px;
+  }
+
+  .stance-item {
+    gap: 0.5rem;
+  }
+
+  .color-box {
+    width: 14px;
+    height: 14px;
+  }
+
+  .stance-label {
+    font-size: 0.85rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
 }
 </style>

@@ -17,7 +17,19 @@ import Bg3 from "../components/Bg3.vue";
 import Framing from "../components/Framing.vue";
 import BubbleChart from "../components/BubbleChart.vue";
 import StanceView from "../views/StanceView.vue"; // Import StanceView component
-
+//stance detail pages
+import Apology from "../views/stanceDetailPages/Apology.vue";
+import HistoricalAffirmation from "../views/stanceDetailPages/HistoricalAffirmation.vue";
+import ExplicitDenial from "../views/stanceDetailPages/ExplicitDenial.vue";
+import MinimizationReframing from "../views/stanceDetailPages/MinimizationReframing.vue";
+import JustificationNarrative from "../views/stanceDetailPages/JustificationNarrative.vue";
+import ContemporaryComparison from "../views/stanceDetailPages/ContemporaryComparison.vue";
+import PersonalTestimony from "../views/stanceDetailPages/PersonalTestimony.vue";
+import DiscussionAboutDenial from "../views/stanceDetailPages/DiscussionAboutDenial.vue";
+import HistoricalInversion from "../views/stanceDetailPages/HistoricalInversion.vue";
+import ReconciliationDiscourse from "../views/stanceDetailPages/ReconciliationDiscourse.vue";
+import SympathyMemorial from "../views/stanceDetailPages/SympathyMemorial.vue";
+import ProceduralDeflection from "../views/stanceDetailPages/ProceduralDeflection.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -107,6 +119,67 @@ const router = createRouter({
       name: "stance-details",
       component: StanceView,
       props: true,
+    },
+    //stance detail pages
+    {
+      path: "/stance/Apology",
+      name: "apology",
+      component: Apology,
+    },
+    {
+      path: "/stance/HistoricalAffirmation",
+      name: "historical-affirmation",
+      component: HistoricalAffirmation,
+    },
+    {
+      path: "/stance/ExplicitDenial",
+      name: "explicit-denial",
+      component: ExplicitDenial,
+    },
+    {
+      path: "/stance/MinimizationReframing",
+      name: "minimization-reframing",
+      component: MinimizationReframing,
+    },
+    {
+      path: "/stance/JustificationNarrative",
+      name: "justification-narrative",
+      component: JustificationNarrative,
+    },
+    {
+      path: "/stance/ContemporaryComparison",
+      name: "contemporary-comparison",
+      component: ContemporaryComparison,
+    },
+    {
+      path: "/stance/PersonalTestimony",
+      name: "personal-testimony",
+      component: PersonalTestimony,
+    },
+    {
+      path: "/stance/DiscussionAboutDenial",
+      name: "discussion-about-denial",
+      component: DiscussionAboutDenial,
+    },
+    {
+      path: "/stance/HistoricalInversion",
+      name: "historical-inversion",
+      component: HistoricalInversion,
+    },
+    {
+      path: "/stance/ReconciliationDiscourse",
+      name: "reconciliation-discourse",
+      component: ReconciliationDiscourse,
+    },
+    {
+      path: "/stance/SympathyMemorial",
+      name: "sympathy-memorial",
+      component: SympathyMemorial,
+    },
+    {
+      path: "/stance/ProceduralDeflection",
+      name: "procedural-deflection",
+      component: ProceduralDeflection,
     },
     // { path: "/archive-table", name: "archive-table", component: ArchiveTable },
   ],

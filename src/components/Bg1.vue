@@ -21,7 +21,7 @@
         or direct violence. The events were well-documented by journalists,
         missionaries, and diplomats at the time, with photographs and eyewitness
         accounts.
-        <br />
+        <br /><br />
         Despite this evidence, Turkey still refuses to recognize these events as
         genocide, instead calling them a relocation necessary during wartime.
         For Armenians worldwide, especially those whose family members survived
@@ -29,82 +29,173 @@
         important to remember.
       </h3>
     </div>
+
+    <div
+      class="scroll-indicator"
+      ref="scrollIndicator"
+      @click="emitScrollEvent"
+    >
+      <div class="scroll-text">Scroll to continue</div>
+      <div class="scroll-arrow">↓</div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, getCurrentInstance } from "vue";
+import { ref, onMounted, onUnmounted, defineEmits } from "vue";
 import { useRoute } from "vue-router";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const emit = defineEmits(["scrollToBg2"]);
+
 const bgSection = ref(null);
 const imageContainer = ref(null);
 const bgImage = ref(null);
+const scrollIndicator = ref(null);
 const route = useRoute();
 
+let scrollTriggers = [];
+
+function emitScrollEvent() {
+  emit("scrollToBg2");
+}
+
 onMounted(() => {
-  // Check if we came directly to the background page via navbar
+  // Initialize with a slight delay to ensure DOM is fully ready
+  setTimeout(initScrollAnimations, 300);
+
+  // Handle window resize for responsive adjustments
+  window.addEventListener("resize", handleResize);
+
+  // Check if we came directly to a specific section via navbar
   const isDirectNavigation =
     route.hash === "#background" || route.path.includes("background");
 
   if (isDirectNavigation) {
     // Position the page at the top when directly navigating to background
     window.scrollTo(0, 0);
-
-    // Optionally add a small delay to ensure elements are properly rendered
-    setTimeout(() => {
-      if (bgSection.value) {
-        // Make sure the section is visible at the top of the viewport
-        bgSection.value.scrollIntoView({ behavior: "auto", block: "start" });
-      }
-    }, 100);
   }
-
-  // Setup GSAP animation
-  gsap.to(".background-image", {
-    scrollTrigger: {
-      trigger: ".background-section",
-      start: "top 20%",
-      end: "bottom 80%",
-      scrub: 0.5,
-    },
-    opacity: 0.7,
-    scale: 1.05,
-    duration: 1.5,
-  });
 });
+
+onUnmounted(() => {
+  // Clean up event listeners and GSAP instances
+  window.removeEventListener("resize", handleResize);
+
+  // Kill all ScrollTrigger instances to prevent memory leaks
+  clearScrollTriggers();
+});
+
+function clearScrollTriggers() {
+  // Kill all scroll triggers we've created
+  scrollTriggers.forEach((trigger) => {
+    if (trigger && trigger.kill) {
+      trigger.kill();
+    }
+  });
+  scrollTriggers = [];
+
+  // Also check for any others that might exist
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+}
+
+function handleResize() {
+  // Kill existing triggers and reinitialize
+  clearScrollTriggers();
+  initScrollAnimations();
+}
+
+function initScrollAnimations() {
+  if (!bgSection.value) return;
+
+  // Make sure all content is visible immediately
+  gsap.set(bgSection.value.querySelector(".backgroundTitle"), {
+    opacity: 1,
+    y: 0,
+  });
+  gsap.set(bgSection.value.querySelector(".content-text"), {
+    opacity: 1,
+    y: 0,
+  });
+
+  // Image parallax effect for first section
+  const imageTrigger = ScrollTrigger.create({
+    trigger: bgSection.value,
+    start: "top top",
+    end: "bottom top",
+    scrub: 0.5,
+    onUpdate: (self) => {
+      if (bgImage.value) {
+        gsap.to(bgImage.value, {
+          scale: 1 + self.progress * 0.1,
+          opacity: 0.7 - self.progress * 0.3,
+          duration: 0,
+        });
+      }
+    },
+  });
+  scrollTriggers.push(imageTrigger);
+
+  // Animation for scroll indicator
+  if (scrollIndicator.value) {
+    const indicatorTrigger = ScrollTrigger.create({
+      trigger: bgSection.value,
+      start: "60% top",
+      end: "bottom top",
+      scrub: true,
+      onUpdate: (self) => {
+        gsap.to(scrollIndicator.value, {
+          opacity: 1 - self.progress,
+          duration: 0,
+        });
+      },
+    });
+    scrollTriggers.push(indicatorTrigger);
+
+    // Pulsing animation for scroll indicator (non-scrolltrigger animation)
+    gsap.to(scrollIndicator.value, {
+      y: "+=10",
+      repeat: -1,
+      yoyo: true,
+      duration: 1,
+      ease: "power1.inOut",
+    });
+  }
+}
 </script>
 
 <style scoped>
 .background-section {
-  height: 110vh;
-  background-color: black;
+  height: 100vh;
+  min-height: 800px;
+  background-color: rgb(0, 0, 0);
   color: white;
   position: relative;
-  padding: 80px 0 0 8%; /* Increased top padding */
+  padding: 100px 0 0 8%;
   display: flex;
   flex-direction: column;
   scroll-margin-top: 0;
-  align-items: flex-start; /* Align children to start */
+  align-items: flex-start;
+  overflow: hidden;
+  width: 100%;
 }
 
 .backgroundTitle {
   position: relative;
-  z-index: 2;
-  margin-top: 90px; /* Reduced from 90px */
-  margin-bottom: -10px; /* Added to maintain some spacing */
+  z-index: 5; /* Increased z-index */
+  margin-top: 40px; /* Reduced top margin */
+  margin-bottom: 20px;
   margin-left: 2%;
-  font-size: calc(3.6rem + 1vw); /* Responsive font size */
-  width: 50%; /* Control width */
-  text-align: left; /* Ensure left alignment */
+  font-size: calc(3.6rem + 1vw);
+  width: 60%;
+  text-align: left;
 }
 
 .image-container {
   position: absolute;
-  top: 24%; /* Moved higher */
+  top: 24%;
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
@@ -126,34 +217,35 @@ onMounted(() => {
 
 .content-text {
   position: relative;
-  z-index: 2;
-  max-width: 65%; /* Slightly narrower */
-  margin-top: 20px; /* Reduced from 50px */
-  color: rgb(255, 255, 255);
+  z-index: 5; /* Increased z-index */
+  max-width: 70%;
+  margin-top: 20px;
   display: flex;
-  margin-left: 20%;
+  margin-left: 5%; /* Reduced left margin */
   font-family: aktiv-grotesk, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-style: normal;
-  padding: 10px;
+  padding: 20px;
   flex-direction: column;
-  justify-content: space-between; /* Change to space-between */
-  min-height: auto; /* Changed from 100% */
-  overflow: visible; /* Allow content to be visible */
+  justify-content: space-between;
+  min-height: auto;
+  overflow: visible;
+  margin-bottom: 100px; /* Added space below content for scroll indicator */
+  border-radius: 8px;
 }
 
 .content-text h3 {
-  font-size: calc(1rem + 0.5vw); /* Responsive font size */
-  line-height: 1.8; /* Increase line spacing */
-  letter-spacing: -0.01em; /* Slight letter spacing */
+  font-size: calc(1rem + 0.5vw);
+  line-height: 1.8;
+  letter-spacing: -0.01em;
   font-weight: 500;
   font-family: "aktiv-grotesk", "General Sans", sans-serif;
   margin: 0;
-  margin-top: 100px; /* Increased margin */
-  margin-left: -220px;
+  color: white;
+  background-color: transparent;
 }
 
 .citation {
@@ -165,7 +257,61 @@ onMounted(() => {
   background-color: transparent;
 }
 
-/* Added additional media queries for better responsiveness */
+.citation-container {
+  position: absolute;
+  bottom: -40px;
+  right: 10%;
+  z-index: 3;
+  width: 90%;
+}
+
+/* Scroll indicator styling - Fixed positioning */
+.scroll-indicator {
+  position: fixed; /* Changed from absolute to fixed */
+  bottom: 40px; /* Adjusted from 10vh to a fixed value */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100; /* Increased z-index */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  opacity: 0.8;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.5); /* Added semi-transparent background */
+  padding: 10px 20px; /* Added padding */
+  border-radius: 20px; /* Rounded corners */
+}
+
+.scroll-text {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.scroll-arrow {
+  font-size: 1.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Media queries for responsive design */
 @media (max-height: 800px) {
   .content-text h3 {
     font-size: calc(0.9rem + 0.2vw);
@@ -173,49 +319,41 @@ onMounted(() => {
   }
 
   .backgroundTitle {
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 20px;
+    font-size: calc(2.5rem + 1vw);
   }
 
   .content-text {
     margin-top: 10px;
+    margin-bottom: 80px; /* Smaller margin for smaller screens */
+  }
+
+  .scroll-indicator {
+    bottom: 20px; /* Adjusted for smaller screens */
+  }
+
+  .background-section {
+    padding-top: 60px;
   }
 }
 
 @media (max-width: 768px) {
   .content-text {
     max-width: 85%;
+    margin-left: 2%;
   }
 
   .image-container {
     width: 90%;
-    right: -5%;
   }
-}
 
-.citation-container {
-  position: absolute;
-  bottom: -40px; /* Move further down */
-  right: 10%;
-  z-index: 3; /* Increase z-index */
-  width: 90%; /* Match image width */
-}
+  .backgroundTitle {
+    width: 90%;
+    font-size: calc(2.5rem + 1vw);
+  }
 
-/* Container should allow scrolling if needed */
-.container {
-  overflow-y: auto;
-  height: 100%;
-}
-
-.background-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: visible;
-}
-
-.router-view {
-  height: auto;
-  overflow-y: visible;
+  .background-section {
+    padding-left: 5%;
+  }
 }
 </style>
