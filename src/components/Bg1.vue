@@ -1,5 +1,6 @@
 <template>
   <div id="background-section" class="background-section" ref="bgSection">
+    <!-- Fixed background image -->
     <div class="image-container" ref="imageContainer">
       <img
         src="/src/assets/images/Norway_Photo_Bones.jpg"
@@ -11,32 +12,39 @@
         <p class="citation">Source: Norwegian Royal Archives Collection</p>
       </div>
     </div>
-    <h1 class="backgroundTitle">Background</h1>
-    <div class="content-text">
-      <h3>
-        On April 24, 1915, hundreds of Armenian leaders and thinkers were
-        rounded up, arrested, and some killed, followed by widespread
-        deportations of ordinary people from their homes to the Syrian and Iraqi
-        deserts. Many died during these brutal marches from starvation, disease,
-        or direct violence. The events were well-documented by journalists,
-        missionaries, and diplomats at the time, with photographs and eyewitness
-        accounts.
-        <br /><br />
-        Despite this evidence, Turkey still refuses to recognize these events as
-        genocide, instead calling them a relocation necessary during wartime.
-        For Armenians worldwide, especially those whose family members survived
-        and fled to other countries, this history remains deeply personal and
-        important to remember.
-      </h3>
-    </div>
+    <!-- Single content container that scrolls over the image -->
+    <div class="content-container">
+      <div class="content-text" ref="contentText">
+        <h3>
+          On April 24, 1915, hundreds of Armenian leaders and intellectuals were
+          rounded up, arrested, and some killed, followed by widespread
+          deportations of ordinary people from their homes to the Syrian and
+          Iraqi deserts. This was the beginning of the Armenian Genocide,
+          organized by the Young Turks of the Ottoman Empire. An estimated
+          million Armenians were killed; this was not a singular event, but
+          rather came about after a "long-simmering Ottoman hatred of the
+          Armenians dating to Sultan Abdul Hamid II and his slaughters in the
+          1890s," known as the Hamidian Massacres.
+          <a
+            href="https://genocideeducation.org/books/the-burning-tigris-the-armenian-genocide-and-americas-response/"
+            target="_blank"
+            class="citation-link"
+            >(Balakian)</a
+          >
 
-    <div
-      class="scroll-indicator"
-      ref="scrollIndicator"
-      @click="emitScrollEvent"
-    >
-      <div class="scroll-text">Scroll to continue</div>
-      <div class="scroll-arrow">↓</div>
+          <br /><br />
+          The events of the Genocide were well-documented by journalists,
+          missionaries, and diplomats at the time, with photographs and
+          eyewitness accounts. Despite this evidence, Turkey still refuses to
+          recognize these events as genocide, instead calling them a relocation
+          necessary during wartime. For Armenians worldwide, especially those
+          whose family members survived and fled to other countries, this
+          history remains deeply personal and important to remember.
+        </h3>
+
+        <!-- Spacer to ensure scrolling works properly -->
+        <!-- <div class="spacer"></div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -45,8 +53,9 @@
 import { ref, onMounted, onUnmounted, defineEmits } from "vue";
 import { useRoute } from "vue-router";
 import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+// Register the ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
 const emit = defineEmits(["scrollToBg2"]);
@@ -54,10 +63,8 @@ const emit = defineEmits(["scrollToBg2"]);
 const bgSection = ref(null);
 const imageContainer = ref(null);
 const bgImage = ref(null);
-const scrollIndicator = ref(null);
+const contentText = ref(null);
 const route = useRoute();
-
-let scrollTriggers = [];
 
 function emitScrollEvent() {
   emit("scrollToBg2");
@@ -65,7 +72,11 @@ function emitScrollEvent() {
 
 onMounted(() => {
   // Initialize with a slight delay to ensure DOM is fully ready
-  setTimeout(initScrollAnimations, 300);
+  setTimeout(() => {
+    initScrollAnimations();
+    setupImageEffect();
+    setupScrollTrigger();
+  }, 300);
 
   // Handle window resize for responsive adjustments
   window.addEventListener("resize", handleResize);
@@ -81,279 +92,206 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  // Clean up event listeners and GSAP instances
+  // Clean up event listeners
   window.removeEventListener("resize", handleResize);
 
-  // Kill all ScrollTrigger instances to prevent memory leaks
-  clearScrollTriggers();
+  // Kill all ScrollTrigger instances
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 });
 
-function clearScrollTriggers() {
-  // Kill all scroll triggers we've created
-  scrollTriggers.forEach((trigger) => {
-    if (trigger && trigger.kill) {
-      trigger.kill();
-    }
-  });
-  scrollTriggers = [];
-
-  // Also check for any others that might exist
-  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-}
-
 function handleResize() {
-  // Kill existing triggers and reinitialize
-  clearScrollTriggers();
-  initScrollAnimations();
+  // Update ScrollTrigger on resize
+  ScrollTrigger.refresh();
 }
 
 function initScrollAnimations() {
-  if (!bgSection.value) return;
-
-  // Make sure all content is visible immediately
-  gsap.set(bgSection.value.querySelector(".backgroundTitle"), {
-    opacity: 1,
-    y: 0,
-  });
-  gsap.set(bgSection.value.querySelector(".content-text"), {
-    opacity: 1,
-    y: 0,
-  });
-
-  // Image parallax effect for first section
-  const imageTrigger = ScrollTrigger.create({
-    trigger: bgSection.value,
-    start: "top top",
-    end: "bottom top",
-    scrub: 0.5,
-    onUpdate: (self) => {
-      if (bgImage.value) {
-        gsap.to(bgImage.value, {
-          scale: 1 + self.progress * 0.1,
-          opacity: 0.7 - self.progress * 0.3,
-          duration: 0,
-        });
-      }
-    },
-  });
-  scrollTriggers.push(imageTrigger);
-
-  // Animation for scroll indicator
-  if (scrollIndicator.value) {
-    const indicatorTrigger = ScrollTrigger.create({
-      trigger: bgSection.value,
-      start: "60% top",
-      end: "bottom top",
-      scrub: true,
-      onUpdate: (self) => {
-        gsap.to(scrollIndicator.value, {
-          opacity: 1 - self.progress,
-          duration: 0,
-        });
+  // Add initial animation for the content
+  if (contentText.value) {
+    gsap.fromTo(
+      contentText.value,
+      {
+        opacity: 0,
+        y: 50,
       },
-    });
-    scrollTriggers.push(indicatorTrigger);
-
-    // Pulsing animation for scroll indicator (non-scrolltrigger animation)
-    gsap.to(scrollIndicator.value, {
-      y: "+=10",
-      repeat: -1,
-      yoyo: true,
-      duration: 1,
-      ease: "power1.inOut",
-    });
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        scrollTrigger: {
+          trigger: contentText.value,
+          start: "top 80%",
+          end: "top 50%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
   }
+}
+
+function setupScrollTrigger() {
+  // Create a scrolltrigger for the end of the section
+  ScrollTrigger.create({
+    trigger: ".spacer",
+    start: "top 75%",
+    onEnter: () => {
+      // When we reach the end of this section, emit event to go to next section
+      setTimeout(emitScrollEvent, 1000);
+    },
+    once: true, // Only trigger once
+  });
+
+  // Add scroll triggers for each h3 element to fade them in
+  document.querySelectorAll(".content-text h3").forEach((h3, index) => {
+    gsap.fromTo(
+      h3,
+      { opacity: 0, y: 10 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        scrollTrigger: {
+          trigger: h3,
+          start: "top 80%",
+          end: "top 60%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+  });
+}
+
+function setupImageEffect() {
+  // Simple parallax effect for the image
+  window.addEventListener("scroll", () => {
+    if (bgImage.value) {
+      const scrollPosition = window.scrollY;
+      const scale = 1 + scrollPosition * 0.0003; // Subtle zoom effect
+      const opacity = 0.7 - scrollPosition * 0.0003; // Fade out as you scroll
+
+      gsap.to(bgImage.value, {
+        scale: Math.min(scale, 1.15), // Limit scale to 1.15
+        opacity: Math.max(opacity, 0.3), // Don't go below 0.3 opacity
+        duration: 0.1,
+      });
+    }
+  });
 }
 </script>
 
 <style scoped>
+/* Background container */
 .background-section {
-  height: 100vh;
-  min-height: 800px;
-  background-color: rgb(0, 0, 0);
-  color: white;
   position: relative;
-  padding: 100px 0 0 8%;
-  display: flex;
-  flex-direction: column;
-  scroll-margin-top: 0;
-  align-items: flex-start;
-  overflow: hidden;
+  height: auto;
+  min-height: 300vh; /* Increased from 200vh to ensure enough scroll space */
   width: 100%;
+  color: white;
+  overflow: visible; /* Changed from hidden to visible */
 }
 
-.backgroundTitle {
-  position: relative;
-  z-index: 5; /* Increased z-index */
-  margin-top: 40px; /* Reduced top margin */
-  margin-bottom: 20px;
-  margin-left: 2%;
-  font-size: calc(3.6rem + 1vw);
-  width: 60%;
-  text-align: left;
-}
-
+/* Image container with sticky positioning */
 .image-container {
-  position: absolute;
-  top: 24%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 75%;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
   z-index: 1;
-  overflow: visible;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  overflow: hidden;
 }
 
+/* Background image styling */
 .background-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  mix-blend-mode: difference;
-  will-change: transform, opacity;
+  opacity: 0.7;
 }
 
-.content-text {
-  position: relative;
-  z-index: 5; /* Increased z-index */
-  max-width: 70%;
-  margin-top: 20px;
-  display: flex;
-  margin-left: 5%; /* Reduced left margin */
-  font-family: aktiv-grotesk, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-weight: 400;
-  font-style: normal;
-  padding: 20px;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: auto;
-  overflow: visible;
-  margin-bottom: 100px; /* Added space below content for scroll indicator */
-  border-radius: 8px;
-}
+/* Citation styling */
+.citation-container {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 
-.content-text h3 {
-  font-size: calc(1rem + 0.5vw);
-  line-height: 1.8;
-  letter-spacing: -0.01em;
-  font-weight: 500;
-  font-family: "aktiv-grotesk", "General Sans", sans-serif;
-  margin: 0;
-  color: white;
-  background-color: transparent;
+  z-index: 2;
+  padding: 5px 10px;
+  border-radius: 4px;
 }
 
 .citation {
-  font-size: 0.8em;
-  color: #919090;
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.705);
   text-align: right;
   margin: 0;
-  padding: 5px 0;
+  padding: 5px;
+  font-family: "aktiv-grotesk", "General Sans", sans-serif;
+
+  /* font-family: "Times New Roman", serif; */
+}
+
+/* Content container that scrolls over the image */
+.content-container {
+  position: absolute; /* Changed from relative to absolute */
+  top: 0; /* Start from the top */
+  left: 0;
+  right: 0;
+  z-index: 5;
+  font-family: "Georgia", serif;
+  color: black;
+  padding-top: 60vh; /* Start content 60% down the viewport */
+  min-height: 250vh; /* Ensure container is tall enough */
+}
+
+/* Content text styling */
+.content-text {
+  width: 80%;
   background-color: transparent;
+  max-width: 800px;
+  margin: 0 auto 100px; /* Center and add bottom margin */
 }
 
-.citation-container {
-  position: absolute;
-  bottom: -40px;
-  right: 10%;
-  z-index: 3;
-  width: 90%;
+/* Spacer to ensure enough scroll room */
+.spacer {
+  height: 50vh;
+}
+h3 {
+  font-size: 22px;
 }
 
-/* Scroll indicator styling - Fixed positioning */
-.scroll-indicator {
-  position: fixed; /* Changed from absolute to fixed */
-  bottom: 40px; /* Adjusted from 10vh to a fixed value */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100; /* Increased z-index */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.citation-link:hover {
   color: white;
-  opacity: 0.8;
-  cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.5); /* Added semi-transparent background */
-  padding: 10px 20px; /* Added padding */
-  border-radius: 20px; /* Rounded corners */
+  border-bottom-color: white;
 }
 
-.scroll-text {
-  font-size: 0.9rem;
-  margin-bottom: 8px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.scroll-arrow {
-  font-size: 1.5rem;
-  animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-}
-
-/* Media queries for responsive design */
-@media (max-height: 800px) {
-  .content-text h3 {
-    font-size: calc(0.9rem + 0.2vw);
-    line-height: 1.3;
-  }
-
-  .backgroundTitle {
-    margin-top: 20px;
-    font-size: calc(2.5rem + 1vw);
-  }
-
-  .content-text {
-    margin-top: 10px;
-    margin-bottom: 80px; /* Smaller margin for smaller screens */
-  }
-
-  .scroll-indicator {
-    bottom: 20px; /* Adjusted for smaller screens */
-  }
-
-  .background-section {
-    padding-top: 60px;
-  }
-}
-
+/* Media query adjustments */
 @media (max-width: 768px) {
   .content-text {
-    max-width: 85%;
-    margin-left: 2%;
-  }
-
-  .image-container {
     width: 90%;
   }
 
-  .backgroundTitle {
-    width: 90%;
-    font-size: calc(2.5rem + 1vw);
+  .content-text h3 {
+    padding: 30px;
+    font-size: calc(0.9rem + 0.2vw);
+    margin-bottom: 20vh; /* Less spacing on mobile */
   }
 
-  .background-section {
-    padding-left: 5%;
+  .content-container {
+    padding-top: 40vh; /* Start content higher on mobile */
   }
+}
+
+/* Add this to your existing styles */
+.citation-link {
+  color: rgba(8, 8, 8, 0.8);
+  text-decoration: transparent;
+  transition: color 0.2s, border-bottom-color 0.2s;
+  font-style: italic;
+}
+h3 {
+  background-color: transparent;
+}
+.citation-link:visited {
+  color: rgba(200, 200, 255, 0.8);
 }
 </style>

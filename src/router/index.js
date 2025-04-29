@@ -30,6 +30,7 @@ import HistoricalInversion from "../views/stanceDetailPages/HistoricalInversion.
 import ReconciliationDiscourse from "../views/stanceDetailPages/ReconciliationDiscourse.vue";
 import SympathyMemorial from "../views/stanceDetailPages/SympathyMemorial.vue";
 import ProceduralDeflection from "../views/stanceDetailPages/ProceduralDeflection.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

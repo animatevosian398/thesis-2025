@@ -1,7 +1,7 @@
 <template>
   <div class="archive">
     <h1 class="title">
-      Archive of Genocide Comments
+      Archive of Genocide Discourse
       <span class="dates-title"> (2008-2025) </span>
     </h1>
 
@@ -87,7 +87,7 @@
 
         <!-- Category filter section -->
         <div class="filter-section">
-          <h2>Filter by Tag</h2>
+          <h2>Filter by Category</h2>
           <div class="tag-buttons">
             <button
               v-for="(color, stanceKey) in stanceColors"
@@ -95,25 +95,18 @@
               class="tag-button"
               :class="{
                 active: selectedTags.includes(
-                  stanceKey.toLowerCase().replace(/ /g, '_')
+                  stanceKey.toLowerCase().replace(/_/g, '-')
                 ),
               }"
               :style="{
                 backgroundColor: color,
                 color: getTextColor(color),
               }"
-              @click="toggleTag(stanceKey.toLowerCase().replace(/ /g, '_'))"
+              @click="toggleTag(stanceKey.toLowerCase().replace(/_/g, '-'))"
             >
               {{ stanceKey.replace(/_/g, " ") }}
             </button>
           </div>
-        </div>
-
-        <!-- Add this after all filter sections -->
-        <div class="filter-section reset-section">
-          <button class="reset-button" @click="resetFilters">
-            Reset All Filters
-          </button>
         </div>
       </div>
 
@@ -156,87 +149,67 @@
           <div class="loading-text">Loading comments...</div>
         </div>
 
-        <!-- Comments table -->
-        <table
-          v-if="!isLoading && filteredComments.length"
-          class="comments-table"
-        >
-          <thead>
-            <tr>
-              <th>Comment</th>
-              <th>Author</th>
-              <th @click="setSortBy('date')" class="sortable">
-                Publish Date
-                <span>
-                  {{
-                    sortBy === "date"
-                      ? sortDirection === "asc"
-                        ? "↑"
-                        : "↓"
-                      : "↓"
-                  }}
-                </span>
-              </th>
-              <th>Tag</th>
-              <th
-                @click="setSortBy('likes')"
-                class="sortable"
-                style="width: 150px"
-              >
-                Likes
-                <span>
-                  {{
-                    sortBy === "likes"
-                      ? sortDirection === "asc"
-                        ? "↑"
-                        : "↓"
-                      : "↓"
-                  }}
-                </span>
-              </th>
-              <th>Video</th>
-              <!-- Re-added "Video" column -->
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="comment in filteredComments" :key="comment.id">
-              <td class="comment-text">{{ comment.content }}</td>
-              <td class="comment-author">{{ comment.author }}</td>
-              <td class="comment-date">{{ formatDate(comment.date) }}</td>
-              <td class="comment-tags">
-                <span
-                  v-for="tag in comment.tags"
-                  :key="tag"
-                  class="comment-tag"
-                  :style="{
-                    backgroundColor: getTagColor(tag),
-                    color: getTextColorForTag(tag),
-                  }"
-                >
-                  {{ tag.replace(/-/g, " ") }}
-                </span>
-              </td>
-              <td class="comment-likes" style="width: 150px">
-                {{ comment.likes }}
-              </td>
-              <td class="comment-video">
-                <!-- Re-added "Video" data cell -->
-                <a
-                  v-if="comment.videoUrl"
-                  :href="comment.videoUrl"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="video-link"
-                >
-                  {{ comment.videoSource }}
-                </a>
-                <span v-else>No video</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- <div class="comments-container"> -->
+        <div class="comments-grid">
+          <div
+            v-for="comment in filteredComments"
+            :key="comment.id"
+            class="comment-item"
+            :style="{
+              minHeight: `${Math.max(200, comment.emotionalStrength * 2)}px`,
+            }"
+          >
+            <div class="flex flex-col gap-4">
+              <div class="comment-header">
+                <div class="comment-author">{{ comment.author }}</div>
+                <div class="comment-date">{{ formatDate(comment.date) }}</div>
+              </div>
+              <div class="comment-content">
+                {{ comment.content }}
+              </div>
+              <div class="comment-footer">
+                <div class="meta-line">
+                  <div class="comment-tags">
+                    <span
+                      v-for="tag in comment.tags"
+                      :key="tag"
+                      class="comment-tag"
+                      :style="{
+                        backgroundColor: getTagColor(tag),
+                        color: getTextColorForTag(tag),
+                        borderColor: getTagColor(tag),
+                      }"
+                    >
+                      {{ tag.replace(/-/g, " ") }}
+                    </span>
+                  </div>
 
-        <div v-else-if="!isLoading" class="no-comments">No comments found.</div>
+                  <span class="video-source-text"
+                    >From video:
+                    <a
+                      v-if="comment.videoUrl"
+                      :href="comment.videoUrl"
+                      target="_blank"
+                      rel="noopener"
+                      class="video-link"
+                    >
+                      {{ comment.videoSource || "YouTube Video" }}
+                    </a>
+                    <span v-else>{{ comment.videoSource || "Unknown" }}</span>
+                  </span>
+                </div>
+
+                <div class="comment-meta">
+                  <span
+                    >Emotion/Toxicity?: {{ comment.emotionalStrength }}%</span
+                  >
+                  <span>Likes: {{ comment.likes }}</span>
+                  <!-- </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -255,22 +228,22 @@ export default {
       availableTags: [],
       isLoading: true,
       stanceColors: {
-        "Historical Affirmation": "#4CAF50",
-        "Personal Testimony": "#7A485D",
-        "Explicit Denial": "#E53734",
-        "Minimization/Reframing": "#658B88",
-        "Justification Narrative": "#FAFF6B",
-        "Contemporary Comparison": "#2E4D46",
-        "Procedural Deflection Evidence Archives": "#FBA423",
-        "Competitive Victimhood/Historical Inversion": "#979C63",
-        "Sympathy/Memorial/Commemorative": "#40414A",
+        Historical_Affirmation: "#4CAF50",
+        Personal_Testimony: "#7A485D",
+        Explicit_Denial: "#E53734",
+        Minimization_Reframing: "#658B88",
+        Justification_Narrative: "#FAFF6B",
+        Contemporary_Comparison: "#2E4D46",
+        Procedural_Deflection_Evidence_Archives: "#FBA423",
+        Competitive_Victimhood_Historical_Inversion: "#979C63",
+        Sympathy_Memorial_Commemorative: "#40414A",
         Apology: "#2738EC",
-        "Discussion About Denial": "#841A26",
-        "Reconciliation Discourse": "#527c7995",
+        Discussion_About_Denial: "#841A26",
+        Reconciliation_Discourse: "#527c7995",
       },
       sortOptions: [
         { value: "likes", label: "LIKE COUNT" },
-        // { value: "date", label: "DATE" },
+        { value: "date", label: "DATE" },
         { value: "emotional", label: "EMOTIONAL STRENGTH" },
         { value: "random", label: "RANDOM" },
       ],
@@ -304,23 +277,9 @@ export default {
       }
 
       if (this.selectedTags.length > 0) {
-        console.log("Filtering by tags:", this.selectedTags);
         result = result.filter((comment) => {
-          if (!comment.tags || comment.tags.length === 0) {
-            return false;
-          }
-
-          const match = this.selectedTags.some((selectedTag) =>
-            comment.tags.includes(selectedTag)
-          );
-
-          if (comment.tags[0] && this.selectedTags.includes(comment.tags[0])) {
-            console.log("Match found:", comment.tags[0]);
-          }
-
-          return match;
+          return comment.tags.some((tag) => this.selectedTags.includes(tag));
         });
-        console.log("After tag filtering:", result.length);
       }
 
       // Add year filtering
@@ -357,12 +316,15 @@ export default {
   },
 
   methods: {
-    // Fix getTagColor to properly map kebab-case tags to stanceColors keys
+    // Fix getTagColor to properly convert from kebab-case to Snake_Case
     getTagColor(tag) {
-      const formattedTag = tag
-        .replace(/_/g, " ") // Convert kebab-case to space-separated
-        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
-      return this.stanceColors[formattedTag] || "#cccccc"; // Default color if not found
+      // Convert kebab-case (like "explicit-denial") to Snake_Case (like "Explicit_Denial")
+      const stanceKey = tag
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join("_");
+
+      return this.stanceColors[stanceKey] || "#cccccc"; // Default to gray if not found
     },
 
     // Add this if not already present
@@ -371,30 +333,17 @@ export default {
       return this.getTextColor(bgColor);
     },
 
-    // Fix the toggleTag function to use the correct format
     toggleTag(tag) {
-      console.log("Toggle tag:", tag);
-
-      // Check if this tag is already selected
       if (this.selectedTags.includes(tag)) {
-        // If it is, remove it
         this.selectedTags = this.selectedTags.filter((t) => t !== tag);
       } else {
-        // If not, add it
         this.selectedTags.push(tag);
       }
-
-      console.log("Selected tags after toggle:", this.selectedTags);
     },
 
     setSortBy(value) {
-      if (this.sortBy === value) {
-        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
-      } else {
-        // Set the new sort column and reset to descending order
-        this.sortBy = value;
-        this.sortDirection = "desc";
-      }
+      this.sortBy = value;
+      this.showSortDropdown = false;
     },
 
     loadCommentsFromCSV() {
@@ -428,7 +377,7 @@ export default {
                   date: row.publish_date || new Date().toISOString(),
                   content: row.cleaned_text || "",
                   tags: [
-                    row.predicted_stance?.toLowerCase().replace(/ /g, "-"), // Format consistently
+                    row.predicted_stance?.toLowerCase().replace(/_/g, "-"),
                   ].filter(Boolean),
                   emotionalStrength: Math.floor(Math.random() * 100),
                   likes: parseInt(row.like_count || 0),
@@ -472,14 +421,10 @@ export default {
       this.comments.forEach((comment) => {
         if (comment.tags && comment.tags.length > 0 && comment.tags[0]) {
           stanceSet.add(comment.tags[0]);
-          // Log the first few tags to see their format
-          if (stanceSet.size <= 5) {
-            console.log("Tag found:", comment.tags[0]);
-          }
         }
       });
       this.availableTags = Array.from(stanceSet);
-      console.log("All available tags:", this.availableTags);
+      console.log("Available tags:", this.availableTags);
     },
 
     getTextColor(hexColor) {
@@ -553,15 +498,6 @@ export default {
       this.availableYears = Array.from(years).sort((a, b) => b - a); // Sort descending
       console.log("Available years:", this.availableYears);
     },
-
-    // Add this method to reset all filters
-    resetFilters() {
-      this.selectedTags = [];
-      this.sortBy = "date";
-      this.sortDirection = "desc";
-      this.selectedYear = "all";
-      this.searchQuery = "";
-    },
   },
 
   mounted() {
@@ -622,9 +558,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky;
-  overflow-y: auto;
-  top: 0;
 }
 
 .header h1 {
@@ -683,17 +616,17 @@ a:hover {
   flex: 1;
   width: 75%;
   padding-left: 0px;
-  height: 100%;
+  height: 100%; /* Take full height */
   display: flex;
   overflow-y: auto;
   position: relative;
   flex-direction: column;
-  background-color: white;
+  background-color: white; /* Change from red to white */
 }
 .comments-container {
   flex: 1;
   overflow-y: auto; /* Enable vertical scrolling */
-  height: calc(100% - 70px); /* Account for search bar and results counter */
+  height: calc(100% - 80px); /* Account for search bar and results counter */
   width: 100%;
   padding-right: 10px;
   background-color: white;
@@ -711,7 +644,7 @@ a:hover {
   position: relative;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
-  min-height: 200px;
+  min-height: 200px; /* Reduced height */
   width: 100%;
   box-sizing: border-box;
   display: flex;
@@ -719,8 +652,19 @@ a:hover {
   text-align: left;
 }
 
+/* Fix header layout */
+.comment-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Left alignment */
+  position: relative;
+  padding-bottom: 6px;
+  margin-bottom: 1px;
+  gap: 8px;
+}
+
 .comment-author {
-  /* font-weight: bold; */
+  font-weight: bold;
   color: #333;
   font-size: 14px;
 }
@@ -891,7 +835,6 @@ a:hover {
   border: none;
   border-bottom: 1px solid #e5e5e5;
   cursor: pointer;
-  color: black; /* Add this line to explicitly set text color */
 }
 
 .sort-option:last-child {
@@ -922,6 +865,15 @@ a:hover {
   color: #606060;
 }
 
+/* Meta line styling - keep tags and video source on same line */
+.meta-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
 /* Footer layout */
 .comment-footer {
   margin-top: auto;
@@ -936,7 +888,6 @@ a:hover {
   flex-wrap: wrap;
   gap: 4px;
   opacity: 0.8;
-  border: none;
 }
 .comment-tag {
   padding: 2px 8px;
@@ -976,18 +927,19 @@ a:hover {
   color: #606060;
 }
 
-/* Adjust search-container to take full width and remain fixed */
 .search-container {
+  display: flex;
   position: sticky;
-  top: 0; /* Ensure it aligns with the viewport */
-  z-index: 20; /* Higher than the table headers */
+  top: 0;
+  z-index: 100;
   background-color: white;
-  padding: 10px;
-  width: 100%;
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  padding: 10px 0;
+  width: 96%;
+  margin: 0 0 5px 20px;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid #f0f0f0;
 }
-
 .search-button {
   width: 40px;
   height: 38px;
@@ -1005,13 +957,6 @@ a:hover {
 .search-row {
   display: flex;
   width: 100%;
-  padding: 10px 0px 0px 0px;
-}
-.results-counter {
-  width: 100%;
-  padding: 5px 20px;
-  font-size: 12px;
-  color: #606060;
 }
 .search-button {
   width: 40px;
@@ -1034,7 +979,13 @@ a:hover {
   outline: none;
   border-color: #999;
 }
-
+.search-container {
+  display: flex;
+  margin-bottom: 10px;
+  width: 96%;
+  margin-top: 10px;
+  margin-left: 20px;
+}
 /* Input styling */
 .search-input {
   flex: 1;
@@ -1127,7 +1078,6 @@ a:hover {
 .comments-column {
   scrollbar-width: thin; /* For Firefox */
   scrollbar-color: lightgrey transparent; /* Thumb and track colors */
-  position: relative; /* Add this to enable sticky positioning */
 }
 
 .comments-column::-webkit-scrollbar {
@@ -1148,121 +1098,5 @@ h2 {
   font-size: 1rem; /* Smaller font size */
   text-align: left; /* Align text to the left */
   margin-bottom: 0.5rem; /* Add some spacing below */
-}
-
-/* Table styles */
-.comments-table {
-  width: 100%;
-  border-collapse: separate; /* Changed from collapse to separate */
-  border-spacing: 0;
-  margin-top: 0;
-  font-size: 0.9rem;
-  position: relative;
-  text-align: left;
-}
-.comments-table tbody tr {
-  background-color: white;
-}
-.comments-table thead {
-  background-color: white;
-  position: sticky;
-  z-index: 11;
-  top: 97px; /* Stick to the top of the viewport */
-}
-.comments-table thead th {
-  position: sticky; /* Make the header sticky */
-  top: 70px; /* Match the height of the search container */
-  z-index: 2; /* Ensure it stays above the table body */
-  background-color: #f0f0f0; /* Match the header background color */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-}
-.comments-table th {
-  top: 70px; /* Same value as thead th for alignment */
-  background-color: #f0f0f0;
-  font-weight: bold;
-  z-index: 10;
-  position: sticky;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.sortable {
-  cursor: pointer;
-  user-select: none; /* Prevent text selection on click */
-}
-
-.sortable span {
-  margin-left: 5px; /* Add spacing between the text and the arrow */
-}
-
-.comments-table th,
-.comments-table td {
-  border: 1px solid #e5e5e5;
-  padding: 0.75rem;
-}
-
-.comments-table th {
-  background-color: #f0f0f0;
-  font-weight: bold;
-}
-
-.comments-table td.comment-tags {
-  display: table-cell; /* Ensure the tags behave like a single cell */
-  vertical-align: middle; /* Align content vertically */
-  border: 1px solid #e5e5e5; /* Keep the table cell border */
-  white-space: nowrap; /* Prevent wrapping of tags */
-}
-
-.comment-tags {
-  display: inline-block; /* Ensure tags are inline within the cell */
-  gap: 4px; /* Maintain spacing between tags */
-  border: none; /* Remove the inner border from the tag container */
-}
-
-.comments-table td.comment-text {
-  max-width: 300px;
-  word-wrap: break-word;
-  font-weight: 500;
-  font-family: "AktivGrotesk", sans-serif;
-  color: #0f0f0f;
-}
-
-.no-comments {
-  text-align: center;
-  margin-top: 0;
-  font-size: 1rem;
-  color: #606060;
-}
-
-.comments-table th:nth-child(5),
-.comments-table td.comment-likes {
-  width: 150px; /* Ensure the width is consistently applied */
-}
-
-/* Add these styles to your <style scoped> section */
-.reset-section {
-  margin-top: 2rem;
-  text-align: center;
-  border-bottom: none;
-}
-
-.reset-button {
-  background: #ffffff;
-  color: black;
-  border: 1px solid black;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  width: 100%;
-  transition: all 0.2s ease;
-}
-
-.reset-button:hover {
-  background: #000000;
-  color: white;
-}
-
-.reset-button:active {
-  background: #d0d0d0;
-  transform: translateY(1px);
 }
 </style>

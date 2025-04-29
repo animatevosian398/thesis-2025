@@ -1,5 +1,9 @@
 <template>
-  <div class="stance-page-container" :style="{ backgroundColor: stanceColor }">
+  <div
+    @click="togglePause"
+    class="stance-page-container"
+    :style="{ backgroundColor: stanceColor }"
+  >
     <div @click="goBack" class="back-arrow">← Back</div>
 
     <div class="content-container">
@@ -16,17 +20,6 @@
           </span>
           <span v-if="allCommentsVisible" class="end-message">End of Text</span>
         </div>
-      </div>
-
-      <div class="controls">
-        <button
-          class="control-button"
-          @click="togglePause"
-          :aria-label="isPaused ? 'Play scrolling' : 'Pause scrolling'"
-        >
-          {{ isPaused ? "▶ Play" : "❚❚ Pause" }}
-        </button>
-        <!-- <div class="comment-counter">{{ comments.length }} comments</div> -->
       </div>
     </div>
   </div>

@@ -18,7 +18,6 @@
             >(Source: NYT)</a
           >
         </p>
-        <h3>Now let's look at their framing</h3>
       </div>
     </div>
   </div>

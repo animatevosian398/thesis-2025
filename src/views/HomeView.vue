@@ -1,94 +1,105 @@
 <template>
-  <Navbar />
   <div class="app-container">
-    <!-- Three columns section positioned behind the title -->
-    <div class="background-columns">
-      <div class="column">
+    <!-- Positioned phrases that go behind the title -->
+    <div class="phrases-container" ref="columnsContainer">
+      <!-- Individual phrases with absolute positioning -->
+      <div class="phrase phrase-1">
         <p>
           Denialism: The systematic rejection of established historical facts
-          despite overwhelming evidence, often motivated by ideological,
-          political, or psychological factors.
-        </p>
-        <p>
-          Historical Revisionism: The legitimate scholarly process of
-          reinterpreting historical events based on new evidence and
-          perspectives, distinct from negationism.
-        </p>
-        <p>
-          Apologism: The defense or justification of controversial historical
-          actions through minimization, contextualization, or deflection of
-          responsibility.
-        </p>
-        <p>
-          Trutherism: The promotion of alternative explanations for significant
-          events, typically involving conspiracy theories that contradict
-          official narratives.
+          despite overwhelming evidence.
         </p>
       </div>
-      <div class="column">
+
+      <div class="phrase phrase-2">
         <p>
-          Objectivism: The belief that historical facts exist independently of
-          subjective interpretation and can be definitively established through
-          evidence.
+          Historical Revisionism: The legitimate scholarly process of
+          reinterpreting historical events.
         </p>
+      </div>
+
+      <div class="phrase phrase-3">
         <p>
-          Relativism: The view that historical truth is always contingent upon
-          cultural context, perspective, and power dynamics rather than
-          absolute.
+          Apologism: The defense or justification of controversial historical
+          actions.
         </p>
+      </div>
+
+      <div class="phrase phrase-4">
         <p>
-          Documentarianism: Emphasis on primary sources, archival materials, and
-          direct testimonies as the foundation for establishing historical
-          truth.
-        </p>
-        <p>
-          Narrativism: The understanding that history is inevitably shaped by
-          storytelling conventions and the imposition of narrative structures on
+          Trutherism: The promotion of alternative explanations for significant
           events.
         </p>
       </div>
-      <div class="column">
+
+      <div class="phrase phrase-5">
         <p>
-          Commemorativism: The approach to history that emphasizes
-          memorialization, ritualized remembrance, and the ethical duty to honor
-          victims.
+          Objectivism: The belief that historical facts exist independently of
+          subjective interpretation.
         </p>
+      </div>
+
+      <div class="phrase phrase-6">
         <p>
-          Reconstructionism: The methodical attempt to rebuild comprehensive
-          accounts of the past through multidisciplinary evidence and contextual
-          analysis.
+          Relativism: The view that historical truth is always contingent upon
+          cultural context.
         </p>
+      </div>
+
+      <div class="phrase phrase-7">
+        <p>
+          Documentarianism: Emphasis on primary sources and direct testimonies.
+        </p>
+      </div>
+
+      <div class="phrase phrase-8">
+        <p>
+          Narrativism: The understanding that history is inevitably shaped by
+          storytelling conventions.
+        </p>
+      </div>
+
+      <div class="phrase phrase-9">
         <p>
           Constructivism: The recognition that historical knowledge is socially
-          constructed through institutional practices, discourse, and cultural
-          frameworks.
+          constructed.
         </p>
+      </div>
+
+      <div class="phrase phrase-10">
         <p>
           Testimonialism: Privileging first-person accounts and witness
-          testimonies as essential, irreplaceable sources of historical
-          understanding.
+          testimonies.
         </p>
       </div>
     </div>
 
-    <h1 class="homeTitle">Narratives of Truth and Denial</h1>
+    <div class="title-container">
+      <h1 class="title">
+        Narratives of Truth and <span class="highlight">Denial</span>
+      </h1>
+    </div>
 
-    <div class="button-container">
-      <div class="tooltip-wrapper">
-        <button @click="scrollToBackground" class="start-button">
-          Launch Project
-        </button>
+    <!-- Updated scroll indicator style instead of button -->
+    <div class="home-scroll-container">
+      <div class="scroll-indicator" @click="scrollToBg1">
+        <div class="scroll-text">Scroll to continue</div>
+        <div class="scroll-arrow">↓</div>
         <span class="tooltip-text">
           Content Warning: Includes sensitive and potentially distressing and/or
           offensive material.
         </span>
       </div>
     </div>
-  </div>
-  <div class="home-container">
-    <Bg1 @scrollToBg2="scrollToBg2" />
+
+    <!-- Content sections with proper IDs -->
+    <div
+      id="bg1-section"
+      style="min-height: 100vh; display: block; width: 100%"
+    >
+      <Bg1 />
+    </div>
     <div id="bg2-section">
-      <Bg2 @scrollToBg3="scrollToBg3" />
+      <Bg2 />
     </div>
     <div id="bg3-section">
       <Bg3 />
@@ -99,46 +110,55 @@
 </template>
 
 <script setup>
-import Navbar from "@/components/Navbar.vue";
+import { ref } from "vue";
 import Bg1 from "@/components/Bg1.vue";
 import Bg2 from "@/components/Bg2.vue";
 import Bg3 from "../components/Bg3.vue";
 import MediaCoveragePast from "../components/MediaCoveragePast.vue";
 import Framing from "../components/Framing.vue";
 
-const scrollToBackground = () => {
-  const section = document.getElementById("background-section");
-  section?.scrollIntoView({ behavior: "smooth" });
+// Reference to columns container
+const columnsContainer = ref(null);
+
+// Scrolling functions
+const scrollToBg1 = () => {
+  const section = document.getElementById("bg1-section");
+
+  if (section) {
+    setTimeout(() => {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  } else {
+    console.error("Element with ID 'bg1-section' not found");
+  }
 };
 
 const scrollToBg2 = () => {
-  const section = document.querySelector("#bg2-section");
-  section?.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
+  const section = document.getElementById("bg2-section");
+  // if (section) {
+  //   section.scrollIntoView({ behavior: "smooth", block: "start" });
+  // }
 };
 
 const scrollToBg3 = () => {
-  const section = document.querySelector("#bg3-section");
-  section?.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
+  const section = document.getElementById("bg3-section");
+  if (section) {
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 };
 </script>
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Neuton:ital,wght@0,200;0,300;0,400;0,700;0,800;1,400&display=swap");
 
-/* Global styles to ensure black background and consistent appearance */
+/* Global styles */
 html,
 body,
 #app {
   margin: 0;
   padding: 0;
-  background-color: black !important;
-  color: white;
+  background-color: rgb(255, 255, 255) !important;
+  color: rgb(0, 0, 0);
   height: 100%;
   width: 100%;
   overflow-x: hidden;
@@ -147,117 +167,202 @@ body,
 /* Main container styles */
 .app-container {
   padding-top: 10px;
-  background-color: black;
+  background-color: rgb(255, 255, 255);
   min-height: 100vh;
   width: 100%;
+  color: black;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+
+/* Title container and styling - updated for overlay effect */
+.title-container {
+  position: relative;
+  z-index: 5; /* Lower z-index to allow some phrases to overlay */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  margin-top: 45vh;
+  margin-bottom: 50px;
+}
+
+/* Phrases container styling */
+.phrases-container {
+  position: absolute;
+  width: 90%;
+  max-width: 1500px;
+  height: 100vh; /* Full viewport height */
+  margin: 0 auto;
+  overflow: visible;
+  z-index: 1; /* Lower z-index to ensure it's behind the title */
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Base styling for all phrases - with blur effect */
+.phrase {
+  position: absolute;
+  width: 300px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  padding: 15px;
+  opacity: 0.5; /* Make phrases slightly transparent */
+  backdrop-filter: blur(3px); /* Add blur effect to background */
+  -webkit-backdrop-filter: blur(3px); /* For Safari support */
+  filter: blur(1.8px); /* Blur the text and content */
+  transition: filter 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Add hover effect to unblur when mouse is over */
+.phrase:hover {
+  filter: blur(0); /* Remove blur on hover */
+  opacity: 0.9; /* Increase opacity on hover */
+}
+
+.phrase p {
+  font-family: "Neuton", serif;
+  line-height: 1.6;
+  margin: 0;
+  color: rgb(50, 50, 50);
+  font-size: 0.95rem;
+}
+
+/* Individual phrase positioning */
+.phrase-1 {
+  top: 15%;
+  left: 10%;
+}
+
+.phrase-2 {
+  top: 30%;
+  left: 25%;
+}
+
+.phrase-3 {
+  top: 60%;
+  left: 15%;
+}
+
+.phrase-4 {
+  top: 75%;
+  left: 35%;
+}
+
+.phrase-5 {
+  top: 10%;
+  left: 55%;
+}
+
+.phrase-6 {
+  top: 25%;
+  left: 70%;
+}
+
+.phrase-7 {
+  top: 45%;
+  left: 50%;
+}
+
+.phrase-8 {
+  top: 60%;
+  left: 65%;
+}
+
+.phrase-9 {
+  top: 40%;
+  left: 30%;
+}
+
+.phrase-10 {
+  top: 70%;
+  left: 75%;
+}
+
+/* Update specific phrases to overlay the title */
+.phrase-3,
+.phrase-7,
+.phrase-9 {
+  z-index: 6; /* Higher than title to appear on top */
+  opacity: 0.4; /* Make them more transparent when overlaying */
+}
+
+/* Modify the hover effect for phrases that overlay the title */
+.phrase-3:hover,
+.phrase-7:hover,
+.phrase-9:hover {
+  opacity: 0.85; /* Slightly less opaque than regular phrases */
+}
+
+/* Home Scroll Container */
+.home-scroll-container {
+  text-align: center;
+  margin-top: 8vh; /* Reduced from 10vh for better spacing with lowered title */
+  padding-bottom: 50px;
+  position: relative;
+  z-index: 10; /* Same as title to be above phrases */
+  width: 100%;
+  display: flex;
   justify-content: center;
 }
 
-/* Title styling */
-.homeTitle {
-  text-align: center;
-  font-size: 3em;
-  margin-top: 350px;
-  margin-bottom: 50px;
-  color: white;
-  font-family: "Neuton", serif;
-  font-weight: bold;
-  width: 80%;
-  max-width: 1200px;
+/* Scroll indicator styling */
+.scroll-indicator {
   position: relative;
-  z-index: 2;
-}
-
-/* Three columns styling */
-.background-columns {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 80%;
-  max-width: 1200px;
-  margin: 0 auto;
-  gap: 30px;
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0.2;
-  z-index: 1;
-}
-
-.column {
-  flex: 1;
-  padding: 10px;
-}
-
-.column h2 {
-  font-family: "Neuton", serif;
-  font-size: 1.5em;
-  margin-bottom: 15px;
-  color: white;
-}
-
-.column p {
-  font-family: "Neuton", serif;
-  line-height: 1.6;
-  color: white;
-}
-
-.backgroundTitle {
-  font-family: "Neuton", serif;
-  padding-top: 80px;
-  padding-bottom: 10px;
-  color: white;
-}
-
-/* Button styles */
-.button-container {
-  color: white;
-  background-color: black;
-  text-align: center;
-  margin-top: 80px;
-  padding-bottom: 50px;
-}
-
-.tooltip-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-button {
-  background-color: transparent;
-  color: white;
-  border-radius: 9px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.start-button {
-  background-color: transparent;
-  color: white;
-  border: 2px solid white;
-  border-radius: 25px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  background-color: rgb(255, 255, 255);
+  flex-direction: column;
+  align-items: center;
   color: black;
-  border: 2px solid white;
+  opacity: 0.8;
+  cursor: pointer;
+  padding: 20px 20px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.scroll-indicator:hover {
+  opacity: 1;
+  background-color: rgba(220, 220, 220, 0.001);
+}
+
+.scroll-text {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  font-family: "Georgia", serif;
+  text-transform: uppercase;
+}
+
+.scroll-arrow {
+  font-size: 1.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
 }
 
 /* Tooltip styles */
 .tooltip-text {
   visibility: hidden;
-  color: white;
+  color: black;
   text-align: center;
   padding: 8px 12px;
   border-radius: 6px;
@@ -270,37 +375,16 @@ button:hover {
   font-size: 0.85em;
   opacity: 0;
   transition: opacity 0.3s ease;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(227, 225, 225, 0.767);
 }
 
-.tooltip-wrapper:hover .tooltip-text {
+.scroll-indicator:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
 }
 
-/* Container styles */
-.home-container {
-  position: relative;
-  width: 100%;
-  overflow: visible;
-  background-color: black;
-}
-
-.content-section {
-  position: relative;
-  height: auto;
-  min-height: 100vh;
-  overflow: visible;
-  z-index: 1;
-}
-
-.component-container {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  z-index: 2;
-}
-
+/* Section containers */
+#bg1-section,
 #bg2-section,
 #bg3-section {
   min-height: 100vh;
@@ -308,43 +392,44 @@ button:hover {
   position: relative;
 }
 
-/* Override any scroll indicators that might appear in the home view */
-.home-container > .scroll-indicator {
-  display: none !important;
+/* Title styling with subtle transparency */
+.title {
+  font-size: 4rem;
+  font-weight: 700;
+  text-align: center;
+  color: black;
+  font-family: "Neuton", serif;
+  position: relative;
+  padding: 15px 40px;
+  border-radius: 5px;
+  margin: 0;
+  letter-spacing: 0.02em;
+  background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent background */
+  backdrop-filter: blur(2px); /* Add a slight blur to the background */
+  -webkit-backdrop-filter: blur(2px);
 }
 
-/* Make sure scroll indicators only appear within their respective sections */
-#background-section .scroll-indicator,
-#background-section-2 .scroll-indicator {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-}
-
-/* Override any fixed positioning from child components in the home view */
-.app-container + * .scroll-indicator {
-  position: absolute !important;
-  display: none !important;
+/* Refined highlight styling for "Denial" with reduced height */
+.highlight {
+  background-color: black;
+  color: white;
+  padding: 0 8px; /* Horizontal padding only */
+  font-style: normal;
+  display: inline-block;
+  letter-spacing: 0.01em;
+  line-height: 1; /* Tighter line height */
+  transform: translateY(2px); /* Optional: slight vertical adjustment */
 }
 
 /* Media queries for better responsiveness */
 @media (max-width: 768px) {
-  .homeTitle {
-    font-size: 2.5em;
-    margin-top: 250px;
-    width: 90%;
+  .title {
+    font-size: 2.8em;
+    padding: 12px 20px;
   }
 
-  .background-columns {
-    flex-direction: column;
-    width: 90%;
-    top: 10%;
-  }
-
-  .column {
-    margin-bottom: 30px;
+  .phrase {
+    width: 250px;
   }
 
   .tooltip-text {
@@ -354,12 +439,18 @@ button:hover {
 }
 
 @media (max-height: 700px) {
-  .homeTitle {
-    margin-top: 120px;
+  .title-container {
+    margin-top: 40vh; /* Still lower but accommodates smaller screens */
   }
 
-  .button-container {
-    margin-top: 50px;
+  .home-scroll-container {
+    margin-top: 5vh;
+  }
+}
+
+@media (min-height: 900px) {
+  .title-container {
+    margin-top: 48vh; /* Even lower on larger screens */
   }
 }
 </style>

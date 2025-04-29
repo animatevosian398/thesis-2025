@@ -130,7 +130,7 @@
               </a>
             </div>
 
-            <div
+            <!-- <div
               class="matched-phrases"
               v-if="comment.matchedPhrases && comment.matchedPhrases.length > 0"
             >
@@ -142,7 +142,7 @@
               >
                 {{ phrase }}
               </span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -242,7 +242,7 @@ export default {
     visibleComments() {
       // If the active stance is "all", show all comments
       if (this.activeStance === "all") {
-        return this.commentsData;
+        // return this.commentsData;
       }
 
       // If the active stance is an array (for multiple stances), filter matching comments
@@ -537,7 +537,7 @@ export default {
 .text-visualizer {
   background-color: white;
   color: #111111;
-  padding: 40px 80px 60px 80px;
+  padding: 0px 80px 60px 70px;
   width: 100%;
   box-sizing: border-box;
   height: 100vh;
@@ -545,14 +545,14 @@ export default {
 }
 
 .header {
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .title h3 {
   font-size: 25px;
   font-weight: bold;
-  padding: 20px;
-  margin-top: 30px;
+  padding: 0px;
+  margin-top: 0px;
   font-family: "General Sans", sans-serif;
   color: #333;
   margin-bottom: 0px;
@@ -756,7 +756,7 @@ h5 {
   padding: 1px 3px;
   margin-right: 3px;
   border-radius: 2px;
-  display: inline-block;
+  display: inline;
 }
 
 /* Stance colors */
@@ -909,7 +909,7 @@ body,
   background-color: white;
   cursor: pointer;
   padding: 20px 30px 10px 0px; /* Added right padding for arrow */
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   line-height: 1.4;
   min-height: 50px; /* Ensure height for wrapped text */
   -webkit-appearance: none;
@@ -1045,5 +1045,17 @@ body,
   background-color: white;
   position: sticky;
   top: 0;
+}
+.highlight::before,
+.highlight::after {
+  content: none !important; /* Prevent any generated content */
+}
+.highlight {
+  background-color: rgba(255, 255, 0, 0.4); /* Highlight color */
+  display: inline !important; /* Force inline display */
+  padding: 0; /* Remove extra padding */
+  border-radius: 0; /* No rounded corners */
+  line-height: inherit; /* Match the line height of surrounding text */
+  vertical-align: baseline; /* Align with the text baseline */
 }
 </style>

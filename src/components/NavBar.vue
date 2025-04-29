@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white px-0">
     <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom"> -->
     <div class="container">
       <a class="navbar-brand" href="/">Narratives of Truth and Denial</a>
@@ -45,37 +45,40 @@
 <style scoped>
 .navbar {
   position: fixed;
+  background-color: transparent !important;
+
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
   z-index: 1000;
   padding: 0.5rem 0;
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
 }
 
 /* Container for navbar content */
 .container {
-  display: flex;
-  justify-content: space-between;
+  display: flex !important;
+  justify-content: flex-start !important; /* Start from left instead of space-between */
   align-items: center;
   width: 100%;
   max-width: 1200px; /* Set a consistent max width */
-  padding: 0 24px; /* Consistent padding on both sides */
+  padding: 0px 0px 0px 0px; /* Consistent padding on both sides */
   margin: 0 auto;
   box-sizing: border-box; /* Include padding in width calculations */
 }
 
-/* Brand styling - aligned far left */
+/* Brand styling - aligned far left - fix with !important rules */
 .navbar-brand {
   color: #333;
   padding: 0.5rem 0;
   font-size: 1rem;
   font-weight: 500;
   text-decoration: none;
-  margin-left: 0; /* Remove negative margin */
-  margin-right: 2rem; /* Add proper spacing between brand and nav items */
+  margin-left: 0 !important; /* Ensure no left margin with !important */
+  margin-right: auto !important; /* Push everything else to the right */
+  text-align: left !important; /* Explicitly left align text */
+  float: left !important; /* Force left floating */
+  display: block !important; /* Ensure it behaves as a block element */
 }
 
 /* Navigation items - aligned right */
@@ -120,7 +123,7 @@
   }
 
   .nav-item {
-    margin-left: 10px;
+    margin-left: 0px;
   }
 
   .nav-link {
@@ -138,7 +141,7 @@
 
   .navbar-nav {
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-between;
   }
 
   .nav-item {
@@ -224,5 +227,10 @@ option {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
+}
+
+/* Add additional space between brand and nav items */
+.navbar-collapse {
+  margin-left: auto !important; /* Push to right edge */
 }
 </style>

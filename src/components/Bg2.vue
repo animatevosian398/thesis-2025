@@ -1,25 +1,50 @@
 <template>
   <div id="bg2-section" class="background-section-2" ref="bg2Section">
-    <h1 class="backgroundTitle" ref="title">Post-1915</h1>
-    <h3 ref="content">
-      Turkey's official stance on the genocide evolved from silence, to a more
-      complicated form of denial and revisionist reframing of history. They
-      frame the events as justified due to suspected Armenian alliances with
-      Russia and also a relocation for their own safety, a relocation which
-      essentially was a death march through the Syrian desert; they acknowledge
-      the Armenian deaths, but as a consequence of other factors like famine and
-      disease or wartime causes. The systematic denial of the Armenian Genocide
-      has profound consequences. Beyond historical revisionism, it prevents
-      healing for survivors and their descendants while creating a precedent for
-      impunity regarding mass atrocities. However, the Ottoman Empire had
-      previously attacked Armenians during the Hamidian Massacres in the 1800s,
-      so this was not a single, unrelated event. [cite]?
-      <br /><br />
-      This denial extends beyond Turkey, influencing international relations and
-      historical education. For Armenian communities worldwide, this represents
+    <h2 class="date">Post-1915</h2>
+    <h1 class="backgroundTitle" ref="title">Turkey's Denial</h1>
+    <!-- Split paragraph into multiple sections for animated reveal -->
+    <div ref="content" class="content-container">
+      <p class="paragraph-section" ref="para1">
+        Turkey's official stance on the genocide evolved from silence, to a more
+        complicated form of denial and revisionist reframing of history. They
+        frame the events as justified due to suspected Armenian alliances with
+        Russia and also a relocation for their own safety, a relocation which
+        essentially was a death march through the Syrian desert; they
+        acknowledge the Armenian deaths, but as a consequence of other factors
+        like famine and disease or wartime causes.
+      </p>
+
+      <p class="paragraph-section quote" ref="para2">
+        "While it is true that some Armenians protested unfair taxation, and
+        some did defect to Russia during the war, they were vastly outnumbered
+        by the millions of peaceful residents of the Ottoman Empire who were
+        forced into labor, deportation, and concentration camps. Scholars agree
+        on this overwhelmingly."
+        <a
+          href="https://www.vice.com/en/article/how-google-searches-are-promoting-genocide-denial/"
+          target="_blank"
+          class="citation-link"
+          >(Merchant)</a
+        >
+      </p>
+
+      <p class="paragraph-section" ref="para3">
+        The systematic denial of the Armenian Genocide has profound
+        consequences. Beyond historical revisionism, it prevents healing for
+        survivors and their descendants while creating a precedent for impunity
+        regarding mass atrocities.
+      </p>
+
+      <p class="paragraph-section" ref="para4">
+        This denial extends beyond Turkey's borders, influencing international
+        relations, historical education, and even
+        <span class="highlight">discourse online.</span>
+      </p>
+
+      <!-- For Armenian communities worldwide, this represents
       not only a historical injustice but an ongoing wound that affects their
-      identity and relationship with their heritage.
-    </h3>
+      identity and relationship with their heritage. -->
+    </div>
   </div>
 </template>
 
@@ -36,6 +61,12 @@ export default {
     const bg2Section = ref(null);
     const title = ref(null);
     const content = ref(null);
+
+    // Add refs for paragraphs
+    const para1 = ref(null);
+    const para2 = ref(null);
+    const para3 = ref(null);
+    const para4 = ref(null);
 
     // Method that can be called to trigger the animation
     const triggerAnimation = () => {
@@ -54,28 +85,41 @@ export default {
         delay: 0.3,
         ease: "power2.out",
       });
-
-      gsap.to(content.value, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        delay: 0.6,
-        ease: "power2.out",
-      });
     };
 
     onMounted(() => {
       // Initial states - start hidden
       gsap.set(bg2Section.value, { opacity: 0 });
       gsap.set(title.value, { opacity: 0, y: 30 });
-      gsap.set(content.value, { opacity: 0, y: 30 });
 
-      // Create scroll trigger for fade-in
+      // Set initial state for paragraphs
+      gsap.set([para1.value, para2.value, para3.value, para4.value], {
+        opacity: 0,
+        y: 20,
+      });
+
+      // Create scroll trigger for fade-in of the section
       ScrollTrigger.create({
         trigger: bg2Section.value,
-        start: "top 80%", // Starts animation when top of section is 80% from top of viewport
+        start: "top 10%",
         onEnter: triggerAnimation,
         once: false,
+      });
+
+      // Create scroll triggers for each paragraph
+      const paragraphs = [para1.value, para2.value, para3.value, para4.value];
+      paragraphs.forEach((para, index) => {
+        gsap.to(para, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: para,
+            start: "top 90%", // When paragraph is 85% from top of viewport
+            end: "top 60%",
+            toggleActions: "play none none reverse", // Play animation when entering, reverse when scrolling back up
+          },
+        });
       });
     });
 
@@ -83,6 +127,10 @@ export default {
       bg2Section,
       title,
       content,
+      para1,
+      para2,
+      para3,
+      para4,
       triggerAnimation,
     };
   },
@@ -90,24 +138,86 @@ export default {
 </script>
 
 <style scoped>
+/* Parent container alignment */
 .background-section-2 {
   min-height: 100vh;
-  background: #000000;
-  color: white;
+  background-color: rgba(222, 222, 222, 0.682);
+  color: rgba(30, 29, 29, 0.786);
   display: block;
-  padding: 10%;
-  justify-content: left;
-  align-items: center;
-  text-align: left;
-  /* Remove any margins that might be causing spacing */
+  font-family: "Helvetica";
+  padding: 10% 10% 10% 10%; /* Top Right Bottom Left */
+  text-align: left; /* Explicitly set left alignment */
   margin-top: 0;
   margin-bottom: 0;
 }
 
+/* Date styling */
+.date {
+  margin-left: 0; /* Changed from 6px to 0 for perfect alignment */
+  font-size: 1.5rem;
+  margin-top: 80px;
+  font-family: "Helvetica";
+  color: rgba(0, 0, 0, 0.694);
+  text-align: left; /* Explicit left alignment */
+  display: block; /* Ensure it takes full width */
+}
+
+/* Title styling */
 .backgroundTitle {
-  /* font-family: "Helvetica"; */
-  font-family: "aktiv-grotesk", "General Sans", sans-serif;
-  padding-top: 80px;
-  padding-bottom: 10px;
+  font-family: "Helvetica";
+  font-size: calc(3.4rem + 1vw);
+  margin-top: 0px;
+  margin-bottom: 20px;
+  width: 100%; /* Changed from 50% to 100% for consistency */
+  color: black;
+  text-align: left; /* Explicit left alignment */
+  padding-left: 0; /* Ensure no padding shifts it */
+}
+
+/* Content container */
+.content-container {
+  max-width: 800px;
+  margin-left: 0; /* Align with left edge */
+  padding-left: 0; /* Ensure no padding shifts content */
+}
+
+/* Rest of your styles remain unchanged */
+.citation-link {
+  color: rgba(16, 16, 16, 0.8);
+  text-decoration: none;
+  transition: color 0.2s, border-bottom-color 0.2s;
+  font-style: italic;
+}
+
+.citation-link:hover {
+  color: rgb(0, 0, 0);
+  border-bottom-color: rgb(39, 38, 38);
+}
+
+.highlight {
+  background-color: rgb(255, 255, 255);
+  color: black;
+  padding: 0 4px; /* Horizontal padding only */
+  display: inline-block;
+  line-height: 1.1;
+  position: relative;
+  font-weight: 600;
+  transform: translateY(0);
+}
+
+.paragraph-section {
+  color: rgb(48, 48, 48);
+  font-family: "Helvetica";
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 1.8rem;
+  opacity: 0; /* Start invisible */
+  text-align: left; /* Ensure paragraphs are left-aligned */
+}
+
+.quote {
+  padding-left: 20px;
+  font-style: italic;
+  border-left: 3px solid rgba(0, 0, 0, 0.2); /* Add a subtle left border to quotes */
 }
 </style>

@@ -382,7 +382,7 @@ export default {
     return {
       isHovered: null,
       activeStance: null,
-      activeDocument: null, // Add this data property to track the selected document
+      activeDocument: null,
     };
   },
   methods: {
@@ -440,8 +440,7 @@ h3 {
 .highlight {
   transition: background-color 0.2s ease;
   cursor: pointer;
-  padding: 2px 0;
-  border-radius: 2px;
+  /* padding: 2px 0; */
 }
 
 /* The default state with lower opacity */

@@ -1,5 +1,9 @@
 <template>
-  <div class="stance-page-container" :style="{ backgroundColor: stanceColor }">
+  <div
+    @click="togglePause"
+    class="stance-page-container"
+    :style="{ backgroundColor: stanceColor }"
+  >
     <div @click="goBack" class="back-arrow">← Back</div>
 
     <div class="content-container">
@@ -18,7 +22,7 @@
         </div>
       </div>
 
-      <div class="controls">
+      <!-- <div class="controls">
         <button
           class="control-button"
           @click="togglePause"
@@ -26,8 +30,8 @@
         >
           {{ isPaused ? "▶ Play" : "❚❚ Pause" }}
         </button>
-        <!-- <div class="comment-counter">{{ comments.length }} comments</div> -->
-      </div>
+        <div class="comment-counter">{{ comments.length }} comments</div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -89,7 +93,6 @@ export default defineComponent({
               // Add a space between sentences if missing
               cleanedText = cleanedText.replace(/([.!?])([A-Z])/g, "$1 $2");
 
-              // Bold the word "sorry" and "apologize"
               cleanedText = cleanedText
                 .replace(/deny/gi, "<b>$&</b>")
                 .replace(/denial/gi, "<b>$&</b>");
