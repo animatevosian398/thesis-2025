@@ -128,24 +128,23 @@ export default defineComponent({
       this.allCommentsVisible = false;
 
       this.scrollInterval = setInterval(() => {
-        if (this.isPaused || this.allCommentsVisible) return; // Skip if paused or all comments are visible
+        if (this.isPaused || this.allCommentsVisible) return;
 
-        const currentTop = parseFloat(scrollingElement.style.top) || 50;
-        const newTop = currentTop - 0.15; // Slower scroll for better readability
+        const scrollingElement = this.$refs.scrollingComments;
+        const currentTop = parseFloat(scrollingElement.style.top) || 0;
+        const newTop = currentTop - 2; // Increase for faster speed (pixels)
 
-        scrollingElement.style.top = `${newTop}%`;
+        scrollingElement.style.top = `${newTop}px`;
 
-        // Reset when content scrolls completely off the top
+        const containerHeight = scrollingElement.parentElement.offsetHeight;
         const contentHeight = scrollingElement.offsetHeight;
-        const containerHeight =
-          this.$refs.scrollingComments.parentElement.offsetHeight;
-        const resetPoint = -100 * (contentHeight / containerHeight) * 1.5; // Adjust for content height
-        if (newTop < resetPoint) {
+
+        if (Math.abs(newTop) > contentHeight - containerHeight) {
           this.stopScrolling();
           this.allCommentsVisible = true;
-          scrollingElement.style.top = "50%"; // Reset to centered
+          scrollingElement.style.top = "0px"; // Reset
         }
-      }, 50);
+      }, 1);
     },
     stopScrolling() {
       if (this.scrollInterval) {
@@ -232,13 +231,13 @@ export default defineComponent({
   width: 100%;
   padding: 0 20px;
   white-space: normal;
-  font-size: 14px;
+  font-size: 80px;
   line-height: 1.6; /* Increased line height for better readability */
   opacity: 0.8; /* Slightly higher opacity */
   text-align: center;
   transform: translateY(-50%); /* Center content vertically */
   letter-spacing: 0.2px; /* Better letter spacing */
-  word-spacing: 1px; /* Better word spacing */
+  word-spacing: 1px;
 }
 
 .comment {

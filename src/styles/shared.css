@@ -1,26 +1,29 @@
 /* Government Text Styles */
 .government-text {
   width: 100%;
-  padding-right: 20px;
-  line-height: 1.6;
+  padding: 0 2px; /* Add 20px padding to left and right sides */
+  line-height: 1.4; /* Keep your tighter line-height for compact display */
   font-size: 18px;
-  text-align: left;
-  font-family: "Georgia", serif;
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
   overflow-y: auto;
   box-sizing: border-box;
+  color: black !important; /* Force black text */
+  margin: 0 0 30px 0; /* Add bottom margin of 30px */
 }
 
 .government-text p {
   margin-bottom: 15px;
   text-align: left;
+  color: black !important;
 }
 
 .source-note {
   font-size: 0.85em;
-  color: #666;
+  color: black !important; /* Changed from #666 and #6e2424 */
   margin-top: 0.1em;
   margin-bottom: 2.5em;
   text-align: left;
@@ -28,7 +31,7 @@
 }
 
 .source-note a {
-  color: grey;
+  color: black !important; /* Changed from grey */
   text-decoration: none;
   font-family: "Times New Roman", Times, serif;
 }
@@ -37,42 +40,22 @@
   text-decoration: underline;
 }
 
-.government-text {
-  width: 100%;
-  padding-right: 20px;
-  line-height: 1.6;
-  font-size: 18px;
-  text-align: left;
-  font-family: "Georgia", serif;
-  /* font-family: "Times New Roman", Times, serif; */
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  overflow-y: auto;
-  box-sizing: border-box;
-}
-
 h3 {
-  font-size: 20px;
+  font-size: 18px;
   background-color: white;
-  font-family: "Vollkorn", serif;
+  font-family: "Times New Roman", Times, serif;
   margin-bottom: 8px;
-  color: #333;
+  color: black !important; /* Changed from #333 */
   text-align: left;
   position: sticky;
   top: 0;
 }
 
-.government-text p {
-  margin-bottom: 15px;
-  text-align: left;
-}
-
 /* Base highlight styles with lower opacity */
 .highlight {
   transition: background-color 0.2s ease;
-  cursor: pointer;
-  padding: 2px 0;
+  cursor: pointer; /* Add this line to show pointer cursor */
+  padding: 0px 0;
   display: inline;
   /* border-radius: 2px; */
 }
@@ -102,6 +85,55 @@ h3 {
   background-color: rgba(135, 178, 194, 0.4);
 }
 
+/* Same for other highlight types */
+.highlight-procedural,
+.highlight-minimization,
+.highlight-justification,
+.highlight-explicit-denial,
+.highlight-competitive-victimhood,
+.highlight-reconciliation {
+  cursor: pointer; /* Add this line to all highlight types */
+  transition: background-color 0.2s ease;
+}
+.highlight,
+.highlight-procedural,
+.highlight-minimization,
+.highlight-justification,
+.highlight-explicit-denial,
+.highlight-competitive-victimhood,
+.highlight-reconciliation {
+  cursor: pointer !important;
+  position: relative;
+}
+
+/* Add a subtle hover effect with a small increase in opacity */
+.highlight:hover,
+.highlight-procedural:hover,
+.highlight-minimization:hover,
+.highlight-justification:hover,
+.highlight-explicit-denial:hover,
+.highlight-competitive-victimhood:hover,
+.highlight-reconciliation:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+/* You could also add an underline on hover */
+.highlight:hover::after,
+.highlight-procedural:hover::after,
+.highlight-minimization:hover::after,
+.highlight-justification:hover::after,
+.highlight-explicit-denial:hover::after,
+.highlight-competitive-victimhood:hover::after,
+.highlight-reconciliation:hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
 /* Hover state with higher opacity */
 .highlight-active.highlight-explicit-denial {
   background-color: rgba(229, 57, 53, 0.8);
@@ -156,25 +188,36 @@ h3 {
   background-color: rgba(135, 178, 194, 0.8);
 }
 
-.source-note {
-  font-size: 0.85em;
-  color: #6e2424;
-  margin-top: 0.1em;
-  margin-bottom: 2em;
-  text-align: left;
-  font-family: "Times New Roman", Times, serif;
+/* Ensure highlighted text is readable on colored backgrounds */
+/* For highlights that would normally have white text */
+.highlight-selected.highlight-explicit-denial,
+.highlight-selected.highlight-reconciliation,
+.highlight-selected.highlight-procedural {
+  color: white !important; /* Keep white text for better contrast on dark highlights */
 }
 
-.source-note a {
-  color: grey;
-  text-decoration: none;
-  font-family: "Times New Roman", Times, serif;
+/* For all other highlights, ensure black text */
+.highlight:not(.highlight-selected.highlight-explicit-denial):not(
+    .highlight-selected.highlight-reconciliation
+  ):not(.highlight-selected.highlight-procedural) {
+  color: black !important;
 }
 
-.source-note a:hover {
-  text-decoration: underline;
+/* Add a general rule to catch any other text elements */
+.government-text-container {
+  color: black !important;
+  width: 55%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  line-height: 1;
+  padding: 0 0px 0px 0px; /* Add padding left, right and bottom */
+  margin: 10px 0; /* Add vertical margin */
+  max-height: 80vh;
+  scrollbar-width: none;
 }
 
-.source-note a {
-  color: grey;
+/* Override any specific text colors in links */
+a {
+  color: black !important;
 }

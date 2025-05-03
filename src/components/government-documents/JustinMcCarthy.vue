@@ -19,7 +19,6 @@
             'highlight-selected':
               activeStance === 'Procedural_Deflection_Evidence_Archives',
           }"
-          @mouseenter="onMouseEnter('Procedural_Deflection_Evidence_Archives')"
           @click="toggleActiveStance('Procedural_Deflection_Evidence_Archives')"
         >
           Throughout recent debate on the Armenian Question one statement has
@@ -45,7 +44,6 @@
             'highlight-active': isHovered === 'Explicit_Denial',
             'highlight-selected': activeStance === 'Explicit_Denial',
           }"
-          @mouseenter="onMouseEnter('Explicit_Denial')"
           @click="toggleActiveStance('Explicit_Denial')"
         >
           Nationalists who use history have a different set of goals. They use
@@ -64,7 +62,6 @@
             'highlight-active': isHovered === 'Justification_Narrative',
             'highlight-selected': activeStance === 'Justification_Narrative',
           }"
-          @mouseenter="onMouseEnter('Justification_Narrative')"
           @click="toggleActiveStance('Justification_Narrative')"
         >
           Like other men and women, historians have political goals and
@@ -103,7 +100,6 @@
             'highlight-active': isHovered === 'Minimization_Reframing',
             'highlight-selected': activeStance === 'Minimization_Reframing',
           }"
-          @mouseenter="onMouseEnter('Minimization_Reframing')"
           @click="toggleActiveStance('Minimization_Reframing')"
         >
           Two inferences can be drawn from the relatively small number of
@@ -122,9 +118,6 @@
             'highlight-selected':
               activeStance === 'Competitive_Victimhood_Historical_Inversion',
           }"
-          @mouseenter="
-            onMouseEnter('Competitive_Victimhood_Historical_Inversion')
-          "
           @click="
             toggleActiveStance('Competitive_Victimhood_Historical_Inversion')
           "
@@ -142,7 +135,6 @@
             'highlight-active': isHovered === 'Reconciliation_Discourse',
             'highlight-selected': activeStance === 'Reconciliation_Discourse',
           }"
-          @mouseenter="onMouseEnter('Reconciliation_Discourse')"
           @click="toggleActiveStance('Reconciliation_Discourse')"
         >
           I suggest, as I have suggested before, that the Turkish Republic
@@ -158,7 +150,6 @@
             'highlight-selected':
               activeStance === 'Procedural_Deflection_Evidence_Archives',
           }"
-          @mouseenter="onMouseEnter('Procedural_Deflection_Evidence_Archives')"
           @click="toggleActiveStance('Procedural_Deflection_Evidence_Archives')"
         >
           All archives should be opened to the commission - not only the Ottoman
@@ -196,5 +187,5 @@ export default {
 </script>
 
 <style scoped>
-/* @import "../styles/shared.css"; */
+@import "../../styles/shared.css";
 </style>

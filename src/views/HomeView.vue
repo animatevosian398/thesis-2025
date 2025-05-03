@@ -1,85 +1,53 @@
 <template>
   <div class="app-container">
-    <!-- Positioned phrases that go behind the title -->
-    <div class="phrases-container" ref="columnsContainer">
-      <!-- Individual phrases with absolute positioning -->
-      <div class="phrase phrase-1">
-        <p>
-          Denialism: The systematic rejection of established historical facts
-          despite overwhelming evidence.
-        </p>
-      </div>
-
-      <div class="phrase phrase-2">
-        <p>
-          Historical Revisionism: The legitimate scholarly process of
-          reinterpreting historical events.
-        </p>
-      </div>
-
-      <div class="phrase phrase-3">
-        <p>
-          Apologism: The defense or justification of controversial historical
-          actions.
-        </p>
-      </div>
-
-      <div class="phrase phrase-4">
-        <p>
-          Trutherism: The promotion of alternative explanations for significant
-          events.
-        </p>
-      </div>
-
-      <div class="phrase phrase-5">
-        <p>
-          Objectivism: The belief that historical facts exist independently of
-          subjective interpretation.
-        </p>
-      </div>
-
-      <div class="phrase phrase-6">
-        <p>
-          Relativism: The view that historical truth is always contingent upon
-          cultural context.
-        </p>
-      </div>
-
-      <div class="phrase phrase-7">
-        <p>
-          Documentarianism: Emphasis on primary sources and direct testimonies.
-        </p>
-      </div>
-
-      <div class="phrase phrase-8">
-        <p>
-          Narrativism: The understanding that history is inevitably shaped by
-          storytelling conventions.
-        </p>
-      </div>
-
-      <div class="phrase phrase-9">
-        <p>
-          Constructivism: The recognition that historical knowledge is socially
-          constructed.
-        </p>
-      </div>
-
-      <div class="phrase phrase-10">
-        <p>
-          Testimonialism: Privileging first-person accounts and witness
-          testimonies.
-        </p>
+    <!-- Replace the static continuous text with auto-scrolling text -->
+    <div class="continuous-text-container">
+      <div class="continuous-text" ref="scrollContainer">
+        <div
+          class="scrolling-content"
+          :style="{ transform: `translateY(${-scrollPosition}px)` }"
+        >
+          <p>
+            <span
+              v-for="(comment, index) in backgroundComments"
+              :key="index"
+              :class="comment.type"
+            >
+              {{ comment.text }} <span class="separator">•</span>
+            </span>
+          </p>
+          <!-- Duplicate content for seamless looping -->
+          <p class="duplicate-content">
+            <span
+              v-for="(comment, index) in backgroundComments"
+              :key="'duplicate-' + index"
+              :class="comment.type"
+            >
+              {{ comment.text }} <span class="separator">•</span>
+            </span>
+          </p>
+        </div>
       </div>
     </div>
 
+    <!-- Background SVG image remains the same -->
+    <div class="background-svg-container">
+      <img
+        src="/assets/full-width-desert.svg"
+        alt="Background pattern"
+        class="background-svg"
+      />
+    </div>
+
+    <!-- Rest of your template remains the same -->
     <div class="title-container">
       <h1 class="title">
+        <!-- Narratives of Truth and Denial -->
+
         Narratives of Truth and <span class="highlight">Denial</span>
       </h1>
     </div>
 
-    <!-- Updated scroll indicator style instead of button -->
     <div class="home-scroll-container">
       <div class="scroll-indicator" @click="scrollToBg1">
         <div class="scroll-text">Scroll to continue</div>
@@ -106,24 +74,27 @@
     </div>
     <MediaCoveragePast />
     <Framing />
+    <ThreeChartComparison />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import Bg1 from "@/components/Bg1.vue";
 import Bg2 from "@/components/Bg2.vue";
 import Bg3 from "../components/Bg3.vue";
 import MediaCoveragePast from "../components/MediaCoveragePast.vue";
 import Framing from "../components/Framing.vue";
+import Papa from "papaparse";
+import * as d3 from "d3";
+import ThreeChartComparison from "../components/ThreeChartComparison.vue";
 
-// Reference to columns container
-const columnsContainer = ref(null);
+// Array to store filtered background comments
+const backgroundComments = ref([]);
 
-// Scrolling functions
+// Scrolling functions remain the same
 const scrollToBg1 = () => {
   const section = document.getElementById("bg1-section");
-
   if (section) {
     setTimeout(() => {
       section.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -133,19 +104,116 @@ const scrollToBg1 = () => {
   }
 };
 
-const scrollToBg2 = () => {
-  const section = document.getElementById("bg2-section");
-  // if (section) {
-  //   section.scrollIntoView({ behavior: "smooth", block: "start" });
-  // }
+// Other scroll functions remain the same...
+
+// Function to load and filter comments from CSV
+const loadComments = () => {
+  fetch("/assets/Classified_Comments.csv")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+      return response.text();
+    })
+    .then((csvText) => {
+      Papa.parse(csvText, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          // Filter for the specified stances
+          const filteredComments = results.data.filter((row) => {
+            const stance = (row.predicted_stance || "").toLowerCase();
+            return (
+              stance.includes("explicit_denial") ||
+              stance.includes("justification_narrative") ||
+              stance.includes("sympathy_memorial_commemorative")
+            );
+          });
+
+          // Process and format the comments
+          const processedComments = filteredComments
+            .slice(0, 100) // Increase to get more comments for the continuous text
+            .map((row) => {
+              // Determine the comment type for styling
+              let type = "other-comment";
+              const stance = (row.predicted_stance || "").toLowerCase();
+
+              if (stance.includes("explicit_denial")) {
+                type = "denial-comment";
+              } else if (stance.includes("justification_narrative")) {
+                type = "justification-comment";
+              } else if (stance.includes("sympathy_memorial_commemorative")) {
+                type = "sympathy-comment";
+              }
+
+              return {
+                text: row.cleaned_text || "",
+                type: type,
+                date: row.publish_date || "",
+                author: row.author || "Anonymous",
+              };
+            });
+
+          // Shuffle the comments for more variety
+          backgroundComments.value = processedComments.sort(
+            () => Math.random() - 0.5
+          );
+          console.log(`Loaded ${processedComments.length} filtered comments`);
+        },
+        error: (error) => {
+          console.error("Error parsing CSV:", error);
+        },
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching CSV:", error);
+    });
 };
 
-const scrollToBg3 = () => {
-  const section = document.getElementById("bg3-section");
-  if (section) {
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
+// Add these variables for smooth scrolling
+const scrollPosition = ref(0);
+const scrollSpeed = 0.5; // pixels per second - very slow for subtle effect
+let animationFrameId = null;
+let lastTimestamp = null;
+const scrollContainer = ref(null);
+
+// Auto-scroll animation function
+const animate = (timestamp) => {
+  if (!lastTimestamp) lastTimestamp = timestamp;
+
+  const deltaTime = timestamp - lastTimestamp;
+  lastTimestamp = timestamp;
+
+  // Update scroll position
+  scrollPosition.value += (scrollSpeed * deltaTime) / 16; // Smooth movement
+
+  // Reset when we've scrolled through the first set of content
+  if (scrollContainer.value) {
+    const firstContentHeight = scrollContainer.value.scrollHeight / 2;
+    if (scrollPosition.value >= firstContentHeight) {
+      scrollPosition.value = 0;
+      lastTimestamp = null;
+    }
   }
+
+  animationFrameId = requestAnimationFrame(animate);
 };
+
+// Start and clean up animation
+onMounted(() => {
+  loadComments();
+
+  // Start scrolling animation with a slight delay to ensure content is loaded
+  setTimeout(() => {
+    animationFrameId = requestAnimationFrame(animate);
+  }, 1000);
+});
+
+onUnmounted(() => {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+  }
+});
 </script>
 
 <style>
@@ -178,10 +246,10 @@ body,
   position: relative;
 }
 
-/* Title container and styling - updated for overlay effect */
+/* Title container and styling */
 .title-container {
   position: relative;
-  z-index: 5; /* Lower z-index to allow some phrases to overlay */
+  z-index: 50 !important; /* Higher than SVG (20) and override any other z-index */
   width: 100%;
   display: flex;
   justify-content: center;
@@ -190,122 +258,106 @@ body,
   margin-top: 45vh;
   margin-bottom: 50px;
 }
-
-/* Phrases container styling */
-.phrases-container {
-  position: absolute;
-  width: 90%;
-  max-width: 1500px;
-  height: 100vh; /* Full viewport height */
-  margin: 0 auto;
-  overflow: visible;
-  z-index: 1; /* Lower z-index to ensure it's behind the title */
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Base styling for all phrases - with blur effect */
-.phrase {
-  position: absolute;
-  width: 300px;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  padding: 15px;
-  opacity: 0.5; /* Make phrases slightly transparent */
-  backdrop-filter: blur(3px); /* Add blur effect to background */
-  -webkit-backdrop-filter: blur(3px); /* For Safari support */
-  filter: blur(1.8px); /* Blur the text and content */
-  transition: filter 0.3s ease; /* Smooth transition for hover effect */
-}
-
-/* Add hover effect to unblur when mouse is over */
-.phrase:hover {
-  filter: blur(0); /* Remove blur on hover */
-  opacity: 0.9; /* Increase opacity on hover */
-}
-
-.phrase p {
+/* Title styling */
+.title {
+  font-size: 4rem;
+  font-weight: 700;
+  text-align: center;
+  color: black;
   font-family: "Neuton", serif;
-  line-height: 1.6;
+  position: relative;
+  padding: 1px 20px;
+  border-radius: 5px;
   margin: 0;
-  color: rgb(50, 50, 50);
-  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(2px); /* Reduced from 4px to 2px for softer effect */
+  -webkit-backdrop-filter: blur(2px);
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.08
+  ); /* Reduced opacity from 0.113 to 0.08 */
+  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.1); /* Reduced size and opacity of glow */
 }
 
-/* Individual phrase positioning */
-.phrase-1 {
-  top: 15%;
-  left: 10%;
+/* Highlight styling for "Denial" */
+.highlight {
+  color: white !important;
+  position: relative;
+  background-color: transparent; /* Remove background from the element itself */
+  padding: 0;
+  font-style: normal;
+  display: inline;
+  letter-spacing: 0.01em;
+  line-height: inherit; /* Use the parent's line height */
+  vertical-align: baseline;
+  z-index: 1; /* Make sure text is above the background */
 }
 
-.phrase-2 {
-  top: 30%;
-  left: 25%;
+/* Create the background as a pseudo-element */
+.highlight::before {
+  content: "";
+  position: absolute;
+  background-color: black;
+  width: 100%;
+  height: 0.9em; /* Control the height of the background */
+  left: 0;
+  top: 0.15em; /* Adjust this value to move the background down */
+  z-index: -1; /* Place it behind the text */
+  padding: 0 2px; /* Add horizontal padding to the background */
+  box-sizing: border-box;
 }
 
-.phrase-3 {
-  top: 60%;
-  left: 15%;
+/* Make sure the title's highlight has the right color */
+.title .highlight {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
 }
 
-.phrase-4 {
-  top: 75%;
-  left: 35%;
+/* Adjust the title highlight background separately */
+.title .highlight::before {
+  height: 0.9em;
+  top: 0.15em; /* Move the background down slightly for the title */
+  padding: 0 4px; /* Larger horizontal padding for the title */
 }
 
-.phrase-5 {
-  top: 10%;
-  left: 55%;
+/* Background SVG styling */
+.background-svg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 20;
+  opacity: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
-.phrase-6 {
-  top: 25%;
-  left: 70%;
-}
-
-.phrase-7 {
-  top: 45%;
-  left: 50%;
-}
-
-.phrase-8 {
-  top: 60%;
-  left: 65%;
-}
-
-.phrase-9 {
-  top: 40%;
-  left: 30%;
-}
-
-.phrase-10 {
-  top: 70%;
-  left: 75%;
-}
-
-/* Update specific phrases to overlay the title */
-.phrase-3,
-.phrase-7,
-.phrase-9 {
-  z-index: 6; /* Higher than title to appear on top */
-  opacity: 0.4; /* Make them more transparent when overlaying */
-}
-
-/* Modify the hover effect for phrases that overlay the title */
-.phrase-3:hover,
-.phrase-7:hover,
-.phrase-9:hover {
-  opacity: 0.85; /* Slightly less opaque than regular phrases */
+/* Background SVG styling to fill width while maintaining aspect ratio */
+.background-svg {
+  width: 100%; /* Fill the width of the container */
+  height: auto; /* Maintain aspect ratio */
+  min-height: 100%; /* Ensure it's at least as tall as the container */
+  object-fit: cover; /* Ensure the entire image is visible */
+  object-position: center; /* Center the image */
+  max-width: none; /* Override any max-width restrictions */
+  filter: grayscale(100%); /* Add black and white filter */
+  -webkit-filter: grayscale(100%); /* For Safari support */
 }
 
 /* Home Scroll Container */
 .home-scroll-container {
   text-align: center;
-  margin-top: 8vh; /* Reduced from 10vh for better spacing with lowered title */
+  margin-top: 14vh;
   padding-bottom: 50px;
   position: relative;
-  z-index: 10; /* Same as title to be above phrases */
+  z-index: 50 !important; /* Same high z-index as title */
   width: 100%;
   display: flex;
   justify-content: center;
@@ -333,6 +385,7 @@ body,
 .scroll-text {
   font-size: 0.9rem;
   margin-bottom: 8px;
+  color: white;
   letter-spacing: 1px;
   font-family: "Georgia", serif;
   text-transform: uppercase;
@@ -340,6 +393,7 @@ body,
 
 .scroll-arrow {
   font-size: 1.5rem;
+  color: white;
   animation: bounce 2s infinite;
 }
 
@@ -404,21 +458,31 @@ body,
   border-radius: 5px;
   margin: 0;
   letter-spacing: 0.02em;
-  background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent background */
-  backdrop-filter: blur(2px); /* Add a slight blur to the background */
+  backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(2px);
 }
 
 /* Refined highlight styling for "Denial" with reduced height */
 .highlight {
   background-color: black;
-  color: white;
-  padding: 0 8px; /* Horizontal padding only */
+  color: white !important;
+  padding: 0px 2px; /* Horizontal padding only, removed vertical padding */
   font-style: normal;
   display: inline-block;
   letter-spacing: 0.01em;
-  line-height: 1; /* Tighter line height */
-  transform: translateY(2px); /* Optional: slight vertical adjustment */
+  line-height: 0.1; /* Reduced from 1 to make it tighter vertically */
+  transform: translateY(2px); /* Adjusts vertical position */
+  margin-top: -2px; /* Negative top margin to reduce space above */
+  margin-bottom: -10px; /* Negative bottom margin to reduce space below */
+  vertical-align: baseline; /* Align with text baseline */
+  height: auto; /* Let height adjust naturally */
+  box-sizing: border-box; /* Ensure padding doesn't add to overall size */
+}
+
+/* Make sure the title's highlight has the right color regardless of other styles */
+.title .highlight {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
 }
 
 /* Media queries for better responsiveness */
@@ -428,7 +492,7 @@ body,
     padding: 12px 20px;
   }
 
-  .phrase {
+  .comment {
     width: 250px;
   }
 
@@ -452,5 +516,172 @@ body,
   .title-container {
     margin-top: 48vh; /* Even lower on larger screens */
   }
+}
+
+/* Add these styles at the end of your existing styles */
+
+/* Comments wall container */
+.comments-wall-container {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Individual background comments styling */
+.background-comment {
+  position: absolute;
+  padding: 0;
+  background-color: transparent;
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+  /* font-family: "Courier New", monospace; */
+  font-size: 0.5rem;
+  line-height: 1;
+  text-align: left;
+  filter: blur(0.3px);
+  border: none;
+  box-shadow: none;
+  max-width: 300px;
+  /* word-wrap: break-word; */
+  /* overflow-wrap: break-word; */
+}
+
+/* Styling for different comment types */
+
+/* Hover effect to make comments more readable */
+.background-comment:hover {
+  opacity: 0.95 !important;
+  filter: blur(0);
+  z-index: 10;
+  transform: none !important;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.background-comment p {
+  margin: 0;
+  max-height: none;
+  overflow: visible;
+  text-overflow: clip;
+  line-height: 1;
+}
+
+/* Make sure the title stays above comments when hovered */
+.title-container {
+  z-index: 60;
+}
+
+.background-svg-container {
+  z-index: 20;
+}
+
+/* Remove the old text-wall styling that's no longer needed */
+.text-wall-container,
+.text-wall {
+  display: none;
+}
+.comments-wall-container {
+  display: none;
+}
+.continuous-text-container {
+  position: absolute;
+  width: 150%;
+  height: 100vh;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  line-height: 1.3;
+
+  overflow: hidden; /* Change from visible to hidden to hide overflow */
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.continuous-text {
+  width: 100%;
+  height: 85vh;
+  overflow: hidden;
+  opacity: 0.2; /* Slightly reduced opacity for subtlety */
+  position: relative;
+}
+
+.scrolling-content {
+  will-change: transform; /* Optimize for animation */
+  transition: transform 0.1s linear; /* Smooth movement */
+}
+
+/* Style for comment types */
+.denial-comment,
+.justification-comment,
+.sympathy-comment,
+.other-comment {
+  color: #666666; /* Medium gray for all comments */
+  opacity: 0.7;
+}
+
+.separator {
+  display: inline-block;
+  margin: 0 8px;
+  color: #9e9e9e;
+  opacity: 0.5;
+}
+
+/* Ensure the duplicate content styling matches the original */
+.duplicate-content {
+  margin-top: 20px;
+}
+
+@media (min-width: 992px) {
+  .continuous-text p,
+  .continuous-text .duplicate-content {
+    column-count: 1;
+    column-gap: 40px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .continuous-text p,
+  .continuous-text .duplicate-content {
+    column-count: 1;
+    column-gap: 50px;
+  }
+}
+
+/* Ultra-compact highlight styling with minimal vertical space */
+.highlight {
+  background-color: black;
+  color: white !important;
+  padding: 0px 10px; /* Keep horizontal padding */
+  font-style: normal;
+  display: inline;
+  letter-spacing: 0.01em;
+  line-height: 0.8; /* Adjust line height to be tighter but not too tight */
+  transform: translateY(0px); /* Adjust vertical positioning */
+  margin-top: -6px; /* More negative top margin */
+  margin-bottom: -4px; /* More negative bottom margin */
+  vertical-align: baseline;
+  box-sizing: border-box;
+  position: relative; /* Add position relative for more control */
+  top: 0px; /* Fine-tune vertical alignment */
+}
+
+/* Make sure the title's highlight has the right color */
+.title .highlight {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+  /* Additional adjustments specific to the title's highlight */
+  display: inline-block;
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 0.9em; /* Set a fixed height relative to the font size */
+  line-height: 0.9; /* Match line-height to height */
 }
 </style>

@@ -144,8 +144,27 @@
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
             </button>
+
+            <!-- Download button moved into search row -->
+            <button @click="downloadCSV" class="download-button">
+              <svg
+                class="download-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download
+            </button>
           </div>
-          <!-- Results counter below search -->
+
           <div class="results-counter">
             <span>{{ filteredComments.length }} comments found</span>
             <span v-if="filteredComments.length !== comments.length"> </span>
@@ -156,87 +175,91 @@
           <div class="loading-text">Loading comments...</div>
         </div>
 
-        <!-- Comments table -->
-        <table
-          v-if="!isLoading && filteredComments.length"
-          class="comments-table"
-        >
-          <thead>
-            <tr>
-              <th>Comment</th>
-              <th>Author</th>
-              <th @click="setSortBy('date')" class="sortable">
-                Publish Date
-                <span>
-                  {{
-                    sortBy === "date"
-                      ? sortDirection === "asc"
-                        ? "↑"
+        <!-- Add a container for the scrollable table section -->
+        <div class="table-container">
+          <table
+            v-if="!isLoading && filteredComments.length"
+            class="comments-table"
+          >
+            <thead>
+              <tr>
+                <th>Comment</th>
+                <th>Author</th>
+                <th @click="setSortBy('date')" class="sortable">
+                  Publish Date
+                  <span>
+                    {{
+                      sortBy === "date"
+                        ? sortDirection === "asc"
+                          ? "↑"
+                          : "↓"
                         : "↓"
-                      : "↓"
-                  }}
-                </span>
-              </th>
-              <th>Tag</th>
-              <th
-                @click="setSortBy('likes')"
-                class="sortable"
-                style="width: 150px"
-              >
-                Likes
-                <span>
-                  {{
-                    sortBy === "likes"
-                      ? sortDirection === "asc"
-                        ? "↑"
+                    }}
+                  </span>
+                </th>
+                <th>Tag</th>
+                <th
+                  @click="setSortBy('likes')"
+                  class="sortable"
+                  style="width: 150px"
+                >
+                  Likes
+                  <span>
+                    {{
+                      sortBy === "likes"
+                        ? sortDirection === "asc"
+                          ? "↑"
+                          : "↓"
                         : "↓"
-                      : "↓"
-                  }}
-                </span>
-              </th>
-              <th>Video</th>
-              <!-- Re-added "Video" column -->
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="comment in filteredComments" :key="comment.id">
-              <td class="comment-text">{{ comment.content }}</td>
-              <td class="comment-author">{{ comment.author }}</td>
-              <td class="comment-date">{{ formatDate(comment.date) }}</td>
-              <td class="comment-tags">
-                <span
-                  v-for="tag in comment.tags"
-                  :key="tag"
-                  class="comment-tag"
-                  :style="{
-                    backgroundColor: getTagColor(tag),
-                    color: getTextColorForTag(tag),
-                  }"
-                >
-                  {{ tag.replace(/-/g, " ") }}
-                </span>
-              </td>
-              <td class="comment-likes" style="width: 150px">
-                {{ comment.likes }}
-              </td>
-              <td class="comment-video">
-                <!-- Re-added "Video" data cell -->
-                <a
-                  v-if="comment.videoUrl"
-                  :href="comment.videoUrl"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="video-link"
-                >
-                  {{ comment.videoSource }}
-                </a>
-                <span v-else>No video</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                    }}
+                  </span>
+                </th>
+                <th>Video</th>
+                <!-- Re-added "Video" column -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="comment in filteredComments" :key="comment.id">
+                <td class="comment-text">{{ comment.content }}</td>
+                <td class="comment-author">{{ comment.author }}</td>
+                <td class="comment-date">{{ formatDate(comment.date) }}</td>
+                <td class="comment-tags">
+                  <span
+                    v-for="tag in comment.tags"
+                    :key="tag"
+                    class="comment-tag"
+                    :style="{
+                      backgroundColor: getTagColor(tag),
+                      color: getTextColorForTag(tag),
+                    }"
+                  >
+                    {{ tag.replace(/-/g, " ") }}
+                  </span>
+                </td>
+                <td class="comment-likes" style="width: 150px">
+                  {{ comment.likes }}
+                </td>
+                <td class="comment-video">
+                  <!-- Re-added "Video" data cell -->
+                  <a
+                    v-if="comment.videoUrl"
+                    :href="comment.videoUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="video-link"
+                  >
+                    {{ comment.videoSource }}
+                  </a>
+                  <span v-else>No video</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-        <div v-else-if="!isLoading" class="no-comments">No comments found.</div>
+          <div v-else-if="!isLoading" class="no-comments">
+            No comments found.
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -250,7 +273,7 @@ export default {
     return {
       comments: [],
       selectedTags: [],
-      sortBy: "date",
+      sortBy: "likes", // Changed from "date" to "likes"
       showSortDropdown: false,
       availableTags: [],
       isLoading: true,
@@ -291,16 +314,38 @@ export default {
 
       let result = this.comments || [];
 
-      // Apply search filter
+      // Apply improved search filter with plural handling
       if (this.searchQuery.trim()) {
         const query = this.searchQuery.toLowerCase();
-        result = result.filter(
-          (comment) =>
-            comment.content.toLowerCase().includes(query) ||
-            comment.author.toLowerCase().includes(query) ||
-            (comment.videoSource &&
-              comment.videoSource.toLowerCase().includes(query))
-        );
+        const searchTerms = query
+          .split(/\s+/)
+          .filter((term) => term.length > 2);
+
+        result = result.filter((comment) => {
+          // Check if any search term matches content, author, or video source
+          const commentText = comment.content.toLowerCase();
+          const authorText = comment.author.toLowerCase();
+          const videoSourceText = comment.videoSource
+            ? comment.videoSource.toLowerCase()
+            : "";
+
+          // Check each search term
+          return searchTerms.some((term) => {
+            // Normalize the search term to handle plurals
+            const normalizedTerm = this.normalizeWord(term);
+
+            // Check if normalized term appears in any of the fields
+            return (
+              commentText.includes(normalizedTerm) ||
+              authorText.includes(normalizedTerm) ||
+              videoSourceText.includes(normalizedTerm) ||
+              // Also check with the original term
+              commentText.includes(term) ||
+              authorText.includes(term) ||
+              videoSourceText.includes(term)
+            );
+          });
+        });
       }
 
       if (this.selectedTags.length > 0) {
@@ -557,10 +602,111 @@ export default {
     // Add this method to reset all filters
     resetFilters() {
       this.selectedTags = [];
-      this.sortBy = "date";
+      this.sortBy = "likes"; // Changed from "date" to "likes"
       this.sortDirection = "desc";
       this.selectedYear = "all";
       this.searchQuery = "";
+    },
+
+    // Add this method to normalize words for better search matching
+    normalizeWord(word) {
+      // Convert to lowercase
+      word = word.toLowerCase().trim();
+
+      // Basic English plural/singular normalization
+      // This handles common plural patterns but isn't comprehensive
+      if (word.endsWith("s")) {
+        // Try removing 's' for potential singular form
+        return word.slice(0, -1);
+      } else if (word.endsWith("es")) {
+        // Handle words ending in 'es'
+        return word.slice(0, -2);
+      } else if (word.endsWith("ies")) {
+        // Handle words like 'countries' → 'country'
+        return word.slice(0, -3) + "y";
+      }
+
+      return word;
+    },
+
+    // Add this to your methods section
+    downloadCSV() {
+      // Determine which data to download - filtered or all
+      const shouldDownloadFiltered =
+        this.filteredComments.length !== this.comments.length;
+      let dataToDownload = this.comments;
+      let filename = "all_comments.csv";
+
+      if (
+        shouldDownloadFiltered &&
+        confirm(
+          `Download only the ${this.filteredComments.length} filtered comments? Click Cancel to download all ${this.comments.length} comments.`
+        )
+      ) {
+        dataToDownload = this.filteredComments;
+        filename = "filtered_comments.csv";
+      }
+
+      // Create CSV header
+      const headers = [
+        "Author",
+        "Date",
+        "Comment",
+        "Tags",
+        "Likes",
+        "Video Source",
+        "Video URL",
+      ];
+      let csvContent = headers.join(",") + "\n";
+
+      // Add rows
+      dataToDownload.forEach((comment) => {
+        // Properly escape fields for CSV format
+        const escapedContent = `"${(comment.content || "").replace(
+          /"/g,
+          '""'
+        )}"`;
+        const escapedAuthor = `"${(comment.author || "").replace(/"/g, '""')}"`;
+        const escapedDate = `"${(comment.date || "").replace(/"/g, '""')}"`;
+        const escapedTags = `"${(comment.tags || [])
+          .join(",")
+          .replace(/"/g, '""')}"`;
+        const escapedVideoSource = `"${(comment.videoSource || "").replace(
+          /"/g,
+          '""'
+        )}"`;
+        const escapedVideoUrl = comment.videoUrl
+          ? `"${comment.videoUrl.replace(/"/g, '""')}"`
+          : '""';
+
+        const row = [
+          escapedAuthor,
+          escapedDate,
+          escapedContent,
+          escapedTags,
+          comment.likes || 0,
+          escapedVideoSource,
+          escapedVideoUrl,
+        ];
+
+        csvContent += row.join(",") + "\n";
+      });
+
+      // Create and trigger download
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.setAttribute("href", url);
+      link.setAttribute("download", filename);
+      link.style.visibility = "hidden";
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Alert user of success
+      alert(`Downloaded ${dataToDownload.length} comments to ${filename}`);
     },
   },
 
@@ -685,7 +831,7 @@ a:hover {
   padding-left: 0px;
   height: 100%;
   display: flex;
-  overflow-y: auto;
+  overflow-y: hidden; /* Change to hidden */
   position: relative;
   flex-direction: column;
   background-color: white;
@@ -1006,12 +1152,14 @@ a:hover {
   display: flex;
   width: 100%;
   padding: 10px 0px 0px 0px;
+  gap: 0; /* Remove gap between elements */
 }
 .results-counter {
   width: 100%;
-  padding: 5px 20px;
+  padding: 10px 0px 5px 0px;
   font-size: 12px;
   color: #606060;
+  margin-left: 5px;
 }
 .search-button {
   width: 40px;
@@ -1067,7 +1215,6 @@ a:hover {
   background-color: black;
 }
 
-/* Fix the SVG icon color on hover - CORRECTED VERSION */
 .search-button:hover .search-icon-svg {
   stroke: rgb(255, 255, 255);
 }
@@ -1167,17 +1314,17 @@ h2 {
   background-color: white;
   position: sticky;
   z-index: 11;
-  top: 97px; /* Stick to the top of the viewport */
+  top: 0px; /* This needs to match the height of the search container + padding */
 }
 .comments-table thead th {
-  position: sticky; /* Make the header sticky */
-  top: 70px; /* Match the height of the search container */
-  z-index: 2; /* Ensure it stays above the table body */
-  background-color: #f0f0f0; /* Match the header background color */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  position: sticky; /* Keep header sticky */
+  top: 0px; /* This needs to match the value in comments-table thead */
+  z-index: 2;
+  background-color: #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .comments-table th {
-  top: 70px; /* Same value as thead th for alignment */
+  top: 7px; /* This needs to match the value in comments-table thead */
   background-color: #f0f0f0;
   font-weight: bold;
   z-index: 10;
@@ -1264,5 +1411,42 @@ h2 {
 .reset-button:active {
   background: #d0d0d0;
   transform: translateY(1px);
+}
+
+.download-button {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: white;
+  color: #333;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 0 12px;
+  margin-left: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.download-button:hover {
+  background-color: black;
+  color: white;
+}
+
+.download-button:hover .download-icon {
+  stroke: white;
+  background-color: black;
+}
+
+.download-icon {
+  stroke: #333;
+  background-color: transparent !important;
+}
+.table-container {
+  overflow-y: auto;
+  flex: 1;
+  margin-top: 0;
+  padding-top: 0;
 }
 </style>

@@ -29,7 +29,6 @@
             'highlight-active': isHovered === 'Minimization_Reframing',
             'highlight-selected': activeStance === 'Minimization_Reframing',
           }"
-          @mouseenter="onMouseEnter('Minimization_Reframing')"
           @click="toggleActiveStance('Minimization_Reframing')"
         >
           harsh conditions of the First World War </span
@@ -41,7 +40,6 @@
             'highlight-active': isHovered === 'Minimization_Reframing',
             'highlight-selected': activeStance === 'Minimization_Reframing',
           }"
-          @mouseenter="onMouseEnter('Minimization_Reframing')"
           @click="toggleActiveStance('Minimization_Reframing')"
         >
           due to the clashes, insurgencies as well as gang violence, and
@@ -57,7 +55,6 @@
             'highlight-active': isHovered === 'Reconciliation_Discourse',
             'highlight-selected': activeStance === 'Reconciliation_Discourse',
           }"
-          @mouseenter="onMouseEnter('Reconciliation_Discourse')"
           @click="toggleActiveStance('Reconciliation_Discourse')"
         >
           No matter how tragic it is, we must not allow the events of the past
@@ -86,7 +83,6 @@
             'highlight-active': isHovered === 'Minimization_Reframing',
             'highlight-selected': activeStance === 'Minimization_Reframing',
           }"
-          @mouseenter="onMouseEnter('Minimization_Reframing')"
           @click="toggleActiveStance('Minimization_Reframing')"
         >
           passed away during the disintegration of the Empire."</span
@@ -122,147 +118,5 @@ export default {
 </script>
 
 <style scoped>
-/* @import "./styles/shared.css"; */
-/* @import "./styles/shared.css"; */
-
-.government-text {
-  width: 100%;
-  padding-right: 20px;
-  line-height: 1.6;
-  font-size: 18px;
-  text-align: left;
-  font-family: "Georgia", serif;
-  /* font-family: "Times New Roman", Times, serif; */
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  overflow-y: auto;
-  box-sizing: border-box;
-}
-
-h3 {
-  font-size: 20px;
-  background-color: white;
-  font-family: "Vollkorn", serif;
-  margin-bottom: 8px;
-  color: #333;
-  text-align: left;
-  position: sticky;
-  top: 0;
-}
-
-.government-text p {
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-/* Base highlight styles with lower opacity */
-.highlight {
-  transition: background-color 0.2s ease;
-  cursor: pointer;
-  padding: 2px 0;
-  border-radius: 2px;
-}
-
-/* The default state with lower opacity */
-.highlight-explicit-denial {
-  background-color: rgba(237, 45, 42, 0.62);
-}
-
-.highlight-reconciliation {
-  background-color: rgba(82, 124, 121, 0.4);
-}
-
-.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.4);
-}
-
-.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.4);
-}
-
-.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.4);
-}
-
-.highlight-minimization {
-  background-color: rgba(135, 178, 194, 0.4);
-}
-
-/* Hover state with higher opacity */
-.highlight-active.highlight-explicit-denial {
-  background-color: rgba(229, 57, 53, 0.8);
-}
-
-.highlight-active.highlight-reconciliation {
-  background-color: rgba(82, 124, 121, 0.8);
-}
-
-.highlight-active.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.8);
-}
-
-.highlight-active.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.8);
-  color: white;
-}
-
-.highlight-active.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.8);
-}
-
-.highlight-active.highlight-minimization {
-  background-color: rgba(135, 178, 194, 0.8);
-}
-
-/* Selected/clicked state with full opacity */
-.highlight-selected.highlight-explicit-denial {
-  background-color: rgba(229, 57, 53, 1);
-  color: white;
-}
-
-.highlight-selected.highlight-reconciliation {
-  background-color: rgba(82, 124, 121, 1);
-  color: white;
-}
-
-.highlight-selected.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.8);
-}
-
-.highlight-selected.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.8);
-  color: white;
-}
-
-.highlight-selected.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.8);
-}
-
-.highlight-selected.highlight-minimization {
-  background-color: rgba(135, 178, 194, 1);
-}
-
-.source-note {
-  font-size: 0.85em;
-  color: #d61717;
-  margin-top: 0.1em;
-  margin-bottom: 2em;
-  text-align: left;
-  font-family: "Times New Roman", Times, serif;
-}
-
-.source-note a {
-  color: grey;
-  text-decoration: none;
-  font-family: "Times New Roman", Times, serif;
-}
-
-.source-note a:hover {
-  text-decoration: underline;
-}
-
-.source-note a {
-  color: grey;
-}
+@import "../../styles/shared.css";
 </style>

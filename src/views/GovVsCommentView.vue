@@ -29,7 +29,7 @@
       </div> -->
 
       <div class="sections">
-        <div class="section-label government">GOVERNMENT</div>
+        <div class="section-label government">GOVERNMENT DENIALISM</div>
 
         <div class="section-label social-media">ONLINE DISCOURSE</div>
       </div>
@@ -65,17 +65,53 @@
       <div class="social-media-comments">
         <h3 class="social-media-side-title">
           Echoing Statements from Users on YouTube
+          <!-- Add sort button here -->
         </h3>
-        <div v-if="activeStance === 'all'" class="instruction-message">
+
+        <!-- Show instructions when no stance is selected -->
+        <div v-if="showInitialInstructions" class="instruction-message">
           Click on highlighted sections of the government text to view comments
-          that share the sentiment.
+          that share and amplify the sentiment.
         </div>
 
-        <!-- Show this when stance is selected -->
-        <div v-else class="comments-header">
-          {{ formatStanceForDisplay(activeStance) }} ·
-          {{ visibleComments.length }} comments
+        <!-- Show this when stance is selected and there are comments to display -->
+        <div
+          v-else-if="activeStance && visibleComments.length > 0"
+          class="comments-header active-stance-header"
+        >
+          <span
+            class="stance-indicator"
+            :class="getStanceClass(activeStance)"
+          ></span>
+          <span class="stance-title">{{
+            formatStanceForDisplay(activeStance)
+          }}</span>
+          <span class="comment-count">
+            : {{ visibleComments.length }} comments
+            <!-- Add sort dropdown inline with comment count - only visible when comments are shown -->
+            <div class="sort-container">
+              <label for="sort-select" class="sort-label">Sort by:</label>
+              <select id="sort-select" v-model="sortOrder" class="sort-select">
+                <option value="likes">Most Liked</option>
+                <option value="latest">Latest</option>
+                <option value="alphabetical">A to Z</option>
+              </select>
+            </div>
+          </span>
+          <button class="clear-stance" @click="showAllComments">×</button>
         </div>
+
+        <!-- Show "No comments found" message when stance is selected but no comments match -->
+        <div
+          v-else-if="activeStance && visibleComments.length === 0"
+          class="no-comments-message"
+        >
+          No comments found for this stance.
+          <button class="clear-stance" @click="showAllComments">
+            Show all
+          </button>
+        </div>
+
         <div id="comments-container">
           <!-- Using computed property to filter comments by stance -->
           <div
@@ -191,7 +227,12 @@ export default {
   },
   data() {
     return {
-      activeStance: "all",
+      // Add this property to control initial view
+      showInitialInstructions: true,
+
+      // Your existing properties
+      sortOrder: "latest",
+      activeStance: null, // Changed from 'all' to null
       commentsData: [],
       isLoading: true,
       stancePhrases: stancePhrases,
@@ -240,31 +281,61 @@ export default {
 
   computed: {
     visibleComments() {
-      // If the active stance is "all", show all comments
-      if (this.activeStance === "all") {
-        // return this.commentsData;
+      // If showing initial instructions, return empty array
+      if (this.showInitialInstructions) {
+        return [];
       }
 
-      // If the active stance is an array (for multiple stances), filter matching comments
-      else if (Array.isArray(this.activeStance)) {
-        return this.commentsData.filter((comment) =>
+      // Rest of your existing filtering logic
+      let comments = [];
+      if (this.activeStance === "all") {
+        comments = [...this.commentsData];
+      } else if (Array.isArray(this.activeStance)) {
+        comments = this.commentsData.filter((comment) =>
           this.activeStance.includes(comment.stance)
         );
-      }
-
-      // If it's a single stance, filter comments matching that stance
-      else {
-        return this.commentsData.filter(
+      } else if (this.activeStance) {
+        comments = this.commentsData.filter(
           (comment) => comment.stance === this.activeStance
         );
+      }
+
+      // Sorting logic remains the same
+      if (this.sortOrder === "likes") {
+        return comments.sort((a, b) => b.likes - a.likes);
+      } else {
+        return comments.sort((a, b) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          return dateB - dateA;
+        });
       }
     },
   },
   methods: {
+    // Add this method
+    toggleSort() {
+      this.sortOrder = this.sortOrder === "latest" ? "likes" : "latest";
+    },
+
+    // Your existing methods
     // Method to handle document selection change
     handleDocumentChange() {
-      // Reset stance to "all" when switching documents
-      this.activeStance = "all";
+      // Reset stance when switching documents
+      this.activeStance = null; // Changed from "all" to null
+
+      // Show instructions again when switching documents
+      this.showInitialInstructions = true;
+
+      // Scroll the comments container to the top
+      this.$nextTick(() => {
+        const commentsContainer = document.querySelector(
+          ".social-media-comments"
+        );
+        if (commentsContainer) {
+          commentsContainer.scrollTop = 0;
+        }
+      });
     },
 
     findPhraseMatches(comment) {
@@ -371,6 +442,7 @@ export default {
 
     showRelatedComments(stance) {
       console.log("Showing comments for stance:", stance);
+      this.showInitialInstructions = false; // Hide instructions
       this.activeStance = stance;
 
       // Scroll the comments container to the top after a short delay
@@ -387,7 +459,8 @@ export default {
 
     showAllComments() {
       console.log("Showing all comments");
-      this.activeStance = "all"; // Reset to show all comments instead of defaulting to explicit denial
+      this.showInitialInstructions = true; // Show instructions again
+      this.activeStance = null; // Reset stance
     },
 
     formatStanceForDisplay(stance) {
@@ -420,7 +493,8 @@ export default {
     // Set the first document as active by default
     this.activeDocument = defaultDoc;
     console.log("Active document:", this.activeDocument?.title);
-    this.activeStance = "all";
+    this.activeStance = null; // Start with no active stance
+    this.showInitialInstructions = true; // Show instructions initially
 
     // Load the CSV data
     this.loadCSV();
@@ -433,12 +507,12 @@ export default {
 .document-title h3,
 .social-media-comments h3.social-media-side-title {
   font-size: 20px;
-  margin: 0 0 8px 0;
+  margin: 0 0 10px 0;
   position: sticky;
-  padding: 8px 0;
+  padding: 22px 0;
   text-align: center;
-  font-family: "Georgia", serif;
-  line-height: 1.4;
+  font-family: "Roboto", sans-serif; /* Change from Georgia to Roboto */
+  line-height: 1.2;
   height: auto; /* Remove fixed height */
   min-height: 35px; /* Min height instead of fixed */
   align-items: center;
@@ -499,13 +573,13 @@ export default {
 }
 .document-header {
   display: flex;
-  font-family: "Georgia", serif;
-
+  /* font-family: "Georgia", serif; */
+  font-family: "Times New Roman", Times, serif;
   flex-direction: column;
   align-items: baseline;
-  gap: 15px;
   align-items: center;
   color: black;
+  line-height: 1;
   margin-bottom: 12px; /* Reduced from 15px */
   padding-bottom: 15px; /* Reduced from 10px */
   width: 100%; /* Ensure full width */
@@ -593,6 +667,7 @@ export default {
   box-sizing: border-box;
   overflow-y: auto;
   overflow-x: hidden;
+  line-height: 1;
   padding-bottom: 30px; /* Add padding at the bottom */
   max-height: 80vh; /* Set a maximum height to ensure scrolling */
   scrollbar-width: none; /* Firefox */
@@ -604,16 +679,18 @@ export default {
   padding-left: 20px;
   border-left: 1px solid #ddd;
   text-align: left;
-  overflow: hidden;
+  overflow-y: auto; /* Keep auto scroll */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
   height: 100%;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  padding-bottom: 30px; /* Add padding at the bottom */
-  max-height: 80vh; /* Set a maximum height to ensure scrolling */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  padding-bottom: 30px;
+  max-height: 80vh;
+  /* Remove these lines to show scrollbars */
+  /* scrollbar-width: none; */ /* Firefox */
+  /* -ms-overflow-style: none; */ /* IE and Edge */
 }
 
 #comments-container {
@@ -626,9 +703,10 @@ export default {
 
 .comment-card {
   min-height: 0;
-  padding: 10px;
+  padding: 12px;
+  padding-top: 20px;
   font-size: 13px;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .comment-header {
@@ -643,6 +721,7 @@ export default {
 .comment-card p {
   margin: 4px 0;
   font-size: 12px;
+  padding-top: 8px;
 }
 
 .video-source {
@@ -654,6 +733,7 @@ export default {
   width: 55%;
   overflow-y: auto;
   box-sizing: border-box;
+  line-height: 1.2;
 }
 
 .social-media-comments {
@@ -672,6 +752,7 @@ export default {
 .social-media-comments h3 {
   font-size: 20px;
   margin-bottom: 6px;
+  font-family: "Roboto", sans-serif !important; /* Add !important to override */
   color: #333;
   text-align: left;
   position: sticky;
@@ -900,7 +981,8 @@ body,
   background-color: white;
 } */
 .document-title-select {
-  font-family: "Georgia", serif;
+  font-family: "Times New Roman", Times, serif;
+  /* font-family: "Georgia", serif; */
   color: #333;
   width: 100%;
   text-align: left;
@@ -908,27 +990,28 @@ body,
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: white;
   cursor: pointer;
-  padding: 20px 30px 10px 0px; /* Added right padding for arrow */
+  padding: 10px 35px 10px 0px; /* Adjusted right padding to make room for arrow */
   margin-bottom: 10px;
-  line-height: 1.4;
+  line-height: 1;
   min-height: 50px; /* Ensure height for wrapped text */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  white-space: nowrap;
+  white-space: normal; /* Allow text wrapping */
   overflow: visible;
   text-overflow: clip;
 }
 
 .select-wrapper {
   position: relative;
-  width: 80%;
-  max-width: 600px;
+  width: 95%; /* Increased from 80% to 95% for more width */
+  max-width: 800px; /* Increased from 600px to 800px */
   margin: 0 auto;
   overflow: visible;
-  top: 65px;
+  top: 50px;
   min-height: 60px;
 }
+
 .document-title-select:focus {
   outline: none;
   border-bottom-color: rgba(0, 0, 0, 0.3);
@@ -949,31 +1032,7 @@ body,
   white-space: normal;
   padding: 10px;
   max-width: none;
-}
-
-.social-media-comments h3 span.comment-count {
-  font-size: 0.9em;
-  color: #000000;
-  font-weight: normal;
-  margin-left: 4px;
-}
-.comments-header {
-  font-size: 0.9em;
-  color: #4d4d4d;
-  font-weight: normal;
-  margin-left: 0px;
-}
-.social-media-comments h3.social-media-side-title {
-  font-size: 20px;
-  margin: 0;
-  padding: 8px 0;
-  position: sticky;
-  text-align: center;
-  font-family: "Roboto", sans-serif;
-  line-height: 1.4;
-  background-color: white;
-  z-index: 100;
-  top: 0;
+  overflow: visible;
 }
 
 /* Most specific selector to override all others */
@@ -994,13 +1053,13 @@ body,
   appearance: none;
   white-space: normal;
   min-height: auto;
-  line-height: 1.4;
+  line-height: 1;
 }
 
 .select-arrow {
   position: absolute;
   right: 10px;
-  top: 50%;
+  top: 65%; /* Adjusted from 50% to position it lower */
   transform: translateY(-50%);
   pointer-events: none;
   color: #1e1e1e;
@@ -1024,27 +1083,21 @@ body,
   margin: 0;
   position: sticky;
   text-align: center;
-  font-family: "Georgia", serif;
-  line-height: 1.4;
+  font-family: "Times New Roman", Times, serif;
+
+  /* font-family: "Georgia", serif; */
+  line-height: 1.1;
   white-space: normal; /* Allow text to wrap */
   overflow: visible; /* Show all content */
   min-height: auto; /* Adjust height automatically */
   padding: 0px 0 18px 0; /* Reduced bottom padding */
 }
 
-.document-title {
-  width: 100%;
-  margin-bottom: 0px;
-  margin: 0;
-  z-index: 10;
-  padding-bottom: 10px;
-  top: 0;
-  position: sticky;
-}
 .header-and-source {
   background-color: white;
   position: sticky;
   top: 0;
+  z-index: 10;
 }
 .highlight::before,
 .highlight::after {
@@ -1057,5 +1110,65 @@ body,
   border-radius: 0; /* No rounded corners */
   line-height: inherit; /* Match the line height of surrounding text */
   vertical-align: baseline; /* Align with the text baseline */
+}
+
+/* Add these styles to your <style> section */
+.social-media-side-title {
+  display: flex;
+  justify-content: center; /* Changed from space-between to center */
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: white;
+  padding: 8px 0;
+  text-align: center; /* Added text-align center */
+  width: 100%; /* Ensure full width */
+}
+
+/* Adjust the related styles to maintain the proper layout */
+.social-media-comments h3.social-media-side-title {
+  display: flex;
+  justify-content: center; /* Changed from space-between to center */
+  align-items: center;
+  padding-right: 15px;
+  padding-left: 15px;
+  text-align: center; /* Added text-align center */
+  font-family: "Roboto", sans-serif !important;
+}
+
+/* Replace the sort button styles with these dropdown styles */
+.sort-container {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+  font-size: 11px;
+}
+
+.sort-label {
+  color: #666;
+  margin-right: 4px;
+}
+
+.sort-select {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  font-size: 11px;
+  color: #666;
+  cursor: pointer;
+  padding: 2px 15px 2px 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 top 50%;
+  background-size: 8px auto;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-bottom-color: #999;
 }
 </style>

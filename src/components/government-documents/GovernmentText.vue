@@ -46,7 +46,6 @@
           'highlight-active': isHovered === 'Explicit_Denial',
           'highlight-selected': activeStance === 'Explicit_Denial',
         }"
-        @mouseenter="onMouseEnter('Explicit_Denial')"
         @click="toggleActiveStance('Explicit_Denial')"
       >
         The Armenian view of history, however, selects the Armenian suffering,
@@ -69,9 +68,6 @@
             'highlight-selected':
               activeStance === 'Competitive_Victimhood_Historical_Inversion',
           }"
-          @mouseenter="
-            onMouseEnter('Competitive_Victimhood_Historical_Inversion')
-          "
           @click="
             toggleActiveStance('Competitive_Victimhood_Historical_Inversion')
           "
@@ -98,7 +94,6 @@
           'highlight-active': isHovered === 'Reconciliation_Discourse',
           'highlight-selected': activeStance === 'Reconciliation_Discourse',
         }"
-        @mouseenter="onMouseEnter('Reconciliation_Discourse')"
         @click="toggleActiveStance('Reconciliation_Discourse')"
       >
         That is why Turkey has initiated a process aimed at an honest and open
@@ -119,9 +114,6 @@
           'highlight-selected':
             activeStance === 'Competitive_Victimhood_Historical_Inversion',
         }"
-        @mouseenter="
-          onMouseEnter('Competitive_Victimhood_Historical_Inversion')
-        "
         @click="
           toggleActiveStance('Competitive_Victimhood_Historical_Inversion')
         "
@@ -146,7 +138,6 @@
           'highlight-selected':
             activeStance === 'Procedural_Deflection_Evidence_Archives',
         }"
-        @mouseenter="onMouseEnter('Procedural_Deflection_Evidence_Archives')"
         @click="toggleActiveStance('Procedural_Deflection_Evidence_Archives')"
       >
         Turkey's views are based on available archival documents, academic
@@ -163,7 +154,6 @@
           'highlight-active': isHovered === 'Justification_Narrative',
           'highlight-selected': activeStance === 'Justification_Narrative',
         }"
-        @mouseenter="onMouseEnter('Justification_Narrative')"
         @click="toggleActiveStance('Justification_Narrative')"
       >
         Rather, they point to an empire at the verge of collapse fighting for
@@ -185,7 +175,6 @@
             'highlight-active': isHovered === 'Justification_Narrative',
             'highlight-selected': activeStance === 'Justification_Narrative',
           }"
-          @mouseenter="onMouseEnter('Justification_Narrative')"
           @click="toggleActiveStance('Justification_Narrative')"
           >In the fall of 1914 Armenian volunteer units organized themselves and
           fought against the Turks</span
@@ -201,7 +190,6 @@
           'highlight-active': isHovered === 'Justification_Narrative',
           'highlight-selected': activeStance === 'Justification_Narrative',
         }"
-        @mouseenter="onMouseEnter('Justification_Narrative')"
         @click="toggleActiveStance('Justification_Narrative')"
       >
         In response, the Ottoman Government ordered in 1915 the Armenian
@@ -223,7 +211,6 @@
             'highlight-active': isHovered === 'Minimization_Reframing',
             'highlight-selected': activeStance === 'Minimization_Reframing',
           }"
-          @mouseenter="onMouseEnter('Minimization_Reframing')"
           @click="toggleActiveStance('Minimization_Reframing')"
         >
           exacerbated by internal strife, local groups seeking revenge,
@@ -240,7 +227,6 @@
           'highlight-active': isHovered === 'Explicit_Denial',
           'highlight-selected': activeStance === 'Explicit_Denial',
         }"
-        @mouseenter="onMouseEnter('Explicit_Denial')"
         @click="toggleActiveStance('Explicit_Denial')"
       >
         no authentic evidence exists to support the claim that there was a
@@ -257,7 +243,6 @@
             'highlight-active': isHovered === 'Explicit_Denial',
             'highlight-selected': activeStance === 'Explicit_Denial',
           }"
-          @mouseenter="onMouseEnter('Explicit_Denial')"
           @click="toggleActiveStance('Explicit_Denial')"
         >
           it is factually problematic, morally unsound and legally unfounded to
@@ -286,7 +271,6 @@
           'highlight-selected':
             activeStance === 'Procedural_Deflection_Evidence_Archives',
         }"
-        @mouseenter="onMouseEnter('Procedural_Deflection_Evidence_Archives')"
         @click="toggleActiveStance('Procedural_Deflection_Evidence_Archives')"
       >
         This represents an opportunity for replacing the language of national
@@ -327,7 +311,6 @@
           'highlight-active': isHovered === 'Reconciliation_Discourse',
           'highlight-selected': activeStance === 'Reconciliation_Discourse',
         }"
-        @mouseenter="onMouseEnter('Reconciliation_Discourse')"
         @click="toggleActiveStance('Reconciliation_Discourse')"
       >
         Turks and Armenians should work to rebuild their historical friendship
@@ -343,7 +326,6 @@
           'highlight-active': isHovered === 'Explicit_Denial',
           'highlight-selected': activeStance === 'Explicit_Denial',
         }"
-        @mouseenter="onMouseEnter('Explicit_Denial')"
         @click="toggleActiveStance('Explicit_Denial')"
       >
         their version of history be adopted as uncontested truth.</span
@@ -406,147 +388,5 @@ export default {
 </script>
 
 <style scoped>
-.government-text {
-  width: 100%;
-  padding-right: 15px;
-  line-height: 1.6;
-  font-size: 18px;
-  text-align: left;
-  font-family: "Times New Roman", Times, serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  overflow-y: auto;
-  box-sizing: border-box;
-}
-
-h3 {
-  font-size: 20px;
-  background-color: white;
-  font-family: "Vollkorn", serif;
-  margin-bottom: 8px;
-  color: #333;
-  text-align: left;
-  position: sticky;
-  top: 0;
-}
-
-.government-text p {
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-/* Base highlight styles with lower opacity */
-.highlight {
-  transition: background-color 0.2s ease;
-  cursor: pointer;
-  /* padding: 2px 0; */
-}
-
-/* The default state with lower opacity */
-.highlight-explicit-denial {
-  background-color: rgba(237, 45, 42, 0.62);
-}
-
-.highlight-reconciliation {
-  background-color: #527c7995;
-}
-
-.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.4);
-}
-
-.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.4);
-}
-
-.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.4);
-}
-
-.highlight-minimization {
-  background-color: rgba(135, 178, 194, 0.4);
-}
-
-/* Hover state with higher opacity */
-.highlight-active.highlight-explicit-denial {
-  background-color: rgba(229, 57, 53, 0.8);
-}
-
-.highlight-active.highlight-reconciliation {
-  background-color: rgba(82, 124, 121, 0.8);
-}
-
-.highlight-active.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.8);
-}
-
-.highlight-active.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.8);
-  color: white;
-}
-
-.highlight-active.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.8);
-}
-
-.highlight-active.highlight-minimization {
-  background-color: rgba(135, 178, 194, 0.8);
-}
-
-/* Selected/clicked state with full opacity */
-.highlight-selected.highlight-explicit-denial {
-  background-color: rgba(229, 57, 53, 1);
-  color: white;
-}
-
-.highlight-selected.highlight-reconciliation {
-  background-color: #527c79be;
-  color: white;
-}
-
-.highlight-selected.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.8);
-}
-
-.highlight-selected.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.8);
-  color: white;
-}
-
-.highlight-selected.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.8);
-}
-
-.highlight-selected.highlight-minimization {
-  background-color: rgba(135, 178, 194, 0.8);
-}
-
-/* .document-title-select {
-  font-size: 20px;
-  background-color: white;
-  font-family: "Vollkorn", serif;
-  margin-bottom: 5px;
-  color: #333;
-  text-align: left;
-  position: sticky;
-  top: 0;
-  width: 100%;
-  border: none;
-  padding: 10px 0;
-  cursor: pointer;
-  z-index: 100;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 8px auto;
-  z-index: 10;
-} */
-
-.document-title-select:focus {
-  outline: none;
-}
+@import "../../styles/shared.css";
 </style>

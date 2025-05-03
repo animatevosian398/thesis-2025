@@ -33,7 +33,6 @@
             'highlight-active': isHovered === 'Explicit_Denial',
             'highlight-selected': activeStance === 'Explicit_Denial',
           }"
-          @mouseenter="onMouseEnter('Explicit_Denial')"
           @click="toggleActiveStance('Explicit_Denial')"
         >
           The move was strongly rejected by Türkiye as "null and void.” </span
@@ -69,7 +68,6 @@
             'highlight-selected':
               activeStance === 'Procedural_Deflection_Evidence_Archives',
           }"
-          @mouseenter="onMouseEnter('Procedural_Deflection_Evidence_Archives')"
           @click="toggleActiveStance('Procedural_Deflection_Evidence_Archives')"
           >He said Turkish President Recep Tayyip Erdogan previously suggested
           to open these archives and see if there was a genocide or not. "They
@@ -91,7 +89,6 @@
             'highlight-active': isHovered === 'Justification_Narrative',
             'highlight-selected': activeStance === 'Justification_Narrative',
           }"
-          @mouseenter="onMouseEnter('Justification_Narrative')"
           @click="toggleActiveStance('Justification_Narrative')"
           >Türkiye's position on the events of 1915 is that the deaths of
           Armenians in eastern Anatolia took place when some sided with the
@@ -103,7 +100,6 @@
             'highlight-active': isHovered === 'Minimization_Reframing',
             'highlight-selected': activeStance === 'Minimization_Reframing',
           }"
-          @mouseenter="onMouseEnter('Minimization_Reframing')"
           @click="toggleActiveStance('Minimization_Reframing')"
         >
           A subsequent relocation of Armenians resulted in numerous casualties.
@@ -145,127 +141,27 @@ export default {
 </script>
 
 <style scoped>
-/* @import "@/styles/shared.css"; */
+@import "../../styles/shared.css";
 
-.government-text {
-  width: 100%;
-  padding-right: 20px;
-  line-height: 1.6;
-  font-size: 18px;
-  text-align: left;
-  font-family: "Georgia", serif;
-  /* font-family: "Times New Roman", Times, serif; */
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  overflow-y: auto;
-  box-sizing: border-box;
-}
-
-h3 {
-  font-size: 20px;
-  background-color: white;
-  /* font-family: "Vollkorn", serif; */
-  margin-bottom: 8px;
-  color: #333;
-  text-align: left;
-  position: sticky;
-  top: 0;
-}
-
-.government-text p {
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-/* Base highlight styles with lower opacity */
-.highlight {
-  transition: background-color 0.2s ease;
-  cursor: pointer;
-  padding: 2px 0;
-  border-radius: 2px;
-}
-
-/* The default state with lower opacity */
-.highlight-explicit-denial {
-  background-color: rgba(237, 45, 42, 0.62);
-}
-
+/* Additional styles to ensure cursor changes */
+.highlight,
+.highlight-procedural,
+.highlight-minimization,
+.highlight-justification,
+.highlight-explicit-denial,
+.highlight-competitive-victimhood,
 .highlight-reconciliation {
-  background-color: rgba(82, 124, 121, 0.4);
+  cursor: pointer !important;
 }
 
-.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.4);
-}
-
-.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.4);
-}
-
-.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.4);
-}
-
-.highlight-minimization {
-  background-color: rgba(135, 178, 194, 0.4);
-}
-
-/* Hover state with higher opacity */
-.highlight-active.highlight-explicit-denial {
-  background-color: rgba(229, 57, 53, 0.8);
-}
-
-.highlight-active.highlight-reconciliation {
-  background-color: rgba(82, 124, 121, 0.8);
-}
-
-.highlight-active.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.8);
-}
-
-.highlight-active.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.8);
-  color: white;
-}
-
-.highlight-active.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.8);
-}
-
-.highlight-active.highlight-minimization {
-  background-color: rgba(135, 178, 194, 0.8);
-}
-
-/* Selected/clicked state with full opacity */
-.highlight-selected.highlight-explicit-denial {
-  background-color: rgba(229, 57, 53, 1);
-  color: white;
-}
-
-.highlight-selected.highlight-reconciliation {
-  background-color: rgba(82, 124, 121, 1);
-  color: white;
-}
-
-.highlight-selected.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.8);
-}
-
-.highlight-selected.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.8);
-  color: white;
-}
-
-.highlight-selected.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.8);
-}
-
-.highlight-selected.highlight-minimization {
-  background-color: rgba(135, 178, 194, 1);
-}
-.highlight:hover {
-  opacity: 0.9;
-  cursor: pointer;
+/* Add a subtle hover effect to make it even more clear */
+.highlight:hover,
+.highlight-procedural:hover,
+.highlight-minimization:hover,
+.highlight-justification:hover,
+.highlight-explicit-denial:hover,
+.highlight-competitive-victimhood:hover,
+.highlight-reconciliation:hover {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 </style>

@@ -2,19 +2,20 @@
   <div id="background-section" class="background-section" ref="bgSection">
     <!-- Fixed background image -->
     <div class="image-container" ref="imageContainer">
-      <img
+      <!-- <img
         src="/src/assets/images/Norway_Photo_Bones.jpg"
         alt="Background"
         class="background-image"
         ref="bgImage"
-      />
-      <div class="citation-container">
+      /> -->
+      <!-- <div class="citation-container">
         <p class="citation">Source: Norwegian Royal Archives Collection</p>
-      </div>
+      </div> -->
     </div>
     <!-- Single content container that scrolls over the image -->
     <div class="content-container">
       <div class="content-text" ref="contentText">
+        <h3 class="bg1-title">A Crime Against Humanity</h3>
         <h3>
           On April 24, 1915, hundreds of Armenian leaders and intellectuals were
           rounded up, arrested, and some killed, followed by widespread
@@ -293,5 +294,16 @@ h3 {
 }
 .citation-link:visited {
   color: rgba(200, 200, 255, 0.8);
+}
+.bg1-title {
+  font-family: "Times New Roman", serif;
+  /* font-family: "Aktiv Grotesk", sans-serif; */
+  font-size: calc(2.5rem + 1vw);
+  margin-top: 0px;
+  margin-bottom: 20px;
+  width: 100%;
+  color: black;
+  text-align: left; /* Explicit left alignment */
+  padding-left: 0; /* Ensure no padding shifts it */
 }
 </style>
