@@ -16,7 +16,8 @@
 export const stanceDisplayNames = {
   Apology: "Apology*",
   Historical_Affirmation: "Armenian Genocide Recognition*",
-  Competitive_Victimhood_Historical_Inversion: "Historical Inversion",
+  Competitive_Victimhood_Historical_Inversion:
+    "Historical Inversion and Competitive Victimhood",
   Explicit_Denial: "Explicit Denial",
   Justification_Narrative: "Justification",
   Personal_Testimony: "Personal Testimony*",

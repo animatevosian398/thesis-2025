@@ -25,7 +25,8 @@
             <a class="nav-link" href="/Archive">Archive</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/bubble-chart">Bubble Chart</a>
+            <a class="nav-link" href="/narratives-list">Narratives</a>
+            <!-- <a class="nav-link" href="/bubble-chart">Bubble Chart</a> -->
           </li>
           <!-- <li class="nav-item">
             <router-link to="/articles-timeline" class="nav-link">

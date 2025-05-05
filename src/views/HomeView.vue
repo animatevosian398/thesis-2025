@@ -44,7 +44,7 @@
       <h1 class="title">
         <!-- Narratives of Truth and Denial -->
 
-        Narratives of Truth and <span class="highlight">Denial</span>
+        Narratives of Truth and <span class="highlight-title">Denial</span>
       </h1>
     </div>
 
@@ -254,17 +254,17 @@ body,
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 150px;
-  margin-top: 45vh;
+  height: 10px;
+  margin-top: 55vh;
   margin-bottom: 50px;
 }
 /* Title styling */
 .title {
-  font-size: 4rem;
+  font-size: 4.2rem;
   font-weight: 700;
   text-align: center;
   color: black;
-  font-family: "Neuton", serif;
+  /* font-family: "Neuton", serif; */
   position: relative;
   padding: 1px 20px;
   border-radius: 5px;
@@ -282,7 +282,7 @@ body,
 }
 
 /* Highlight styling for "Denial" */
-.highlight {
+.highlight-title {
   color: white !important;
   position: relative;
   background-color: transparent; /* Remove background from the element itself */
@@ -296,27 +296,27 @@ body,
 }
 
 /* Create the background as a pseudo-element */
-.highlight::before {
+.highlight-title::before {
   content: "";
   position: absolute;
   background-color: black;
   width: 100%;
   height: 0.9em; /* Control the height of the background */
   left: 0;
-  top: 0.15em; /* Adjust this value to move the background down */
+  top: 0.25em; /* Adjust this value to move the background down */
   z-index: -1; /* Place it behind the text */
   padding: 0 2px; /* Add horizontal padding to the background */
   box-sizing: border-box;
 }
 
 /* Make sure the title's highlight has the right color */
-.title .highlight {
+.title .highlight-title {
   color: white !important;
   -webkit-text-fill-color: white !important;
 }
 
 /* Adjust the title highlight background separately */
-.title .highlight::before {
+.title .highlight-title::before {
   height: 0.9em;
   top: 0.15em; /* Move the background down slightly for the title */
   padding: 0 4px; /* Larger horizontal padding for the title */
@@ -347,8 +347,6 @@ body,
   object-fit: cover; /* Ensure the entire image is visible */
   object-position: center; /* Center the image */
   max-width: none; /* Override any max-width restrictions */
-  filter: grayscale(100%); /* Add black and white filter */
-  -webkit-filter: grayscale(100%); /* For Safari support */
 }
 
 /* Home Scroll Container */
@@ -448,41 +446,19 @@ body,
 
 /* Title styling with subtle transparency */
 .title {
-  font-size: 4rem;
+  font-size: 3.3rem;
   font-weight: 700;
   text-align: center;
   color: black;
-  font-family: "Neuton", serif;
+  font-family: "Georgia", serif;
+  /* font-family: "Neuton", serif; */
   position: relative;
-  padding: 15px 40px;
+  padding: 25px 10px;
   border-radius: 5px;
   margin: 0;
   letter-spacing: 0.02em;
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(2px);
-}
-
-/* Refined highlight styling for "Denial" with reduced height */
-.highlight {
-  background-color: black;
-  color: white !important;
-  padding: 0px 2px; /* Horizontal padding only, removed vertical padding */
-  font-style: normal;
-  display: inline-block;
-  letter-spacing: 0.01em;
-  line-height: 0.1; /* Reduced from 1 to make it tighter vertically */
-  transform: translateY(2px); /* Adjusts vertical position */
-  margin-top: -2px; /* Negative top margin to reduce space above */
-  margin-bottom: -10px; /* Negative bottom margin to reduce space below */
-  vertical-align: baseline; /* Align with text baseline */
-  height: auto; /* Let height adjust naturally */
-  box-sizing: border-box; /* Ensure padding doesn't add to overall size */
-}
-
-/* Make sure the title's highlight has the right color regardless of other styles */
-.title .highlight {
-  color: white !important;
-  -webkit-text-fill-color: white !important;
 }
 
 /* Media queries for better responsiveness */
@@ -597,7 +573,6 @@ body,
   transform: translateX(-50%);
   z-index: 10;
   line-height: 1.3;
-
   overflow: hidden; /* Change from visible to hidden to hide overflow */
   pointer-events: none;
   display: flex;
@@ -605,12 +580,51 @@ body,
   justify-content: center;
 }
 
+/* Add a top gradient mask to fade text as it scrolls behind the navbar */
 .continuous-text {
   width: 100%;
-  height: 85vh;
+  height: 110vh;
   overflow: hidden;
-  opacity: 0.2; /* Slightly reduced opacity for subtlety */
+  opacity: 0.6;
   position: relative;
+}
+
+/* Add a gradient overlay at the top */
+.continuous-text::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px; /* Height of fade effect - adjust to match your navbar height */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.9) 20%,
+    rgba(255, 255, 255, 0.7) 40%,
+    rgba(255, 255, 255, 0.4) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  z-index: 15; /* Above the text but below other elements */
+  pointer-events: none;
+}
+
+/* Add a gradient overlay at the bottom too for symmetry */
+.continuous-text::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px; /* Shorter fade at bottom */
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.8) 40%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  z-index: 15;
+  pointer-events: none;
 }
 
 .scrolling-content {
@@ -656,7 +670,7 @@ body,
 }
 
 /* Ultra-compact highlight styling with minimal vertical space */
-.highlight {
+.highlight-title {
   background-color: black;
   color: white !important;
   padding: 0px 10px; /* Keep horizontal padding */
@@ -674,7 +688,7 @@ body,
 }
 
 /* Make sure the title's highlight has the right color */
-.title .highlight {
+.title .highlight-title {
   color: white !important;
   -webkit-text-fill-color: white !important;
   /* Additional adjustments specific to the title's highlight */

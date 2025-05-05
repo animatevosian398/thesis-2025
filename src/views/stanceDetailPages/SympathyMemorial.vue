@@ -7,7 +7,7 @@
     <div @click="goBack" class="back-arrow">← Back</div>
 
     <div class="content-container">
-      <h1 class="centered-title">Sympathy & Memory</h1>
+      <h1 class="centered-title">Sympathy & Memorial</h1>
 
       <div class="scrolling-comments-container">
         <div class="scrolling-comments" ref="scrollingComments">
@@ -49,7 +49,7 @@ export default defineComponent({
     const route = useRoute();
 
     const goBack = () => {
-      router.push({ name: "bubble-chart" });
+      router.push({ name: "narratives-list" });
     };
 
     return {

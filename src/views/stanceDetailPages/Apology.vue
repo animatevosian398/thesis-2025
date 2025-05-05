@@ -38,7 +38,7 @@ export default defineComponent({
     const route = useRoute();
 
     const goBack = () => {
-      router.push({ name: "bubble-chart" });
+      router.push({ name: "narratives-list" });
     };
 
     return {

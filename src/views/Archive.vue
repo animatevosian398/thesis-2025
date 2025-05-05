@@ -404,10 +404,46 @@ export default {
   methods: {
     // Fix getTagColor to properly map kebab-case tags to stanceColors keys
     getTagColor(tag) {
-      const formattedTag = tag
-        .replace(/_/g, " ") // Convert kebab-case to space-separated
-        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
-      return this.stanceColors[formattedTag] || "#cccccc"; // Default color if not found
+      // First normalize the tag format to handle various incoming formats
+      let normalizedTag = tag
+        .replace(/-/g, " ") // Replace hyphens with spaces
+        .replace(/_/g, " ") // Replace underscores with spaces
+        .toLowerCase() // Convert to lowercase
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+        .join(" ");
+
+      // Check specialized formats first (handle exceptions)
+      if (normalizedTag.includes("Memorial")) {
+        normalizedTag = "Sympathy/Memorial/Commemorative";
+      } else if (normalizedTag.includes("Competitive")) {
+        normalizedTag = "Competitive Victimhood/Historical Inversion";
+      } else if (normalizedTag.includes("Evidence")) {
+        normalizedTag = "Procedural Deflection Evidence Archives";
+      }
+
+      // Try to find the color in stanceColors
+      for (const [key, value] of Object.entries(this.stanceColors)) {
+        // Compare normalized versions of both strings
+        if (
+          normalizedTag === key ||
+          normalizedTag.includes(key) ||
+          key.includes(normalizedTag)
+        ) {
+          return value;
+        }
+      }
+
+      // Log missing mappings for debugging
+      console.log(
+        "Color not found for tag:",
+        tag,
+        "normalized as:",
+        normalizedTag
+      );
+
+      // Return a default color if no match found
+      return "#cccccc";
     },
 
     // Add this if not already present

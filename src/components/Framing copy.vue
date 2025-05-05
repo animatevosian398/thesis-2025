@@ -22,13 +22,14 @@
           of denial.
         </p>
         <p>
-          Words like <span class="highlight">"incident,"</span>
-          <span class="highlight">"so-called genocide,"</span>
-          <span class="highlight">"1915 events,"</span>
-          <span class="highlight">"alleged,"</span> and
-          <span class="highlight">"claimed"</span> are frequently used, casting
-          doubt and creating distance from historical reality while framing the
-          discourse in terms favorable to the Turkish government position.
+          Words like <span class="highlight-red">"incident,"</span>
+          <span class="highlight-red">"so-called genocide,"</span>
+          <span class="highlight-red">"1915 events,"</span>
+          <span class="highlight-red">"alleged,"</span> and
+          <span class="highlight-red">"claimed"</span> are frequently used,
+          casting doubt and creating distance from historical reality while
+          framing the discourse in terms favorable to the Turkish government
+          position.
         </p>
 
         <!-- Moved explanation paragraph to text column -->
@@ -418,10 +419,10 @@ export default {
       // Get container width
       const containerWidth = this.$refs.chartContainer.clientWidth || 600;
 
-      // Set dimensions and margins - slightly reduced bottom margin to fit better
-      const margin = { top: 30, right: 30, bottom: 70, left: 70 };
+      // Set dimensions and margins
+      const margin = { top: 60, right: 60, bottom: 70, left: 60 };
       const width = containerWidth - margin.left - margin.right;
-      const height = 380 - margin.top - margin.bottom;
+      const height = 480 - margin.top - margin.bottom;
 
       // Create SVG
       const svg = d3
@@ -432,175 +433,202 @@ export default {
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-      // X scale
-      const x = d3
-        .scaleBand()
-        .domain(sortedData.map((d) => d.word))
-        .range([0, width])
-        .padding(0.1);
+      // Create a size scale for bubbles based on word counts
+      const minCount = d3.min(sortedData, (d) => d.count);
+      const maxCount = d3.max(sortedData, (d) => d.count);
 
-      // Y scale
-      const y = d3
-        .scaleLinear()
-        .domain([0, d3.max(sortedData, (d) => d.count) * 1.1])
-        .range([height, 0]);
+      const radiusScale = d3
+        .scaleSqrt() // Use sqrt scale for area representation
+        .domain([minCount, maxCount])
+        .range([40, 90]); // Min and max radius
 
-      // Add X axis
-      svg
-        .append("g")
-        .attr("transform", `translate(0, ${height})`)
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+      // Create a force simulation
+      const simulation = d3
+        .forceSimulation(sortedData)
+        .force("x", d3.forceX(width / 2).strength(0.1))
+        .force("y", d3.forceY(height / 2).strength(0.1))
+        .force(
+          "collide",
+          d3
+            .forceCollide()
+            .radius((d) => radiusScale(d.count) + 2)
+            .strength(0.7)
+        )
+        .force("charge", d3.forceManyBody().strength(5))
+        .on("tick", ticked);
 
-      // Add Y axis
-      svg.append("g").call(d3.axisLeft(y));
-
-      // Add bars with animation and interactivity
-      const bars = svg
-        .selectAll(".bar-group")
+      // Create a group for each bubble
+      const bubbles = svg
+        .selectAll(".bubble-group")
         .data(sortedData)
         .enter()
         .append("g")
-        .attr("class", "bar-group");
-
-      // Add invisible wider hitbox for better hover experience
-      bars
-        .append("rect")
-        .attr("class", "bar-hitbox")
-        .attr("x", (d) => x(d.word) - 5)
-        .attr("width", x.bandwidth() + 10)
-        .attr("y", 0)
-        .attr("height", height)
-        .attr("fill", "transparent")
+        .attr("class", "bubble-group")
         .style("cursor", "pointer");
 
-      // Add the actual visible bar
-      bars
-        .append("rect")
-        .attr("class", "bar-rect")
-        .attr("x", (d) => x(d.word))
-        .attr("width", x.bandwidth())
-        .attr("y", height) // Start from bottom
-        .attr("height", 0)
-        .attr("fill", "black") // Blue bars
-        .style("cursor", "pointer")
+      // Add the circle elements
+      bubbles
+        .append("circle")
+        .attr("class", "bubble-circle")
+        .attr("r", (d) => radiusScale(d.count))
+        .attr("fill", "rgba(0, 0, 0, 0.05)")
+        .attr("stroke", "rgba(1, 0, 0, 0.5)")
+        .attr("stroke-width", 1)
         .transition()
         .duration(800)
-        .attr("y", (d) => y(d.count))
-        .attr("height", (d) => height - y(d.count));
+        .attr("fill", "rgba(0, 0, 0, 0.1)");
 
-      // Add event listeners for both the hitbox and visible bar
-      bars
-        .selectAll("rect")
-        .on("mouseover", (event, d) => {
-          // Only highlight if not already selected
-          if (!this.selectedWordItem || this.selectedWordItem.word !== d.word) {
-            d3.select(event.target.parentNode)
-              .select(".bar-rect")
-              .attr("fill", "#77878B"); // Semi-transparent highlight
-            // .attr("fill", "#C44536"); // Semi-transparent highlight
-          }
+      // Add the text labels - move up slightly
+      bubbles
+        .append("text")
+        .attr("class", "bubble-text")
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .attr("dy", (d) => -radiusScale(d.count) * 0.12) // Slightly increase offset for larger bubbles
+        .style(
+          "font-size",
+          (d) => `${Math.min(18, radiusScale(d.count) * 0.33)}px` // Adjust font size calculation
+        )
+        .style("font-weight", "600")
+        .style("pointer-events", "none")
+        .text((d) => d.word);
+
+      // Add count labels - move down from center
+      bubbles
+        .append("text")
+        .attr("class", "count-label")
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .attr("dy", (d) => radiusScale(d.count) * 0.3) // Increase offset to avoid overlap
+        .style(
+          "font-size",
+          (d) => `${Math.min(14, radiusScale(d.count) * 0.28)}px` // Adjust font size for counts
+        )
+        .style("fill", "#333")
+        .style("pointer-events", "none")
+        .text((d) => d.count);
+
+      // Function to update positions on each tick of the simulation
+      function ticked() {
+        bubbles.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
+      }
+
+      // Add a "frequency" label
+      svg
+        .append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 60)
+        .attr("text-anchor", "middle")
+        .style("font-size", "12px")
+        .style("fill", "#777")
+        .text("Word frequency in articles about the Armenian Genocide");
+
+      // Add interactivity
+      bubbles
+        .on("mouseover", function (event, d) {
+          d3.select(this)
+            .select(".bubble-circle")
+            .transition()
+            .duration(200)
+            .attr("fill", "rgba(0, 0, 0, 0.2)")
+            .attr("stroke", "#283D3B")
+            .attr("stroke-width", 2);
+
+          d3.select(this)
+            .select(".bubble-text")
+            .transition()
+            .duration(200)
+            .style("font-weight", "bold");
         })
-        .on("mouseout", (event, d) => {
-          // Reset bar color on mouseout unless it's the selected one
+        .on("mouseout", function (event, d) {
           if (!this.selectedWordItem || this.selectedWordItem.word !== d.word) {
-            d3.select(event.target.parentNode)
-              .select(".bar-rect")
-              .attr("fill", "black");
+            d3.select(this)
+              .select(".bubble-circle")
+              .transition()
+              .duration(200)
+              .attr("fill", "rgba(0, 0, 0, 0.1)")
+              .attr("stroke", "rgba(0, 0, 0, 0.5)")
+              .attr("stroke-width", 1);
+
+            d3.select(this)
+              .select(".bubble-text")
+              .transition()
+              .duration(200)
+              .style("font-weight", "600");
           }
         })
         .on("click", (event, d) => {
           // Toggle selection
           if (this.selectedWordItem && this.selectedWordItem.word === d.word) {
             this.selectedWordItem = null;
-            d3.select(event.target.parentNode)
-              .select(".bar-rect")
-              .attr("fill", "black");
+            d3.selectAll(".bubble-circle")
+              .attr("fill", "rgba(0, 0, 0, 0.1)")
+              .attr("stroke", "rgba(0, 0, 0, 0.5)")
+              .attr("stroke-width", 1);
           } else {
             this.selectWordItem(d.word);
+
+            // Reset all bubbles first
+            d3.selectAll(".bubble-circle")
+              .attr("fill", "rgba(0, 0, 0, 0.1)")
+              .attr("stroke", "rgba(0, 0, 0, 0.5)")
+              .attr("stroke-width", 1);
+
+            // Then highlight selected bubble
+            d3.select(event.currentTarget)
+              .select(".bubble-circle")
+              .attr("fill", "rgba(40, 61, 59, 0.2)")
+              .attr("stroke", "#283D3B")
+              .attr("stroke-width", 2);
           }
         });
 
-      // Add bar labels
-      svg
-        .selectAll(".bar-label")
-        .data(sortedData)
-        .enter()
-        .append("text")
-        .attr("class", "bar-label")
-        .attr("x", (d) => x(d.word) + x.bandwidth() / 2)
-        .attr("y", (d) => y(d.count) - 5) // Moved slightly higher
-        .attr("text-anchor", "middle")
-        .style("fill", "#333")
-        .style("font-size", "11px") // Smaller font
-        .text((d) => d.count);
-
-      // Add annotation if the word "genocide" exists in the chart
+      // Add annotation for "genocide" if applicable
       const genocideData = sortedData.find((d) => d.word === "genocide");
       if (genocideData && this.selectedWord === "1915") {
-        const genocideX = x("genocide") + x.bandwidth() / 2;
-        const genocideY = y(genocideData.count);
+        // Find the position of the "genocide" bubble
+        setTimeout(() => {
+          const genocidet = d3
+            .selectAll(".bubble-group")
+            .filter((d) => d.word === "genocide")
+            .datum();
 
-        // Add the annotation arrow
-        svg
-          .append("line")
-          .attr("x1", genocideX)
-          .attr("y1", genocideY - 30)
-          .attr("x2", genocideX)
-          .attr("y2", genocideY - 10)
-          .attr("stroke", "#FF5252")
-          .attr("stroke-width", 2)
-          .attr("marker-end", "url(#arrow)");
+          if (genocidet && genocidet.x && genocidet.y) {
+            // Adjust these values to move callout down and to the left
+            const arrowStartX = genocidet.x - 60; // Change from +60 to -60 to move left
+            const arrowStartY = genocidet.y + 50; // Change from -80 to +50 to move down
+            const textOffsetX = -10; // Adjust to center text relative to new position
 
-        // Add arrowhead marker definition
-        svg
-          .append("defs")
-          .append("marker")
-          .attr("id", "arrow")
-          .attr("viewBox", "0 0 10 10")
-          .attr("refX", 5)
-          .attr("refY", 5)
-          .attr("markerWidth", 6)
-          .attr("markerHeight", 6)
-          .attr("orient", "auto")
-          .append("path")
-          .attr("d", "M 0 0 L 10 5 L 0 10 z")
-          .attr("fill", "#FF5252");
+            // Add the annotation arrow with adjusted position
+            svg
+              .append("line")
+              .attr("x1", arrowStartX)
+              .attr("y1", arrowStartY)
+              .attr("x2", genocidet.x)
+              .attr("y2", genocidet.y + radiusScale(genocidet.count) / 2) // Point to bottom of bubble
+              .attr("stroke", "#FF5252")
+              .attr("stroke-width", 1)
+              .attr("marker-end", "url(#arrow)");
 
-        // Add the annotation text (more compact)
-        svg
-          .append("text")
-          .attr("x", genocideX)
-          .attr("y", genocideY - 40)
-          .attr("text-anchor", "middle")
-          .attr("font-size", "11px")
-          .attr("font-weight", "bold")
-          .attr("fill", "#FF5252")
-          .text('"Genocide" appears when refuting recognition');
+            // Replace the single text annotation with a wrapped version using tspan elements
+            svg
+              .append("text")
+              .attr("x", arrowStartX + textOffsetX + 20)
+              .attr("y", arrowStartY + 15) // Position slightly higher for first line
+              .attr("text-anchor", "middle")
+              .attr("font-size", "12px")
+              .attr("font-weight", "bold")
+              .attr("fill", "#FF5252")
+              .append("tspan")
+              .text('"Genocide" appears when')
+              .attr("x", arrowStartX + textOffsetX)
+              .append("tspan")
+              .text("refuting recognition")
+              .attr("x", arrowStartX + textOffsetX)
+              .attr("dy", "14"); // Add line spacing between the two lines
+          }
+        }, 1000); // Wait for force layout to settle
       }
-
-      // Add X axis label (more compact)
-      svg
-        .append("text")
-        .attr("text-anchor", "middle")
-        .attr("x", width / 2)
-        .attr("y", height + margin.bottom - 5)
-        .style("font-size", "11px")
-        .style("fill", "#333")
-        .text("Associated Words");
-
-      // Add Y axis label (more compact)
-      svg
-        .append("text")
-        .attr("text-anchor", "middle")
-        .attr("transform", "rotate(-90)")
-        .attr("y", -margin.left + 15)
-        .attr("x", -height / 2)
-        .style("font-size", "11px")
-        .style("fill", "#333")
-        .text("Frequency");
 
       // Set flag that chart has been rendered
       this.chartRendered = true;
@@ -740,7 +768,7 @@ export default {
   display: inline-block;
 }
 
-.highlight {
+.highlight-red {
   background-color: rgba(238, 16, 16, 0.759);
   padding: 1px 1px;
   color: white;

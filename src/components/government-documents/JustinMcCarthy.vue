@@ -8,7 +8,7 @@
       }}</a>
     </p> -->
 
-    <div class="government-text" @mouseleave="onMouseLeave">
+    <div class="government-text">
       <!-- Document content with highlighted sections -->
       <p>
         <span

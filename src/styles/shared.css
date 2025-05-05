@@ -19,6 +19,8 @@
   margin-bottom: 15px;
   text-align: left;
   color: black !important;
+  text-align: justify;
+  margin: 0.8em 0; /* Apply the same spacing to government-text paragraphs */
 }
 
 .source-note {
@@ -58,6 +60,7 @@ h3 {
   padding: 0px 0;
   display: inline;
   /* border-radius: 2px; */
+  margin-bottom: 0; /* Make sure there's no extra margin here */
 }
 
 /* The default state with lower opacity */
@@ -215,9 +218,15 @@ h3 {
   margin: 10px 0; /* Add vertical margin */
   max-height: 80vh;
   scrollbar-width: none;
+  text-align: justify;
 }
 
 /* Override any specific text colors in links */
 a {
   color: black !important;
+}
+
+p {
+  margin: 0.8em 0; /* Reduce default paragraph margins */
+  line-height: 1.5;
 }

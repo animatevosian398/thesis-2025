@@ -116,7 +116,7 @@
           <!-- Using computed property to filter comments by stance -->
           <div
             v-for="(comment, index) in visibleComments"
-            :key="'comment-' + index"
+            :key="`comment-${index}-${sortOrder}`"
             class="comment-card"
             :class="{
               [getStanceClass(comment.stance)]: true,
@@ -300,10 +300,17 @@ export default {
         );
       }
 
-      // Sorting logic remains the same
+      // Sorting logic for comments
       if (this.sortOrder === "likes") {
         return comments.sort((a, b) => b.likes - a.likes);
+      } else if (this.sortOrder === "alphabetical") {
+        return comments.sort((a, b) => {
+          const textA = a.text.toLowerCase();
+          const textB = b.text.toLowerCase();
+          return textA.localeCompare(textB);
+        });
       } else {
+        // Default date sorting
         return comments.sort((a, b) => {
           const dateA = new Date(a.date);
           const dateB = new Date(b.date);
@@ -589,10 +596,10 @@ export default {
 
 .document-title-select {
   flex-grow: 1;
-  font-size: 20px;
+  font-size: 24px;
   /* font-family: "Vollkorn", serif; */
   font-family: "Georgia", serif;
-  color: #333;
+  color: #000000;
   text-align: left;
   border: none;
   background-color: transparent;
@@ -601,6 +608,7 @@ export default {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  text-align: center;
   white-space: normal; /* Allow text wrapping */
   min-height: 50px; /* Ensure height for wrapped text */
 }
@@ -610,7 +618,7 @@ export default {
 }
 .text-visualizer {
   background-color: white;
-  color: #111111;
+  color: #000000;
   padding: 0px 80px 60px 70px;
   width: 100%;
   box-sizing: border-box;
@@ -670,8 +678,28 @@ export default {
   line-height: 1;
   padding-bottom: 30px; /* Add padding at the bottom */
   max-height: 80vh; /* Set a maximum height to ensure scrolling */
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: thin; /* Firefox */
+  padding-right: 10px; /* Add right padding for better spacing */
+  scrollbar-color: #dddddd #f5f5f5;
+
   -ms-overflow-style: none; /* IE and Edge */
+}
+
+.government-text-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.government-text-container::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+.government-text-container::-webkit-scrollbar-thumb {
+  background-color: #dddddd;
+  border-radius: 4px;
+}
+
+.government-text-container::-webkit-scrollbar-thumb:hover {
+  background-color: #cccccc;
 }
 
 .social-media-comments {
@@ -688,9 +716,33 @@ export default {
   flex-direction: column;
   padding-bottom: 30px;
   max-height: 80vh;
-  /* Remove these lines to show scrollbars */
-  /* scrollbar-width: none; */ /* Firefox */
-  /* -ms-overflow-style: none; */ /* IE and Edge */
+
+  /* Remove these lines that hide scrollbars */
+  /* scrollbar-width: none; */
+  /* -ms-overflow-style: none; */
+
+  /* Add custom scrollbar styling */
+  /* For Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f5f5f5;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #dddddd;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #cccccc;
+  }
+
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #dddddd #f5f5f5;
 }
 
 #comments-container {
@@ -983,9 +1035,9 @@ body,
 .document-title-select {
   font-family: "Times New Roman", Times, serif;
   /* font-family: "Georgia", serif; */
-  color: #333;
+  color: #000000;
   width: 100%;
-  text-align: left;
+  text-align: center;
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: white;

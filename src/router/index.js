@@ -15,7 +15,9 @@ import DensityDot from "../components/DensityDot.vue";
 import Bg1 from "../components/Bg1.vue";
 import Bg3 from "../components/Bg3.vue";
 import Framing from "../components/Framing.vue";
-import BubbleChart from "../components/BubbleChart.vue";
+import YT_feature from "../components/YT_feature.vue";
+import NarrativesList from "../components/NarrativesList.vue";
+// import BubbleChart from "../components/BubbleChart.vue";
 import StanceView from "../views/StanceView.vue"; // Import StanceView component
 //stance detail pages
 import Apology from "../views/stanceDetailPages/Apology.vue";
@@ -39,6 +41,7 @@ const router = createRouter({
       name: "home",
       component: HomeView,
     },
+    { path: "/YT_feature", name: "YT_feature", component: YT_feature },
     {
       path: "/articles-timeline",
       name: "articles-timeline",
@@ -114,7 +117,12 @@ const router = createRouter({
       name: "Framing",
       component: Framing,
     },
-    { path: "/bubble-chart", name: "bubble-chart", component: BubbleChart },
+    {
+      path: "/narratives-list",
+      name: "narratives-list",
+      component: NarrativesList,
+    },
+    // { path: "/bubble-chart", name: "bubble-chart", component: BubbleChart },
     {
       path: "/stance/:stance",
       name: "stance-details",
