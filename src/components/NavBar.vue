@@ -28,6 +28,9 @@
             <a class="nav-link" href="/narratives-list">Narratives</a>
             <!-- <a class="nav-link" href="/bubble-chart">Bubble Chart</a> -->
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/Framing">Media</a>
+          </li>
           <!-- <li class="nav-item">
             <router-link to="/articles-timeline" class="nav-link">
               TR Articles Timeline

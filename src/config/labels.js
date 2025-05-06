@@ -23,8 +23,8 @@ export const stanceDisplayNames = {
   Personal_Testimony: "Personal Testimony*",
   Contemporary_Comparison: "Modern Comparisons",
   Discussion_About_Denial: "Discussion of Denial",
-  Minimization_Reframing: "Minimization & Reframing",
+  Minimization_Reframing: "Minimization and Reframing",
   Reconciliation_Discourse: "Reconciliation",
-  Sympathy_Memorial_Commemorative: "Sympathy & Memorial",
+  Sympathy_Memorial_Commemorative: "Sympathy and Memorial",
   Procedural_Deflection_Evidence_Archives: "Debating Evidence",
 };

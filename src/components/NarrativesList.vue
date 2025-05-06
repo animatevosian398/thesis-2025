@@ -2,9 +2,9 @@
   <div class="stance-list-container">
     <header class="header">
       <h1 class="main-title">NARRATIVES</h1>
-      <h2 class="subtitle">
+      <!-- <h2 class="subtitle">
         Analysis of 10,394 comments across Youtube videos.
-      </h2>
+      </h2> -->
       <!-- <div class="stats">
         <div class="stat-item">
           <div class="stat-number">10,000</div>
@@ -36,12 +36,18 @@
             class="stance-color"
             :style="{ backgroundColor: getColor(item.stance) }"
           ></div>
-          <div class="stance-name">{{ formatStance(item.stance) }}</div>
+          <div
+            class="stance-name"
+            @click="toggleStance(item.stance)"
+            :style="{
+              '--stance-color': getColor(item.stance),
+              '--stance-color-rgb': hexToRgb(getColor(item.stance)),
+            }"
+          >
+            {{ formatStance(item.stance) }}
+          </div>
           <div class="stance-count">{{ item.count.toLocaleString() }}</div>
           <div class="actions">
-            <div class="expand-icon" @click="toggleStance(item.stance)">
-              {{ expandedStance === item.stance ? "−" : "+" }}
-            </div>
             <router-link
               :to="getStanceRoute(item.stance)"
               class="navigate-icon"
@@ -117,52 +123,52 @@ const stanceToRoutePath = {
 // Sample comments for each stance
 const commentsByStance = {
   Apology: [
-    "We deeply regret our country's role in these events.",
-    "On behalf of our government, we offer our sincere apologies.",
+    "I'm from turkey and im really really sorry for what happend back then",
+    "I can't change my country's history but I can apologize to the victims and their families",
   ],
   Historical_Affirmation: [
-    "Historical records clearly document these events.",
-    "Multiple sources confirm this happened exactly as described.",
+    "What happened to the Armenians, Assyrians and Greeks in the final moments of the Ottoman Empire was Genocide.",
+    "They killed, they took our land, and wealth and everything. Will never forget.	",
   ],
   Competitive_Victimhood_Historical_Inversion: [
-    "But what about the suffering my group endured?",
-    "Our people also experienced terrible persecution.",
+    "Armenians did same things to the ottoman.",
+    "No mention to the massacres of Turkish/Kurdish population at the hands of Armenians/Russians. None! ",
   ],
   Explicit_Denial: [
-    "This event never actually happened.",
-    "There is no legitimate evidence for these claims.",
+    "Turkey didn't do any genocideThey are good people 👍",
+    "Big lie	",
   ],
   Justification_Narrative: [
-    "These actions were necessary given the circumstances.",
-    "The context of the time period explains these decisions.",
+    "The Armenians were rebelling against the Ottoman Empire, which responded by slaughtering them and successfully stopping the rebellion.",
+    "As a British, I don't deny the Armenian genocide. I think they kinda deserved it after siding with Ruskies.",
   ],
   Contemporary_Comparison: [
-    "This situation is just like what's happening in Region X today.",
-    "The same patterns are emerging in current conflicts.",
+    "This genocide was led by the Young Turks who were not Turkish. Today they are leading the genocide in Gaza.	",
+    "And now the Turks are doing the same to the Kurds.	",
   ],
   Personal_Testimony: [
-    "I witnessed these events with my own eyes.",
-    "My grandmother told me stories about this period.",
+    "My Great Grandma lost her family during those killings. She was from Van. ",
+    "I am Armenian from Bitlis, and my family was forcibly expelled during the Armenian Genocide. The global Armenian diaspora is a direct result of these atrocities. ",
   ],
   Discussion_About_Denial: [
-    "The denial of this historical event is troubling.",
-    "We need to address the pattern of denial in public discourse.",
+    "Germany admitted to the wrong stuff have done and has apologized. Turkëye acts like them murdering 1.5 million people never happened, lying to their people saying that the genocide never happened.",
+    "It's funny how the only people denying/defending the genocide are from Turkey.	",
   ],
   Minimization_Reframing: [
-    "These events weren't as severe as commonly portrayed.",
-    "The numbers have been greatly exaggerated over time.",
+    "The numbers of deaths are exaggerated. Turkey shouldn’t admit it at all because both sides are to blame.	",
+    "There are more examples that show that this is not a case of genocide. it was a war and both sides fought against each other with casualties on both sides",
   ],
   Reconciliation_Discourse: [
-    "We must find a path forward together despite this history.",
-    "Acknowledging the past is the first step toward healing.",
+    "How can Turkey and Armenia even begin the process of reconciliation if Turkey doesn't admit to having done the thing they're reconciling for?	",
+    "all country must face and admit their wrongdoings in recent past in order to move forward. Australian and Canada apologized to their natives. Germany admitted its role in WW2.	",
   ],
   Sympathy_Memorial_Commemorative: [
-    "We must never forget the victims of this tragedy.",
-    "Their memory deserves to be honored and preserved.",
+    "We all stand with Armenians. It will not be forgotten.	",
+    "As a Kurd from iraq and a survivor of saddams inhumane genocide on the Kurds, i stand with my Armenian brothers against those who deny the Armenian genocide.",
   ],
   Procedural_Deflection_Evidence_Archives: [
-    "We need more evidence before drawing conclusions.",
-    "The archives on this matter remain incomplete.",
+    "Let the historıans talk not politician. Let's open all archives	",
+    "Do you have any proof or court decision about Armenian Genocide? Of course you don't. Nobody have it.	",
   ],
 };
 
@@ -322,6 +328,30 @@ const getWordSize = (weight) => {
   const scale = 1;
   return `${baseSize + weight * scale}px`;
 };
+
+// Add this helper function to your existing script
+const hexToRgb = (hex) => {
+  // Default fallback if hex is invalid
+  if (!hex || typeof hex !== "string") return "0, 0, 0";
+
+  // Remove # if present
+  hex = hex.replace("#", "");
+
+  // Convert 3-digit hex to 6-digit
+  if (hex.length === 3) {
+    hex = hex
+      .split("")
+      .map((char) => char + char)
+      .join("");
+  }
+
+  // Parse the hex values
+  const r = parseInt(hex.substring(0, 2), 16) || 0;
+  const g = parseInt(hex.substring(2, 4), 16) || 0;
+  const b = parseInt(hex.substring(4, 6), 16) || 0;
+
+  return `${r}, ${g}, ${b}`;
+};
 </script>
 
 <style scoped>
@@ -333,27 +363,45 @@ const getWordSize = (weight) => {
   width: 95%; /* Add this to ensure it uses most of the available width */
   margin: 0 auto;
   padding: 60px 20px;
-  font-family: Arial, sans-serif;
+  font-family: "Aktiv Grotesk", sans-serif;
+  /* font-family: Arial, sans-serif; */
   background-color: white;
   color: #000;
 }
 
+/* Center the main title properly */
 .header {
   text-align: center;
-  margin-bottom: 60px;
-  border-bottom: 1px solid #000;
-  padding-bottom: 40px;
+  margin-bottom: 40px;
+  padding-bottom: 0;
+  padding-left: 0px;
+  padding-right: 0px;
+  border-bottom: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center children */
 }
 
 .main-title {
   font-size: 24px;
   font-family: "Aktiv Grotesk", sans-serif;
-  /* font-family: "Times New Roman", serif; */
+  /* font-family: "Aktiv Grotesk", sans-serif; */
   font-weight: normal;
-  letter-spacing: 8px;
   text-transform: uppercase;
-  margin-bottom: 30px;
+  margin-bottom: 0;
+  margin-top: 35px;
+  position: relative;
+  display: inline-block;
+  /* No additional centering needed as the parent handles it */
 }
+
+/* Remove the border-top from stance-list */
+.stance-list {
+  border-top: none; /* Remove the top border */
+}
+
+/* Add a separator after the first stance item if desired */
 
 .subtitle {
   font-size: 16px;
@@ -394,20 +442,25 @@ const getWordSize = (weight) => {
 }
 
 .stance-item {
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #00000064;
   transition: background-color 0.2s;
 }
 
+/* Remove hover background effect from stance-item */
 .stance-item:hover {
-  background-color: #f9f9f9;
+  background-color: transparent; /* Remove background color change */
 }
 
 /* Adjust the stance header to be more spacious */
 .stance-header {
   display: flex;
   align-items: center;
-  padding: 25px 20px; /* Added horizontal padding */
+  padding: 20px 25px 20px 50px; /* Updated to match header padding */
   position: relative;
+  font-family: "General Sans", sans-serif;
+  justify-content: center; /* Center the content horizontally */
+  max-width: 80%; /* Limit width to create center space */
+  margin: 0 auto; /* Center the header */
 }
 
 /* Adjust spacing for wider layout */
@@ -416,6 +469,7 @@ const getWordSize = (weight) => {
   text-align: right;
   font-size: 14px;
   color: #666;
+  margin-right: 10px; /* Add margin to keep spacing consistent */
 }
 
 /* Make color dot more visible in the wider layout */
@@ -424,23 +478,33 @@ const getWordSize = (weight) => {
   height: 10px; /* Slightly larger */
   border-radius: 50%;
   margin-right: 25px; /* More spacing */
-  margin-left: 25px; /* More spacing */
+  margin-left: 15px; /* Adjusted from 25px */
   flex-shrink: 0;
 }
 
-/* Give more space for the stance name */
+/* Make stance name visibly clickable */
 .stance-name {
   flex: 1;
   font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 2px;
   padding-right: 40px; /* Add space for longer names */
+  cursor: pointer; /* Add pointer cursor to indicate clickability */
+  padding: 8px 15px; /* Add padding for better click target */
+  border-radius: 2px; /* Slight rounding for hover effect */
+  /* Remove transition for hover effect */
+}
+
+/* Remove hover background effect from stance name */
+.stance-item:hover .stance-name {
+  background-color: transparent; /* Remove background color change */
 }
 
 .stance-count {
   width: 60px;
   text-align: right;
   font-size: 14px;
+  font-family: "General Sans", sans-serif;
 }
 
 .actions {
@@ -488,8 +552,11 @@ const getWordSize = (weight) => {
 
 /* Add more space for the expanded content */
 .stance-content {
-  padding: 30px 80px 40px 100px; /* Increased padding */
+  padding: 30px 80px 40px;
   background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .word-cloud {
@@ -508,6 +575,7 @@ const getWordSize = (weight) => {
 .words {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center; /* Center words */
   gap: 20px; /* Increased from 15px */
   margin-bottom: 25px; /* Increased spacing */
   max-width: 90%; /* Limit width to avoid spanning too wide */
@@ -609,7 +677,7 @@ const getWordSize = (weight) => {
 
   .stance-name {
     font-size: 14px;
-    letter-spacing: 1px;
+    /* letter-spacing: 1px; */
     padding-right: 10px; /* Less space on mobile */
   }
 

@@ -126,7 +126,7 @@ export default defineComponent({
 
         const scrollingElement = this.$refs.scrollingComments;
         const currentTop = parseFloat(scrollingElement.style.top) || 0;
-        const newTop = currentTop - 2; // Increase for faster speed (pixels)
+        const newTop = currentTop - 1.5; // Slower scroll for better readability
 
         scrollingElement.style.top = `${newTop}px`;
 

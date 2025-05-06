@@ -51,7 +51,7 @@
     <div class="home-scroll-container">
       <div class="scroll-indicator" @click="scrollToBg1">
         <div class="scroll-text">Scroll to continue</div>
-        <div class="scroll-arrow">↓</div>
+        <div class="scroll-arrow"></div>
         <span class="tooltip-text">
           Content Warning: Includes sensitive and potentially distressing and/or
           offensive material.
@@ -82,12 +82,12 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import Bg1 from "@/components/Bg1.vue";
 import Bg2 from "@/components/Bg2.vue";
-import Bg3 from "../components/Bg3.vue";
+// import Bg3 from "../components/Bg3.vue";
 import MediaCoveragePast from "../components/MediaCoveragePast.vue";
 import Framing from "../components/Framing.vue";
 import Papa from "papaparse";
 import * as d3 from "d3";
-import ThreeChartComparison from "../components/ThreeChartComparison.vue";
+// import ThreeChartComparison from "../components/ThreeChartComparison.vue";
 
 // Array to store filtered background comments
 const backgroundComments = ref([]);
@@ -347,6 +347,13 @@ body,
   object-fit: cover; /* Ensure the entire image is visible */
   object-position: center; /* Center the image */
   max-width: none; /* Override any max-width restrictions */
+
+  /* Add black and white filter */
+  filter: grayscale(100%); /* Make the image completely black and white */
+  opacity: 1; /* Slightly reduce opacity for better text contrast */
+
+  /* Add transition for any hover effects */
+  transition: filter 0.5s ease;
 }
 
 /* Home Scroll Container */
@@ -371,7 +378,7 @@ body,
   opacity: 0.8;
   cursor: pointer;
   padding: 20px 20px;
-  border-radius: 20px;
+  /* border-radius: 20px; */
   transition: all 0.3s ease;
 }
 
@@ -389,12 +396,39 @@ body,
   text-transform: uppercase;
 }
 
+/* Update scroll arrow to be a carrot-style triangle (V shape) */
 .scroll-arrow {
-  font-size: 1.5rem;
-  color: white;
+  position: relative;
+  width: 20px;
+  height: 12px;
+  margin-top: 8px;
   animation: bounce 2s infinite;
 }
 
+/* Create the carrot with two pseudo-elements for the angled lines */
+.scroll-arrow::before,
+.scroll-arrow::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 2px; /* Line thickness */
+  height: 12px; /* Line length */
+  background-color: white;
+}
+
+/* Left side of the carrot - INVERTED to point DOWN */
+.scroll-arrow::before {
+  left: 5px;
+  transform: rotate(-45deg); /* Changed from 45deg to -45deg */
+}
+
+/* Right side of the carrot - INVERTED to point DOWN */
+.scroll-arrow::after {
+  right: 5px;
+  transform: rotate(45deg); /* Changed from -45deg to 45deg */
+}
+
+/* Update the bounce animation to work with the new arrow */
 @keyframes bounce {
   0%,
   20%,
@@ -411,28 +445,78 @@ body,
   }
 }
 
-/* Tooltip styles */
+/* Updated tooltip styles with blur glass effect */
 .tooltip-text {
   visibility: hidden;
-  color: black;
+  color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Slightly darker text for better contrast */
   text-align: center;
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 12px 18px;
+  /* border-radius: 8px; */
   position: absolute;
   z-index: 100;
+  font-weight: 600;
+  font-family: "Geogria", serif;
   bottom: 130%;
   left: 50%;
   transform: translateX(-50%);
   width: 600px;
-  font-size: 0.85em;
+  font-size: 0.9em;
+  font-weight: 500; /* Slightly bolder for better readability */
   opacity: 0;
-  transition: opacity 0.3s ease;
-  background-color: rgba(227, 225, 225, 0.767);
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  /* Subtle border and shadow for depth */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  /* Add a small arrow pointing down */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.6) transparent transparent transparent;
+  }
 }
 
+/* Keep the hover behavior */
 .scroll-indicator:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
+}
+
+/* Add a slight scale effect on appear */
+@keyframes tooltip-appear {
+  from {
+    transform: translateX(-50%) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.scroll-indicator:hover .tooltip-text {
+  animation: tooltip-appear 0.2s forwards;
+}
+
+/* Make sure mobile styling is still appropriate */
+@media (max-width: 768px) {
+  .tooltip-text {
+    width: 90%;
+    max-width: 400px;
+    font-size: 0.85em;
+    padding: 10px 14px;
+  }
 }
 
 /* Section containers */

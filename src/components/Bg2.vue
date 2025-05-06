@@ -6,12 +6,19 @@
     <div ref="content" class="content-container">
       <p class="paragraph-section" ref="para1">
         Turkey's official stance on the genocide evolved from silence, to a more
-        complicated form of denial and revisionist reframing of history. They
-        frame the events as justified due to suspected Armenian alliances with
-        Russia and also a relocation for their own safety, a relocation which
-        essentially was a death march through the Syrian desert; they
-        acknowledge the Armenian deaths, but as a consequence of other factors
-        like famine and disease or wartime causes.
+        complicated form of denial and revisionist reframing of history. It
+        "Ankara does not accept the alleged "genocide," but acknowledges there
+        were casualties on both sides during World War I"
+        <a
+          href="https://www.aa.com.tr/en/politics/turkish-vp-no-one-can-defame-turkey-over-1915-events/1269655"
+          target="_blank"
+          class="citation-link"
+          >(Anadolu Agency, 2018)</a
+        >. It also frames the events as justified due to suspected Armenian
+        alliances with Russia and also a relocation for their own safety, a
+        relocation which essentially was a death march through the Syrian
+        desert; they acknowledge the Armenian deaths, but as a consequence of
+        other factors like famine and disease or wartime causes.
       </p>
 
       <p class="paragraph-section quote" ref="para2">
@@ -49,7 +56,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onUnmounted } from "vue";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -70,6 +77,8 @@ export default {
 
     // Method that can be called to trigger the animation
     const triggerAnimation = () => {
+      console.log("Triggering Bg2 animation"); // Add debug log
+
       // Fade in the entire section
       gsap.to(bg2Section.value, {
         opacity: 1,
@@ -85,42 +94,96 @@ export default {
         delay: 0.3,
         ease: "power2.out",
       });
+
+      // Make paragraphs visible immediately if animation is failing
+      gsap.to([para1.value, para2.value, para3.value, para4.value], {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.2,
+      });
     };
 
+    let triggers = []; // Store trigger references for cleanup
+
     onMounted(() => {
+      // Ensure element refs are valid
+      if (!bg2Section.value) {
+        console.error("Bg2Section ref is null");
+        return;
+      }
+
+      console.log("Bg2 mounted, setting up animations"); // Add debug log
+
       // Initial states - start hidden
-      gsap.set(bg2Section.value, { opacity: 0 });
+      gsap.set(bg2Section.value, { opacity: 1 }); // Set to 1 to ensure visibility
       gsap.set(title.value, { opacity: 0, y: 30 });
 
       // Set initial state for paragraphs
-      gsap.set([para1.value, para2.value, para3.value, para4.value], {
-        opacity: 0,
-        y: 20,
-      });
+      if (para1.value && para2.value && para3.value && para4.value) {
+        gsap.set([para1.value, para2.value, para3.value, para4.value], {
+          opacity: 0,
+          y: 20,
+        });
+      } else {
+        console.warn("Some paragraph refs are missing");
+      }
+
+      // Immediate animation if ScrollTrigger fails
+      setTimeout(() => {
+        if (window.scrollY > 300) {
+          // If we're already scrolled down
+          triggerAnimation();
+        }
+      }, 500);
 
       // Create scroll trigger for fade-in of the section
-      ScrollTrigger.create({
+      const mainTrigger = ScrollTrigger.create({
         trigger: bg2Section.value,
-        start: "top 10%",
+        start: "top bottom", // Fire as soon as the top of the section enters viewport
         onEnter: triggerAnimation,
-        once: false,
+        once: true,
+        id: "main-trigger",
+        markers: false, // Set to true to debug
       });
 
+      triggers.push(mainTrigger);
+
       // Create scroll triggers for each paragraph
-      const paragraphs = [para1.value, para2.value, para3.value, para4.value];
+      const paragraphs = [
+        para1.value,
+        para2.value,
+        para3.value,
+        para4.value,
+      ].filter(Boolean);
+
       paragraphs.forEach((para, index) => {
-        gsap.to(para, {
+        const trigger = gsap.to(para, {
           opacity: 1,
           y: 0,
           duration: 0.8,
           scrollTrigger: {
             trigger: para,
-            start: "top 90%", // When paragraph is 85% from top of viewport
+            start: "top 90%", // When paragraph is 90% from top of viewport
             end: "top 60%",
-            toggleActions: "play none none reverse", // Play animation when entering, reverse when scrolling back up
+            toggleActions: "play none none none", // Changed to not reverse
+            id: `para-trigger-${index}`,
+            markers: false, // Set to true to debug
           },
         });
+
+        triggers.push(trigger);
       });
+    });
+
+    // Clean up ScrollTrigger instances
+    onUnmounted(() => {
+      triggers.forEach((trigger) => {
+        if (trigger && trigger.kill) {
+          trigger.kill();
+        }
+      });
+      ScrollTrigger.getAll().forEach((st) => st.kill());
     });
 
     return {
@@ -141,7 +204,8 @@ export default {
 /* Parent container alignment */
 .background-section-2 {
   min-height: 100vh;
-  background-color: rgba(222, 222, 222, 0.682);
+  background-color: white;
+  /* background-color: rgba(222, 222, 222, 0.682); */
   color: rgba(30, 29, 29, 0.786);
   display: block;
   font-family: "Helvetica";

@@ -194,7 +194,7 @@ function initScrollAnimations() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #eaeaea;
+  background-color: #ffffff;
 }
 
 .content-container {
@@ -209,7 +209,7 @@ function initScrollAnimations() {
   margin-bottom: 40px;
   text-align: left;
   color: #111;
-  border-bottom: 3px solid #ddd;
+  border-bottom: 1px solid #000000;
   padding-bottom: 15px;
 }
 
@@ -277,6 +277,7 @@ function initScrollAnimations() {
 
 .ambassador-testimony {
   margin-top: 20px;
+  border: 1px solid rgb(193, 192, 192);
   background-color: white;
   font-family: "Times New Roman", Times, serif;
   padding: 25px;
@@ -378,7 +379,6 @@ blockquote footer {
 .headline-image {
   will-change: transform, opacity;
   transform-origin: center right;
-  border: 2px solid #e0e0e0;
   background-color: white;
   padding: 10px;
   margin-right: 5px;
@@ -411,7 +411,7 @@ blockquote footer {
 }
 .citation-headlines-archive {
   margin-top: 20px;
-  font-size: 0.9rem;
+  font-size: 0.5rem;
   text-align: right;
   margin-right: 2px;
 }

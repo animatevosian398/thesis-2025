@@ -2,7 +2,7 @@
   <div class="word-association-container">
     <!-- Main title above everything -->
     <h2 class="section-title main-title">
-      How does the Turkish Media Frame the Armenian Genocide Today?
+      How does Turkish Media Frame the Armenian Genocide Today?
     </h2>
 
     <div class="two-column-layout">
@@ -660,7 +660,7 @@ export default {
   text-align: right;
   font-style: italic;
   position: absolute;
-  bottom: -13px;
+  bottom: -60px;
   right: 10px;
   margin: 0;
 

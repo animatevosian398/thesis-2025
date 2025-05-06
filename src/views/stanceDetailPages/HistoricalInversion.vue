@@ -126,7 +126,7 @@ export default defineComponent({
         if (this.isPaused || this.allCommentsVisible) return; // Skip if paused or all comments are visible
 
         const currentTop = parseFloat(scrollingElement.style.top) || 50;
-        const newTop = currentTop - 0.15; // Slower scroll for better readability
+        const newTop = currentTop - 0.35; // Slower scroll for better readability
 
         scrollingElement.style.top = `${newTop}%`;
 
