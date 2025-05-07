@@ -4,6 +4,10 @@
       Archive of Genocide Comments
       <span class="dates-title"> (2008-2025) </span>
     </h1>
+    <div class="subtitle">
+      A digital repository of 10,393 online comments from Youtube published
+      under videos on the Armenian Genocide, categorized by narrative stance.
+    </div>
 
     <div class="main-content">
       <!-- Left sidebar with filters -->
@@ -15,10 +19,11 @@
             <div class="sort-dropdown">
               <button
                 class="sort-button"
+                :class="{ open: showSortDropdown }"
                 @click="showSortDropdown = !showSortDropdown"
               >
                 {{ getSortLabel() }}
-                <span class="arrow">▼</span>
+                <span class="arrow"></span>
               </button>
 
               <!-- Dropdown menu -->
@@ -56,10 +61,11 @@
             <div class="sort-dropdown">
               <button
                 class="sort-button"
+                :class="{ open: showYearDropdown }"
                 @click="showYearDropdown = !showYearDropdown"
               >
                 {{ selectedYear === "all" ? "ALL YEARS" : selectedYear }}
-                <span class="arrow">▼</span>
+                <span class="arrow"></span>
               </button>
 
               <!-- Year dropdown menu -->
@@ -125,7 +131,7 @@
             <input
               type="text"
               v-model="searchQuery"
-              placeholder="Search 10,394 comments..."
+              placeholder="Search 10,393 comments..."
               class="search-input"
               @input="handleSearch"
             />
@@ -282,19 +288,39 @@ export default {
         "Personal Testimony": "#7A485D",
         "Explicit Denial": "#E53734",
         "Minimization Reframing": "#658B88",
-        "Justification Narrative": "#FAFF6B",
+        //   Justification_Narrative: "#FAFF6B",
+        // Justification_Narrative: "#FAFF6B",
+        "Justification Narrative": "#C6B987",
+
+        //   Justification_Narrative: "#FBA423",
         "Contemporary Comparison": "#2E4D46",
         "Procedural Deflection Evidence Archives": "#FBA423",
+
+        //   Procedural_Deflection_Evidence_Archives: "#FBA423",
         "Competitive Victimhood Historical Inversion": "#979C63",
         "Sympathy Memorial Commemorative": "#40414A",
         Apology: "#2738EC",
         "Discussion About Denial": "#841A26",
-        "Reconciliation Discourse": "#527c7995",
+        //   Reconciliation_Discourse: "#005477",
+        "Reconciliation Discourse": "#005477",
+        // "Historical Affirmation": "#4CAF50",
+        // "Personal Testimony": "#7A485D",
+        // "Explicit Denial": "#E53734",
+        // "Minimization Reframing": "#658B88",
+        // "Justification Narrative": "#C6B987",
+        // // "Justification Narrative": "#FAFF6B",
+        // "Contemporary Comparison": "#2E4D46",
+        // "Procedural Deflection Evidence Archives": "#FBA423",
+        // "Competitive Victimhood Historical Inversion": "#979C63",
+        // "Sympathy Memorial Commemorative": "#40414A",
+        // Apology: "#2738EC",
+        // "Discussion About Denial": "#841A26",
+        // "Reconciliation Discourse": "#527c7995",
       },
       sortOptions: [
         { value: "likes", label: "LIKE COUNT" },
         // { value: "date", label: "DATE" },
-        { value: "emotional", label: "EMOTIONAL STRENGTH" },
+        // { value: "emotional", label: "EMOTIONAL STRENGTH" },
         { value: "random", label: "RANDOM" },
       ],
       // Add search query to data
@@ -402,39 +428,53 @@ export default {
   },
 
   methods: {
-    // Fix getTagColor to properly map kebab-case tags to stanceColors keys
+    // Fix getTagColor to properly match tags to colors
     getTagColor(tag) {
-      // First normalize the tag format to handle various incoming formats
+      // First, standardize the format
       let normalizedTag = tag
         .replace(/-/g, " ") // Replace hyphens with spaces
         .replace(/_/g, " ") // Replace underscores with spaces
-        .toLowerCase() // Convert to lowercase
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
-        .join(" ");
+        .toLowerCase(); // Convert to lowercase
 
-      // Check specialized formats first (handle exceptions)
-      if (normalizedTag.includes("Memorial")) {
-        normalizedTag = "Sympathy/Memorial/Commemorative";
-      } else if (normalizedTag.includes("Competitive")) {
-        normalizedTag = "Competitive Victimhood/Historical Inversion";
-      } else if (normalizedTag.includes("Evidence")) {
-        normalizedTag = "Procedural Deflection Evidence Archives";
+      // Map of normalized tags to exact keys in stanceColors
+      const tagMap = {
+        "historical affirmation": "Historical Affirmation",
+        "personal testimony": "Personal Testimony",
+        "explicit denial": "Explicit Denial",
+        "minimization reframing": "Minimization Reframing",
+        "justification narrative": "Justification Narrative",
+        "contemporary comparison": "Contemporary Comparison",
+        "procedural deflection": "Procedural Deflection Evidence Archives",
+        "procedural deflection evidence archives":
+          "Procedural Deflection Evidence Archives",
+        "competitive victimhood": "Competitive Victimhood Historical Inversion",
+        "historical inversion": "Competitive Victimhood Historical Inversion",
+        "competitive victimhood historical inversion":
+          "Competitive Victimhood Historical Inversion",
+        "sympathy memorial": "Sympathy Memorial Commemorative",
+        "sympathy memorial commemorative": "Sympathy Memorial Commemorative",
+        apology: "Apology",
+        "discussion about denial": "Discussion About Denial",
+        "reconciliation discourse": "Reconciliation Discourse",
+      };
+
+      // Check if we have a direct mapping
+      if (tagMap[normalizedTag]) {
+        return this.stanceColors[tagMap[normalizedTag]];
       }
 
-      // Try to find the color in stanceColors
+      // Fallback to partial matching
       for (const [key, value] of Object.entries(this.stanceColors)) {
-        // Compare normalized versions of both strings
+        const normalizedKey = key.toLowerCase();
         if (
-          normalizedTag === key ||
-          normalizedTag.includes(key) ||
-          key.includes(normalizedTag)
+          normalizedTag.includes(normalizedKey) ||
+          normalizedKey.includes(normalizedTag)
         ) {
           return value;
         }
       }
 
-      // Log missing mappings for debugging
+      // If we get here, log the tag for debugging
       console.log(
         "Color not found for tag:",
         tag,
@@ -442,7 +482,7 @@ export default {
         normalizedTag
       );
 
-      // Return a default color if no match found
+      // Return a default color
       return "#cccccc";
     },
 
@@ -999,30 +1039,43 @@ a:hover {
 
 /* Ensure proper spacing */
 .filter-section {
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
   margin-top: 10px;
   padding-top: 10px;
   border-bottom: 1px solid #e5e5e5;
   color: black;
 }
 
+/* Add specific styling for the sort filter section to reduce padding */
+.filter-section:first-child {
+  padding-bottom: 5px; /* Reduced from 20px */
+  margin-bottom: 5px; /* Reduced from 20px */
+}
+
+/* Year filter can also have reduced space */
+.filter-section:nth-child(2) {
+  padding-top: 0; /* Removed top padding */
+  padding-bottom: 30px; /* Reduced bottom padding */
+  margin-bottom: 10px; /* Reduced margin */
+}
+
 .tag-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
   margin-top: 0.75rem;
   color: black;
 }
 
 .tag-button {
-  padding: 0.5rem;
+  padding: 0.4rem;
   background: none;
   border: 1px solid #e5e5e5;
-  border-radius: 4px;
+  border-radius: 2px;
   cursor: pointer;
   font-size: 0.8rem;
-  opacity: 0.6;
+  opacity: 0.4;
   transition: opacity 0.2s ease;
 }
 .tag-button:hover {
@@ -1085,6 +1138,33 @@ a:hover {
 }
 
 .arrow {
+  font-size: 0.7rem;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+/* Change the content of the arrow from a filled triangle to a chevron */
+.sort-button .arrow {
+  content: "";
+  display: inline-block;
+  border: none;
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transition: transform 0.2s ease;
+  position: relative;
+  top: -2px;
+}
+
+/* Add a new class for when the dropdown is open */
+.sort-button.open .arrow {
+  transform: rotate(-135deg);
+  top: 1px;
+}
+
+.arrow {
   font-size: 0.8rem;
 }
 /* Add styling for video links */
@@ -1121,9 +1201,10 @@ a:hover {
   border: none;
 }
 .comment-tag {
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 0.3rem;
+  border-radius: 2px;
   font-size: 0.7rem;
+  align-items: center;
 }
 
 /* Video source styling */
@@ -1157,7 +1238,26 @@ a:hover {
   font-size: 0.75rem;
   color: #606060;
 }
+.subtitle {
+  margin-left: 20px; /* Match the margin-left of title (18px + a little extra) */
+  padding-left: 0;
+  text-align: left;
+  font-size: 16px;
+  max-width: 800px; /* Prevent excessive width for better readability */
+  margin-top: 8px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.8);
+}
 
+.title {
+  color: black;
+  font-size: 50px;
+  padding-bottom: 8px;
+  text-align: left;
+  margin-left: 18px;
+  line-height: 1.1; /* Add this for better spacing with the title */
+}
 /* Adjust search-container to take full width and remain fixed */
 .search-container {
   position: sticky;

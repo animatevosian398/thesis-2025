@@ -18,7 +18,8 @@ export const stanceColors = {
   Explicit_Denial: "#E53734",
   Minimization_Reframing: "#658B88",
   //   Justification_Narrative: "#FAFF6B",
-  Justification_Narrative: "#FAFF6B",
+  // Justification_Narrative: "#FAFF6B",
+  Justification_Narrative: "#C6B987",
 
   //   Justification_Narrative: "#FBA423",
   Contemporary_Comparison: "#2E4D46",

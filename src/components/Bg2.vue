@@ -1,24 +1,25 @@
 <template>
   <div id="bg2-section" class="background-section-2" ref="bg2Section">
     <h2 class="date">Post-1915</h2>
-    <h1 class="backgroundTitle" ref="title">Turkey's Denial</h1>
+    <h1 class="backgroundTitle" ref="title">
+      Turkey's <span class="highlight-denial">Denial </span>
+    </h1>
     <!-- Split paragraph into multiple sections for animated reveal -->
     <div ref="content" class="content-container">
       <p class="paragraph-section" ref="para1">
         Turkey's official stance on the genocide evolved from silence, to a more
-        complicated form of denial and revisionist reframing of history. It
-        "Ankara does not accept the alleged "genocide," but acknowledges there
-        were casualties on both sides during World War I"
+        complicated form of denial and revisionist reframing of history. "Ankara
+        does not accept the alleged "genocide," but acknowledges there were
+        casualties on both sides during World War I"
         <a
           href="https://www.aa.com.tr/en/politics/turkish-vp-no-one-can-defame-turkey-over-1915-events/1269655"
           target="_blank"
           class="citation-link"
           >(Anadolu Agency, 2018)</a
         >. It also frames the events as justified due to suspected Armenian
-        alliances with Russia and also a relocation for their own safety, a
+        alliances with Russia and also a relocation for their own safety; A
         relocation which essentially was a death march through the Syrian
-        desert; they acknowledge the Armenian deaths, but as a consequence of
-        other factors like famine and disease or wartime causes.
+        desert, where many died from starvation, disease, and violence.
       </p>
 
       <p class="paragraph-section quote" ref="para2">
@@ -218,12 +219,13 @@ export default {
 /* Date styling */
 .date {
   margin-left: 0; /* Changed from 6px to 0 for perfect alignment */
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin-top: 80px;
   font-family: "Helvetica";
   color: rgba(0, 0, 0, 0.694);
   text-align: left; /* Explicit left alignment */
   display: block; /* Ensure it takes full width */
+  font-style: italic; /* Add italics to the date */
 }
 
 /* Title styling */
@@ -240,7 +242,7 @@ export default {
 
 /* Content container */
 .content-container {
-  max-width: 800px;
+  max-width: 900px;
   margin-left: 0; /* Align with left edge */
   padding-left: 0; /* Ensure no padding shifts content */
 }
@@ -274,7 +276,7 @@ export default {
   font-family: "Helvetica";
   font-size: 1.1rem;
   line-height: 1.8;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.3rem;
   opacity: 0; /* Start invisible */
   text-align: left; /* Ensure paragraphs are left-aligned */
 }
@@ -283,5 +285,9 @@ export default {
   padding-left: 20px;
   font-style: italic;
   border-left: 3px solid rgba(0, 0, 0, 0.2); /* Add a subtle left border to quotes */
+}
+.highlight-denial {
+  background-color: black;
+  color: white;
 }
 </style>

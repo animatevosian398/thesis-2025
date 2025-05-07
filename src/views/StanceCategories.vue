@@ -369,14 +369,6 @@ export default {
   font-style: normal;
 }
 
-@font-face {
-  font-family: "General Sans";
-  src: url("@/assets/font/GeneralSans_Complete/Fonts/WEB/GeneralSans-Regular.woff2")
-    format("woff2");
-  font-weight: 400;
-  font-style: normal;
-}
-
 .header-container {
   display: flex;
   justify-content: space-between;

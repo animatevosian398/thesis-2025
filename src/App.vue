@@ -2,11 +2,27 @@
   <Navbar />
   <router-view></router-view>
   <!-- <StanceLegend /> -->
+  <Bg1 v-if="showBg1" @scrollToBg2="handleScrollToBg2" />
+  <Bg2 v-if="showBg2" @scrollToBg3="handleScrollToBg3" />
+  <!-- Other components... -->
 </template>
 
 <script setup>
 import Navbar from "./components/Navbar.vue";
 import StanceLegend from "./components/StanceLegend.vue";
+
+function handleScrollToBg2() {
+  // Hide Bg1 completely
+  showBg1.value = false;
+
+  // Reset scroll position
+  window.scrollTo(0, 0);
+
+  // Show Bg2 with a slight delay to ensure complete separation
+  setTimeout(() => {
+    showBg2.value = true;
+  }, 500);
+}
 </script>
 
 <style>

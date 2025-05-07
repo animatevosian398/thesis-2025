@@ -69,12 +69,12 @@
     <div id="bg2-section">
       <Bg2 />
     </div>
-    <div id="bg3-section">
+    <!-- <div id="bg3-section">
       <Bg3 />
-    </div>
-    <MediaCoveragePast />
-    <Framing />
-    <ThreeChartComparison />
+    </div> -->
+    <!-- <MediaCoveragePast /> -->
+    <!-- <Framing /> -->
+    <!-- <ThreeChartComparison /> -->
   </div>
 </template>
 
@@ -83,7 +83,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 import Bg1 from "@/components/Bg1.vue";
 import Bg2 from "@/components/Bg2.vue";
 // import Bg3 from "../components/Bg3.vue";
-import MediaCoveragePast from "../components/MediaCoveragePast.vue";
+// import MediaCoveragePast from "../components/MediaCoveragePast.vue";
 import Framing from "../components/Framing.vue";
 import Papa from "papaparse";
 import * as d3 from "d3";
@@ -214,6 +214,37 @@ onUnmounted(() => {
     cancelAnimationFrame(animationFrameId);
   }
 });
+
+// This would go in your HomeView.vue (the parent component)
+function transitionToBg2() {
+  console.log("Transitioning to Bg2");
+  // Instead of directly setting currentSection
+  // Just update the UI without changing the DOM structure
+  gsap.to("#bg1-section", {
+    opacity: 0,
+    duration: 0.5,
+    onComplete: () => {
+      // Only after animation is complete, update the current section
+      currentSection.value = "bg2";
+      window.scrollTo(0, 0);
+    },
+  });
+}
+
+// Add this function for when Bg2 wants to go back to Bg1
+function transitionToBg1() {
+  console.log("Transitioning back to Bg1");
+  currentSection.value = "bg1";
+  window.scrollTo(0, 0);
+
+  // Ensure content is visible
+  setTimeout(() => {
+    gsap.to("#bg1-section", {
+      opacity: 1,
+      duration: 0.5,
+    });
+  }, 100);
+}
 </script>
 
 <style>
@@ -303,7 +334,7 @@ body,
   width: 100%;
   height: 0.9em; /* Control the height of the background */
   left: 0;
-  top: 0.25em; /* Adjust this value to move the background down */
+  top: 0.1em; /* Changed from 0.25em to 0.1em to move higher */
   z-index: -1; /* Place it behind the text */
   padding: 0 2px; /* Add horizontal padding to the background */
   box-sizing: border-box;
@@ -318,7 +349,7 @@ body,
 /* Adjust the title highlight background separately */
 .title .highlight-title::before {
   height: 0.9em;
-  top: 0.15em; /* Move the background down slightly for the title */
+  top: 0em; /* Changed from 0.15em to 0em to move higher */
   padding: 0 4px; /* Larger horizontal padding for the title */
 }
 
@@ -395,7 +426,7 @@ body,
   font-family: "Georgia", serif;
   text-transform: uppercase;
 }
-
+/* 
 /* Update scroll arrow to be a carrot-style triangle (V shape) */
 .scroll-arrow {
   position: relative;
@@ -404,6 +435,7 @@ body,
   margin-top: 8px;
   animation: bounce 2s infinite;
 }
+*/
 
 /* Create the carrot with two pseudo-elements for the angled lines */
 .scroll-arrow::before,
@@ -473,18 +505,6 @@ body,
   /* Subtle border and shadow for depth */
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-
-  /* Add a small arrow pointing down */
-  &::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -8px;
-    border-width: 8px;
-    border-style: solid;
-    border-color: rgba(255, 255, 255, 0.6) transparent transparent transparent;
-  }
 }
 
 /* Keep the hover behavior */

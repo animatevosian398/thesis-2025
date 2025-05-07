@@ -14,7 +14,9 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <router-link to="/Bg1" class="nav-link">Background</router-link>
+            <router-link to="/Background" class="nav-link"
+              >Background</router-link
+            >
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/GovVsComment"
@@ -28,9 +30,9 @@
             <a class="nav-link" href="/narratives-list">Narratives</a>
             <!-- <a class="nav-link" href="/bubble-chart">Bubble Chart</a> -->
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="/Framing">Media</a>
-          </li>
+          </li> -->
           <!-- <li class="nav-item">
             <router-link to="/articles-timeline" class="nav-link">
               TR Articles Timeline

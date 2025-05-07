@@ -5,7 +5,11 @@
         <div class="title">
           <!-- <h3>Select a Document:</h3> -->
           <div class="select-wrapper">
+            <label for="document-select" class="select-label"
+              >Select Document:</label
+            >
             <select
+              id="document-select"
               class="document-title-select"
               v-model="activeDocument"
               @change="handleDocumentChange"
@@ -193,6 +197,7 @@
 
 <script>
 import { markRaw } from "vue";
+import { stanceColors } from "@/config/colors.js";
 
 import Papa from "papaparse";
 import GovernmentText from "../components/government-documents/GovernmentText.vue";
@@ -200,6 +205,23 @@ import ErdoganLetter2025 from "../components/government-documents/ErdoganLetter2
 import JustinMcCarthy from "../components/government-documents/JustinMcCarthy.vue";
 import stancePhrases from "../assets/stancePhrases.json";
 import AnadoluAgencyCounter from "../components/government-documents/AnadoluAgencyCounter.vue";
+
+// Add this object near the top of your script section, after your imports
+const stanceDisplayNames = {
+  Historical_Affirmation: "Historical Affirmation",
+  Personal_Testimony: "Personal Testimony",
+  Explicit_Denial: "Explicit Denial",
+  Minimization_Reframing: "Minimization & Reframing",
+  Justification_Narrative: "Justification Narrative",
+  Contemporary_Comparison: "Contemporary Comparison",
+  Procedural_Deflection_Evidence_Archives: "Debating Evidence",
+  Competitive_Victimhood_Historical_Inversion:
+    "Competitive Victimhood & Historical Inversion",
+  Sympathy_Memorial_Commemorative: "Sympathy & Memorial",
+  Apology: "Apology",
+  Discussion_About_Denial: "Discussion About Denial",
+  Reconciliation_Discourse: "Reconciliation Discourse",
+};
 
 // Define stance mapping object
 const stanceMapping = {
@@ -276,6 +298,7 @@ export default {
         },
       ],
       activeDocument: null, // Track which document is currently selected
+      stanceColors,
     };
   },
 
@@ -452,16 +475,88 @@ export default {
       this.showInitialInstructions = false; // Hide instructions
       this.activeStance = stance;
 
-      // Scroll the comments container to the top after a short delay
-      // to ensure the comments have been updated in the DOM
+      // Add animation for comments container
+      const commentsContainer = document.querySelector(
+        ".social-media-comments"
+      );
+      if (commentsContainer) {
+        // First add a subtle highlight effect
+        commentsContainer.classList.add("flash-highlight");
+
+        // Then scroll to top with animation
+        commentsContainer.scrollTop = 0;
+
+        // Remove the highlight class after animation completes
+        setTimeout(() => {
+          commentsContainer.classList.remove("flash-highlight");
+        }, 800);
+      }
+
+      // Draw connecting lines after DOM update
       this.$nextTick(() => {
-        const commentsContainer = document.querySelector(
-          ".social-media-comments"
-        );
-        if (commentsContainer) {
-          commentsContainer.scrollTop = 0;
-        }
+        this.drawConnectionLines();
       });
+    },
+
+    // Add this new method
+    drawConnectionLines() {
+      // Clear any existing lines
+      const linesContainer = this.$refs.linesContainer;
+      if (!linesContainer) return;
+
+      linesContainer.innerHTML = "";
+
+      // Get the highlighted elements
+      const highlights = document.querySelectorAll(
+        ".government-text-container .highlight"
+      );
+      if (!highlights.length) return;
+
+      // Get the comments header
+      const commentsHeader = document.querySelector(".active-stance-header");
+      if (!commentsHeader) return;
+
+      // Create SVG element
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("width", "100%");
+      svg.setAttribute("height", "100%");
+      svg.setAttribute("class", "connection-svg");
+
+      // For each highlight, create a line
+      highlights.forEach((highlight, index) => {
+        const highlightRect = highlight.getBoundingClientRect();
+        const commentsRect = commentsHeader.getBoundingClientRect();
+        const containerRect = linesContainer.getBoundingClientRect();
+
+        // Calculate the positions relative to the container
+        const x1 = highlightRect.right - containerRect.left;
+        const y1 =
+          highlightRect.top + highlightRect.height / 2 - containerRect.top;
+        const x2 = commentsRect.left - containerRect.left;
+        const y2 =
+          commentsRect.top + commentsRect.height / 2 - containerRect.top;
+
+        // Create path for curved line
+        const path = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "path"
+        );
+
+        // Create a curved path
+        const controlPointX = x1 + (x2 - x1) / 2;
+        const d = `M ${x1} ${y1} C ${controlPointX} ${y1}, ${controlPointX} ${y2}, ${x2} ${y2}`;
+
+        path.setAttribute("d", d);
+        path.setAttribute("class", "connection-line");
+        path.setAttribute("fill", "none");
+
+        // Add animation delay based on index
+        path.style.animationDelay = `${index * 0.2}s`;
+
+        svg.appendChild(path);
+      });
+
+      linesContainer.appendChild(svg);
     },
 
     showAllComments() {
@@ -482,10 +577,10 @@ export default {
       return `stance-${stance.toLowerCase().replace(/_/g, "-")}`;
     },
 
+    // Then update your getStanceLabel method
     getStanceLabel(stance) {
       if (!stance) return "";
-      // Format capitalized stance for display
-      return stance.toLowerCase().replace(/_/g, " ");
+      return stanceDisplayNames[stance] || stance.replace(/_/g, " ");
     },
     // handleMouseLeave() {
     //   console.log("Mouse left component");
@@ -676,30 +771,28 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
   line-height: 1;
-  padding-bottom: 30px; /* Add padding at the bottom */
-  max-height: 80vh; /* Set a maximum height to ensure scrolling */
-  scrollbar-width: thin; /* Firefox */
-  padding-right: 10px; /* Add right padding for better spacing */
-  scrollbar-color: #dddddd #f5f5f5;
+  padding-bottom: 30px;
+  max-height: 80vh;
+  padding-right: 20px; /* Increased from 10px to compensate for hidden scrollbar */
 
+  /* Hide scrollbar but maintain functionality */
+  scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
 }
 
+/* Hide WebKit/Blink scrollbar */
 .government-text-container::-webkit-scrollbar {
-  width: 8px;
+  display: none;
+  width: 0;
+  background: transparent;
 }
 
-.government-text-container::-webkit-scrollbar-track {
-  background: #f5f5f5;
-}
-
-.government-text-container::-webkit-scrollbar-thumb {
-  background-color: #dddddd;
-  border-radius: 4px;
-}
-
+/* Remove these styles that were adding a visible scrollbar */
+.government-text-container::-webkit-scrollbar-track,
+.government-text-container::-webkit-scrollbar-thumb,
 .government-text-container::-webkit-scrollbar-thumb:hover {
-  background-color: #cccccc;
+  display: none;
+  background: transparent;
 }
 
 .social-media-comments {
@@ -858,7 +951,7 @@ h5 {
   font-size: 11px;
   color: white;
   padding: 2px 6px;
-  border-radius: 0px;
+  border-radius: 2px;
   font-weight: bold;
 }
 
@@ -894,62 +987,95 @@ h5 {
 
 /* Stance colors */
 .stance-explicit-denial {
-  border-left-color: #e53935; /* red */
+  border-left-color: #e53734; /* from colors.js */
 }
 .stance-explicit-denial .stance-label {
-  background-color: #e53935;
+  background-color: #e53734;
 }
 
 .stance-justification-narrative {
-  border-left-color: #ff9800; /*orange*/
+  border-left-color: #c6b987; /* from colors.js */
 }
 .stance-justification-narrative .stance-label {
-  background-color: #ff9800;
+  background-color: #c6b987;
 }
 
 .stance-competitive-victimhood-historical-inversion {
-  border-left-color: #778b33d8;
+  border-left-color: #979c63; /* from colors.js */
 }
 .stance-competitive-victimhood-historical-inversion .stance-label {
-  background-color: #778b33d8;
+  background-color: #979c63;
   color: rgb(255, 255, 255);
 }
 
 .stance-historical-affirmation {
-  border-left-color: #673ab7; /* purple */
+  border-left-color: #4caf50; /* from colors.js */
 }
 .stance-historical-affirmation .stance-label {
-  background-color: #673ab7;
-}
-
-.stance-sympathy-memorial-commemorative {
-  border-left-color: #4caf50; /* green */
-}
-.stance-sympathy-memorial-commemorative .stance-label {
   background-color: #4caf50;
 }
 
+.stance-sympathy-memorial-commemorative {
+  border-left-color: #40414a; /* from colors.js */
+}
+.stance-sympathy-memorial-commemorative .stance-label {
+  background-color: #40414a;
+}
+
 .stance-minimization-reframing {
-  border-left-color: #87b2c2;
+  border-left-color: #658b88; /* from colors.js */
 }
 .stance-minimization-reframing .stance-label {
-  background-color: #87b2c2;
+  background-color: #658b88;
 }
 
 .stance-reconciliation-discourse {
-  border-left-color: #527c7995;
+  border-left-color: #005477; /* from colors.js */
 }
 .stance-reconciliation-discourse .stance-label {
-  background-color: #527c7995;
+  background-color: #005477;
 }
 
 .stance-procedural-deflection-evidence-archives,
 .stance-procedural-deflection-using-archives-and-evidence {
-  border-left-color: #5d3a6cd9;
+  border-left-color: #fba423; /* from colors.js */
 }
 .stance-procedural-deflection-evidence-archives .stance-label,
 .stance-procedural-deflection-using-archives-and-evidence .stance-label {
-  background-color: #5d3a6cd9;
+  background-color: #fba423;
+}
+
+/* Add missing stance colors from colors.js */
+.stance-personal-testimony {
+  border-left-color: #7a485d;
+}
+.stance-personal-testimony .stance-label {
+  background-color: #7a485d;
+  color: white;
+}
+
+.stance-contemporary-comparison {
+  border-left-color: #2e4d46;
+}
+.stance-contemporary-comparison .stance-label {
+  background-color: #2e4d46;
+  color: white;
+}
+
+.stance-apology {
+  border-left-color: #2738ec;
+}
+.stance-apology .stance-label {
+  background-color: #2738ec;
+  color: white;
+}
+
+.stance-discussion-about-denial {
+  border-left-color: #841a26;
+}
+.stance-discussion-about-denial .stance-label {
+  background-color: #841a26;
+  color: white;
 }
 
 .video-source {
@@ -1060,58 +1186,47 @@ body,
   max-width: 800px; /* Increased from 600px to 800px */
   margin: 0 auto;
   overflow: visible;
-  top: 50px;
+  top: 60px;
   min-height: 60px;
+  display: flex; /* Add flex display */
+  align-items: center; /* Center items vertically */
 }
 
-.document-title-select:focus {
-  outline: none;
-  border-bottom-color: rgba(0, 0, 0, 0.3);
-}
-
-.document-title-select:hover {
-  border-bottom-color: rgba(0, 0, 0, 0.3);
-}
-
-.document-title-select:focus {
-  outline: none;
-  border-bottom-color: rgba(0, 0, 0, 0.5);
-}
-
-.document-title-select option {
-  font-family: "Vollkorn", serif;
-  font-size: 16px;
-  white-space: normal;
-  padding: 10px;
-  max-width: none;
-  overflow: visible;
-}
-
-/* Most specific selector to override all others */
-.government-text-container .document-header .document-title-select {
+.select-label {
+  font-family: "Times New Roman", Times, serif;
   font-size: 20px;
-  font-family: "Vollkorn", serif;
-  color: #333;
-  width: 100%;
-  text-align: center;
+  color: #000000;
+  font-weight: 500;
+  margin-right: 10px; /* Add space between label and dropdown */
+  white-space: nowrap; /* Prevent label from wrapping */
+}
+
+.document-title-select {
+  flex: 1; /* Allow select to take up remaining space */
+  font-family: "Times New Roman", Times, serif;
+  color: #000000;
+  text-align: left; /* Change from center to left align */
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: white;
   cursor: pointer;
-  padding: 10px 40px 10px 10px;
-  margin-bottom: 8px;
+  padding: 10px 35px 10px 10px; /* Adjust padding for better text alignment */
+  margin-bottom: 10px;
+  line-height: 1;
+  min-height: 50px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   white-space: normal;
-  min-height: auto;
-  line-height: 1;
+  overflow: visible;
+  text-overflow: clip;
 }
 
+/* Adjust arrow position for the new layout */
 .select-arrow {
   position: absolute;
   right: 10px;
-  top: 65%; /* Adjusted from 50% to position it lower */
+  top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
   color: #1e1e1e;

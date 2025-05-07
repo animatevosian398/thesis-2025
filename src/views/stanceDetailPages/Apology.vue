@@ -16,8 +16,7 @@
             :key="index"
             class="comment"
             v-html="comment"
-          >
-          </span>
+          ></span>
           <span v-if="allCommentsVisible" class="end-message">End of Text</span>
         </div>
       </div>
@@ -73,7 +72,7 @@ export default defineComponent({
               const stance = (row.predicted_stance || "").trim().toLowerCase();
               return stance === "apology";
             })
-            .map((row) => {
+            .map((row, index) => {
               // Clean and process the text
               let cleanedText = (
                 row.cleaned_text || "No text available"
@@ -87,17 +86,13 @@ export default defineComponent({
                 .replace(/sorry/gi, "<b>$&</b>")
                 .replace(/apologize/gi, "<b>$&</b>");
 
+              // Add a divider after the comment except for the last one
+              if (index < results.data.length - 1) {
+                cleanedText += '<span class="comment-divider">•</span>';
+              }
+
               return cleanedText;
             });
-
-          // Join comments with visual separators
-          this.formattedComments = this.comments.map((comment, index) => {
-            return `<span class="comment-text">${comment}</span>${
-              index < this.comments.length - 1
-                ? '<span class="comment-divider">•</span>'
-                : ""
-            }`;
-          });
 
           console.log("Filtered Apology comments:", this.comments.length);
           this.$nextTick(() => {
@@ -167,7 +162,8 @@ export default defineComponent({
   padding: 0;
   min-height: 100vh;
   color: white;
-  font-family: "Aktiv Grotesk", sans-serif;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  /* font-family: "Aktiv Grotesk", sans-serif; */
   position: relative;
   overflow: hidden;
 }
@@ -220,36 +216,43 @@ export default defineComponent({
   overflow: hidden;
 }
 
+/* Update scrolling comments for continuous flow */
 .scrolling-comments {
   position: absolute;
-  transform: none;
   top: 0px;
   width: 100%;
-  padding: 0 20px;
+  padding: 0 30px;
   white-space: normal;
-  font-size: 100px;
+  font-size: 20px;
   line-height: 1.6; /* Increased line height for better readability */
-  opacity: 0.8; /* Slightly higher opacity */
-  text-align: center;
+  text-align: justify;
+  letter-spacing: 0.2px;
+  word-spacing: 1px;
   transform: translateY(-50%); /* Center content vertically */
-  letter-spacing: 0.2px; /* Better letter spacing */
-  word-spacing: 1px; /* Better word spacing */
 }
 
+/* Update comments styling for alternating text colors */
 .comment {
-  display: block;
-  margin: 0 8px; /* Add margin between comments */
+  display: inline; /* Change from block to inline for continuous flow */
+  text-indent: 0; /* Remove indentation since we'll use colors */
+  margin: 0 3px; /* Small margin between comments */
 }
 
-.comment-text {
-  display: inline;
+/* Create alternating text color styles */
+.comment:nth-child(odd) {
+  color: rgba(255, 255, 255, 0.95); /* Lighter text for odd comments */
 }
 
+.comment:nth-child(even) {
+  color: rgba(255, 255, 255, 0.7); /* Darker text for even comments */
+}
+
+/* Make dividers more subtle between comments */
 .comment-divider {
-  display: inline-block;
-  margin: 0 12px;
-  opacity: 0.6;
-  font-size: 10px;
+  display: inline;
+  margin: 0 6px;
+  opacity: 0.4;
+  font-size: 8px;
   vertical-align: middle;
 }
 

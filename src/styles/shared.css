@@ -65,27 +65,52 @@ h3 {
 
 /* The default state with lower opacity */
 .highlight-explicit-denial {
-  background-color: rgba(237, 45, 42, 0.62);
+  background-color: rgba(229, 55, 52, 0.6); /* #E53734 at 60% opacity */
 }
 
 .highlight-reconciliation {
-  background-color: #527c7995;
+  background-color: rgba(0, 84, 119, 0.6); /* #005477 at 60% opacity */
 }
 
 .highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.4);
+  background-color: rgba(151, 156, 99, 0.4); /* #979C63 at 40% opacity */
 }
 
 .highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.4);
+  background-color: rgba(251, 164, 35, 0.4); /* #FBA423 at 40% opacity */
 }
 
 .highlight-justification {
-  background-color: rgba(255, 153, 0, 0.4);
+  background-color: rgba(198, 185, 135, 0.4); /* #C6B987 at 40% opacity */
 }
 
 .highlight-minimization {
-  background-color: rgba(135, 178, 194, 0.4);
+  background-color: rgba(101, 139, 136, 0.4); /* #658B88 at 40% opacity */
+}
+
+/* Add missing highlight types */
+.highlight-historical-affirmation {
+  background-color: rgba(76, 175, 80, 0.4); /* #4CAF50 at 40% opacity */
+}
+
+.highlight-personal-testimony {
+  background-color: rgba(122, 72, 93, 0.4); /* #7A485D at 40% opacity */
+}
+
+.highlight-contemporary-comparison {
+  background-color: rgba(46, 77, 70, 0.4); /* #2E4D46 at 40% opacity */
+}
+
+.highlight-sympathy-memorial-commemorative {
+  background-color: rgba(64, 65, 74, 0.4); /* #40414A at 40% opacity */
+}
+
+.highlight-apology {
+  background-color: rgba(39, 56, 236, 0.4); /* #2738EC at 40% opacity */
+}
+
+.highlight-discussion-about-denial {
+  background-color: rgba(132, 26, 38, 0.4); /* #841A26 at 40% opacity */
 }
 
 /* Same for other highlight types */
@@ -139,56 +164,115 @@ h3 {
 }
 /* Hover state with higher opacity */
 .highlight-active.highlight-explicit-denial {
-  background-color: rgba(229, 57, 53, 0.8);
+  background-color: rgba(229, 55, 52, 0.8); /* #E53734 at 80% opacity */
 }
 
 .highlight-active.highlight-reconciliation {
-  background-color: rgba(82, 124, 121, 0.8);
+  background-color: rgba(0, 84, 119, 0.8); /* #005477 at 80% opacity */
 }
 
 .highlight-active.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.8);
+  background-color: rgba(151, 156, 99, 0.8); /* #979C63 at 80% opacity */
 }
 
 .highlight-active.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.8);
+  background-color: rgba(251, 164, 35, 0.8); /* #FBA423 at 80% opacity */
   color: white;
 }
 
 .highlight-active.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.8);
+  background-color: rgba(198, 185, 135, 0.8); /* #C6B987 at 80% opacity */
 }
 
 .highlight-active.highlight-minimization {
-  background-color: rgba(135, 178, 194, 0.8);
+  background-color: rgba(101, 139, 136, 0.8); /* #658B88 at 80% opacity */
+}
+
+/* Add missing hover states */
+.highlight-active.highlight-historical-affirmation {
+  background-color: rgba(76, 175, 80, 0.8); /* #4CAF50 at 80% opacity */
+}
+
+.highlight-active.highlight-personal-testimony {
+  background-color: rgba(122, 72, 93, 0.8); /* #7A485D at 80% opacity */
+}
+
+.highlight-active.highlight-contemporary-comparison {
+  background-color: rgba(46, 77, 70, 0.8); /* #2E4D46 at 80% opacity */
+}
+
+.highlight-active.highlight-sympathy-memorial-commemorative {
+  background-color: rgba(64, 65, 74, 0.8); /* #40414A at 80% opacity */
+}
+
+.highlight-active.highlight-apology {
+  background-color: rgba(39, 56, 236, 0.8); /* #2738EC at 80% opacity */
+}
+
+.highlight-active.highlight-discussion-about-denial {
+  background-color: rgba(132, 26, 38, 0.8); /* #841A26 at 80% opacity */
 }
 
 /* Selected/clicked state with full opacity */
 .highlight-selected.highlight-explicit-denial {
-  background-color: rgba(229, 57, 53, 1);
+  background-color: #e53734; /* Full opacity */
   color: white;
 }
 
 .highlight-selected.highlight-reconciliation {
-  background-color: #527c79be;
+  background-color: #005477; /* Full opacity */
   color: white;
 }
 
 .highlight-selected.highlight-competitive-victimhood {
-  background-color: rgba(131, 157, 43, 0.8);
+  background-color: #979c63; /* Full opacity */
+  color: white;
 }
 
 .highlight-selected.highlight-procedural {
-  background-color: rgba(93, 58, 108, 0.8);
+  background-color: #fba423; /* Full opacity */
   color: white;
 }
 
 .highlight-selected.highlight-justification {
-  background-color: rgba(255, 153, 0, 0.8);
+  background-color: #c6b987; /* Full opacity */
+  color: black;
 }
 
 .highlight-selected.highlight-minimization {
-  background-color: rgba(135, 178, 194, 0.8);
+  background-color: #658b88; /* Full opacity */
+  color: white;
+}
+
+/* Add missing selected states */
+.highlight-selected.highlight-historical-affirmation {
+  background-color: #4caf50; /* Full opacity */
+  color: white;
+}
+
+.highlight-selected.highlight-personal-testimony {
+  background-color: #7a485d; /* Full opacity */
+  color: white;
+}
+
+.highlight-selected.highlight-contemporary-comparison {
+  background-color: #2e4d46; /* Full opacity */
+  color: white;
+}
+
+.highlight-selected.highlight-sympathy-memorial-commemorative {
+  background-color: #40414a; /* Full opacity */
+  color: white;
+}
+
+.highlight-selected.highlight-apology {
+  background-color: #2738ec; /* Full opacity */
+  color: white;
+}
+
+.highlight-selected.highlight-discussion-about-denial {
+  background-color: #841a26; /* Full opacity */
+  color: white;
 }
 
 /* Ensure highlighted text is readable on colored backgrounds */
