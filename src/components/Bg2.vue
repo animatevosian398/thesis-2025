@@ -209,7 +209,7 @@ export default {
   /* background-color: rgba(222, 222, 222, 0.682); */
   color: rgba(30, 29, 29, 0.786);
   display: block;
-  font-family: "Helvetica";
+  /* font-family: "Helvetica"; */
   padding: 10% 10% 10% 10%; /* Top Right Bottom Left */
   text-align: left; /* Explicitly set left alignment */
   margin-top: 0;
@@ -221,7 +221,7 @@ export default {
   margin-left: 0; /* Changed from 6px to 0 for perfect alignment */
   font-size: 1.2rem;
   margin-top: 80px;
-  font-family: "Helvetica";
+  /* font-family: "Helvetica"; */
   color: rgba(0, 0, 0, 0.694);
   text-align: left; /* Explicit left alignment */
   display: block; /* Ensure it takes full width */
@@ -230,7 +230,7 @@ export default {
 
 /* Title styling */
 .backgroundTitle {
-  font-family: "Helvetica";
+  /* font-family: "Helvetica"; */
   font-size: calc(3.4rem + 1vw);
   margin-top: 0px;
   margin-bottom: 20px;
@@ -273,7 +273,8 @@ export default {
 
 .paragraph-section {
   color: rgb(48, 48, 48);
-  font-family: "Helvetica";
+  font-family: "Times New Roman", Times, serif;
+  /* font-family: "Helvetica"; */
   font-size: 1.1rem;
   line-height: 1.8;
   margin-bottom: 1.3rem;

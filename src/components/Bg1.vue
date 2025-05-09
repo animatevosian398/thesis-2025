@@ -11,14 +11,14 @@
         <div class="main-content" ref="mainContent">
           <h3>
             On April 24, 1915, hundreds of Armenian leaders and intellectuals
-            arrested and some killed, followed by widespread deportations of
+            were arrested and killed, followed by widespread deportations of
             ordinary people from their homes to the Syrian and Iraqi deserts.
             This was the beginning of the Armenian Genocide, organized by the
-            Young Turks of the Ottoman Empire. An estimated million Armenians
-            were killed; this was not a singular event, but rather came about
-            after a "long-simmering Ottoman hatred of the Armenians dating to
-            Sultan Abdul Hamid II and his slaughters in the 1890s," known as the
-            Hamidian Massacres.
+            Young Turks of the Ottoman Empire. An estimated 1.5 million
+            Armenians were killed; this was not a singular event, but rather
+            came about after a "long-simmering Ottoman hatred of the Armenians
+            dating to Sultan Abdul Hamid II and his slaughters in the 1890s,"
+            known as the Hamidian Massacres.
             <a
               href="https://genocideeducation.org/books/the-burning-tigris-the-armenian-genocide-and-americas-response/"
               target="_blank"
@@ -29,12 +29,9 @@
             <br /><br />
             The events of the Genocide were well-documented by journalists,
             missionaries, and diplomats at the time, with photographs and
-            eyewitness accounts. Despite this evidence, Turkey still refuses to
-            recognize these events as genocide, instead calling them a
-            relocation necessary during wartime. For Armenians worldwide,
-            especially those whose family members survived and fled to other
-            countries, this history remains deeply personal and important to
-            remember.
+            eyewitness accounts. For Armenians worldwide, especially those whose
+            family members survived and fled to other countries, this history
+            remains deeply personal and important to remember.
           </h3>
         </div>
       </div>
@@ -104,7 +101,7 @@
         <!-- Bg2 content paragraphs - exact content from Bg2.vue -->
         <div ref="bg2Content" class="bg2-content-container">
           <p class="paragraph-section" ref="bg2Para1">
-            Turkey's official stance on the genocide evolved from silence, to a
+            Turkey's official stance on The Genocide evolved from silence to a
             more complicated form of denial and revisionist reframing of
             history. "Ankara does not accept the alleged "genocide," but
             acknowledges there were casualties on both sides during World War I"
@@ -113,10 +110,11 @@
               target="_blank"
               class="citation-link"
               >(Anadolu Agency, 2018)</a
-            >. It also frames the events as justified due to suspected Armenian
-            alliances with Russia and also a relocation for their own safety; A
-            relocation which essentially was a death march through the Syrian
-            desert, where many died from starvation, disease, and violence.
+            >. The government also frames the events as justified due to
+            suspected Armenian alliances with Russia and also as a relocation
+            for the Armenian deportees' own safety. This relocation was
+            essentially a death march through the Syrian desert, where many were
+            killed and died from starvation, disease, and violence.
           </p>
 
           <p class="paragraph-section quote" ref="bg2Para2">
@@ -145,6 +143,84 @@
             international relations, historical education, and even
             <span class="highlight">discourse online.</span>
           </p>
+        </div>
+      </div>
+
+      <!-- New section with typography-focused design -->
+      <div class="terminology-section" ref="terminologySection">
+        <div class="terminology-content">
+          <h2 class="terminology-title">Language of Denial</h2>
+
+          <div class="terminology-text-media">
+            <div class="terminology-text">
+              <p>
+                Words like <span class="term-highlight">incident</span>,
+                <span class="term-highlight">so-called</span>,
+                <span class="term-highlight">1915 events</span>,
+                <span class="term-highlight">claims</span> deny, cast doubt, and
+                create distance from historical reality while framing the
+                discourse in terms favorable to the Turkish government position.
+              </p>
+
+              <p class="note-text">
+                When "genocide" appears in Turkish state media referencing this
+                subject, it's in the context of rejecting other countries'
+                recognition of the Armenian Genocide to express disapproval.
+                Terms such as
+                <span class="term-highlight">slams</span>,
+                <span class="term-highlight">rejects</span>, and
+                <span class="term-highlight">condemns</span>
+                are used to describe Turkey's response to people, countries, and
+                institutions that recognize the genocide or pass resolutions.
+              </p>
+            </div>
+
+            <div class="media-examples">
+              <div class="media-example">
+                <img
+                  src="/assets/AA_4_headline_2.png"
+                  alt="Example of denial terminology in media"
+                />
+              </div>
+              <div class="media-example">
+                <img
+                  src="/assets/AA_2_headline.png"
+                  alt="Official statement using distancing language"
+                />
+              </div>
+              <div class="media-example">
+                <img
+                  src="/assets/AA_3_headline.png"
+                  alt="International coverage of terminology debate"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="terminology-citation">
+            <div class="citation-sources">
+              <a
+                href="https://www.aa.com.tr/en/europe/turkey-rejects-report-over-so-called-genocide-request/593401"
+                target="_blank"
+                rel="noopener"
+                class="citation-link"
+                >Anadolu Agency (2021);
+              </a>
+              <a
+                href="https://www.aa.com.tr/en/politics/bidens-remarks-on-1915-events-null-and-void/2219662"
+                target="_blank"
+                rel="noopener"
+                class="citation-link"
+                >Anadolu Agency (2021);
+              </a>
+              <a
+                href="https://www.aa.com.tr/en/politics/there-are-no-genocides-massacres-in-history-of-turkish-nation/2219593"
+                target="_blank"
+                rel="noopener"
+                class="citation-link"
+                >Anadolu Agency (2021);
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -182,7 +258,10 @@ const bg2Content = ref(null);
 const bg2Para1 = ref(null);
 const bg2Para2 = ref(null);
 const bg2Para3 = ref(null);
-const bg2Para4 = ref(null); // Added the fourth paragraph ref
+const bg2Para4 = ref(null);
+
+// New terminology section reference
+const terminologySection = ref(null);
 
 // Flag to track if direct navigation occurred
 const isDirectNavigation = ref(false);
@@ -202,9 +281,8 @@ onMounted(() => {
   setTimeout(() => {
     initContentAnimations();
     setupHeadlinesAnimation();
-    setupBg2Animations(); // Add this new function
-
-    // Remove setupScrollTrigger() since we're no longer transitioning to a separate page
+    setupBg2Animations();
+    setupTerminologyAnimation(); // Add new animation setup
 
     // Position the page properly when navigating directly to background
     if (isDirectNavigation.value) {
@@ -228,6 +306,29 @@ onMounted(() => {
   // Handle window resize for responsive adjustments
   window.addEventListener("resize", handleResize);
 });
+
+// Add a new function to set up terminology section animations
+function setupTerminologyAnimation() {
+  // Set initial states for terminology elements
+  gsap.set(terminologySection.value, { opacity: 0, y: 30 });
+
+  // Create a timeline for terminology elements
+  const terminologyTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: terminologySection.value,
+      start: "top 70%", // Start animation when terminology section is 70% from the top
+      toggleActions: "play none play reverse", // Play on scroll down, reverse on scroll up
+    },
+  });
+
+  // Animate terminology section
+  terminologyTl.to(terminologySection.value, {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    ease: "power2.out",
+  });
+}
 
 // Add a new function to set up Bg2 animations
 function setupBg2Animations() {
@@ -371,74 +472,82 @@ function setupHeadlinesAnimation() {
 .background-section {
   position: relative;
   height: auto;
-  min-height: 150vh;
+  min-height: 100vh; /* Changed from 150vh to ensure it fills screen without forcing excess scrolling */
   width: 100%;
   color: white;
   overflow: visible;
   background-color: white;
 }
+
 .nyt-quote {
   padding-top: 20px;
 }
-/* Content container that scrolls - adjust top padding to start higher */
+
+/* Content container with improved spacing */
 .content-container {
   position: relative;
   z-index: 5;
   font-family: "Georgia", serif;
   color: black;
-  padding-top: 20vh; /* Reduced from 40vh to 20vh to start content higher */
-  min-height: 200vh;
+  padding-top: clamp(
+    200px,
+    40vh,
+    500px
+  ); /* Significantly increased top padding */
+  /* Using clamp for responsive padding */
+  min-height: 150vh; /* Reduced from 200vh */
+  width: 100%;
+  max-width: 100%;
 }
 
-/* Content text styling */
+/* Content text styling with improved width */
 .content-text {
-  width: 80%;
-  max-width: 800px;
-  margin: 0 auto 100px;
+  width: clamp(300px, 80%, 900px); /* Using clamp for responsive width */
+  margin: 0 auto 5rem; /* Using rem instead of fixed pixels */
   background-color: transparent;
   position: relative;
 }
 
 /* Main content styling */
 .main-content {
-  margin-top: 40px;
+  margin-top: clamp(20px, 5vh, 60px); /* Responsive margin */
   will-change: transform, opacity;
   transform: translateY(60px);
   opacity: 0;
 }
 
-/* Headlines section styling */
+/* Adjusted spacing for headlines section - made larger and moved down */
 .horizontal-headlines-section {
-  width: 85%;
-  max-width: 1200px;
-  margin: 180px auto 50px; /* Reduced bottom margin */
+  width: clamp(300px, 90%, 1400px);
+  margin: clamp(120px, 25vh, 300px) auto clamp(120px, 20vh, 250px); /* Significantly increased top and bottom margins */
   opacity: 0;
+  padding: 60px 0; /* Added vertical padding for more internal space */
 }
 
 .headlines-title {
   font-family: "Times New Roman", serif;
   font-size: calc(1.8rem + 0.5vw);
-  margin-bottom: 70px;
+  margin-bottom: 100px;
   text-align: center;
   color: #222;
 }
 
-/* Headlines container layout */
+/* Headlines container layout - fixed overlap issues */
 .headlines-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  flex-wrap: nowrap;
-  margin: 0 -30px 60px; /* Negative margin to allow headlines to extend beyond container */
+  flex-wrap: wrap; /* Changed from nowrap to help with smaller screens */
+  margin: 0 auto 80px; /* Increased bottom margin from ~60px to 80px */
+  gap: 30px; /* Added gap for spacing when wrapped */
   position: relative;
 }
 
-/* Headline items - slightly larger with overlap */
+/* Headline items with improved sizing */
 .headline-item {
-  flex: 0 0 auto;
-  width: 50%; /* Adjusted width */
-  max-width: 500px;
-  margin: 0 -5%; /* Negative margin creates overlap */
+  flex: 1 1 350px; /* Allow items to grow and shrink with min width */
+  max-width: 500px; /* Capped maximum width */
+  margin: 0; /* Removed negative margins that caused overlap issues */
   opacity: 0;
   transform: translateY(50px);
   transition: transform 0.3s ease;
@@ -472,7 +581,7 @@ function setupHeadlinesAnimation() {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   border-radius: 2px;
   background-color: white;
-  padding: 15px;
+  padding: 25px;
   overflow: hidden;
   transition: all 0.3s ease;
 }
@@ -505,8 +614,8 @@ function setupHeadlinesAnimation() {
 /* Citation styling */
 .citation-headlines-archive {
   text-align: right;
-  margin-top: 100px;
-  font-size: 14px;
+  margin-top: 70px; /* Reduced from 100px to 50px */
+  font-size: 16px;
   font-style: italic;
   opacity: 0.8;
   color: rgba(128, 128, 128, 0.874);
@@ -542,8 +651,13 @@ h3 {
 .bg1-title {
   font-family: "Times New Roman", serif;
   font-size: calc(2.5rem + 1vw);
-  margin-top: 0px;
-  margin-bottom: 20px;
+  margin-top: clamp(
+    80px,
+    15vh,
+    200px
+  ); /* Added top margin to push down further */
+
+  margin-bottom: 30px;
   width: 100%;
   color: black;
   text-align: left;
@@ -553,25 +667,21 @@ h3 {
   opacity: 0;
 }
 
-/* Bg2 section styling - adjusted to be more to the left */
+/* Bg2 section styling - improved layout */
 .bg2-section {
-  width: 85%;
-  max-width: 1000px;
-  margin: 180px auto 80px;
-  font-family: "Helvetica", sans-serif;
+  width: clamp(300px, 85%, 1200px); /* Wider maximum width */
+  margin: clamp(40px, 8vh, 120px) auto; /* Responsive margins */
+  font-family: "Times New Roman", serif;
   opacity: 0;
   position: relative;
-  padding-left: 5%; /* Add padding to shift content left */
-  margin-left: auto;
-  margin-right: auto;
-  text-align: left;
+  padding: 0 clamp(10px, 3vw, 40px); /* Added horizontal padding that scales */
 }
 
 .date {
   margin-left: 0;
   font-size: 1.5rem;
   margin-top: 80px;
-  font-family: "Helvetica";
+  font-family: "Times New Roman", serif;
   color: rgba(0, 0, 0, 0.694);
   text-align: left;
   display: block;
@@ -579,10 +689,11 @@ h3 {
 }
 
 .backgroundTitle {
-  font-family: "Helvetica";
-  font-size: calc(2.8rem + 1vw);
-  margin-top: 0px;
-  margin-bottom: 20px;
+  /* font-family: "Helvetica"; */
+  font-family: "Times New Roman", serif;
+  font-size: clamp(2rem, 5vw, 3.5rem); /* Responsive font size */
+  margin-top: 0;
+  margin-bottom: clamp(10px, 3vh, 30px); /* Responsive margin */
   width: 100%;
   color: black;
   text-align: left;
@@ -590,19 +701,19 @@ h3 {
 }
 
 .bg2-content-container {
-  margin-top: 40px;
-  width: 90%;
+  margin-top: clamp(20px, 4vh, 60px); /* Responsive margin */
+  width: 100%; /* Full width to avoid squishing */
   text-align: left;
-  margin-left: 0; /* Align to the left edge */
 }
 
 .paragraph-section {
-  color: rgb(48, 48, 48);
-  font-family: "Helvetica";
+  color: rgb(0, 0, 0);
+  /* font-family: "Helvetica"; */
+  font-family: "Times New Roman", serif;
   font-size: 1.1rem;
   line-height: 1.8;
-  margin-bottom: 1.3rem;
-  opacity: 0;
+  margin-bottom: 1rem;
+  opacity: A0;
   text-align: left;
 }
 
@@ -623,48 +734,206 @@ h3 {
   transform: translateY(0);
 }
 
+.highlight-denial {
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  background-color: black;
+}
+
+.highlight-nyt {
+  font-weight: 600;
+  background-color: rgba(235, 235, 235, 0.5);
+  padding: 0 4px;
+}
+
+.quote-headline {
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* New terminology section styling - redesigned for better spacing */
+.terminology-section {
+  width: 100%;
+  max-width: 1400px; /* Increased from 1200px */
+  margin: clamp(60px, 10vh, 180px) auto clamp(40px, 6vh, 100px);
+  padding: clamp(30px, 5vh, 80px) clamp(20px, 4vw, 60px); /* Responsive padding */
+  background-color: #f5f5f7;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.terminology-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.terminology-title {
+  font-family: "Times New Roman", serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-style: italic;
+  font-weight: 400;
+  margin-bottom: clamp(20px, 5vh, 60px);
+  color: #000;
+  text-align: left;
+}
+
+.terminology-text-media {
+  display: flex;
+  gap: clamp(20px, 4vw, 60px); /* Responsive gap */
+  align-items: flex-start;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.terminology-text {
+  flex: 1 1 300px; /* Allow flexible sizing with minimum width */
+  font-family: "Helvetica", Arial, sans-serif;
+  font-size: clamp(1rem, 1.2vw, 1.3rem); /* Responsive font size */
+  line-height: 1.6;
+  text-align: left;
+  color: #000;
+}
+
+.terminology-text p {
+  margin-bottom: 24px;
+}
+
+.note-text {
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  line-height: 1.5;
+  text-align: left;
+  margin-top: 30px;
+}
+
+/* Term highlight styling to match the screenshot */
+.term-highlight {
+  display: inline-block;
+  background-color: #000;
+  color: #fff;
+  padding: 2px 6px;
+  margin: 0 2px;
+  font-family: "Helvetica", Arial, sans-serif;
+}
+
+/* Update media examples to zoom in a bit on the images */
+.media-examples {
+  flex: 1 1 300px; /* Allow flexible sizing with minimum width */
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2vh, 25px); /* Responsive gap */
+}
+
+.media-example {
+  width: 100%;
+  overflow: hidden; /* This is important to crop the zoomed image */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 3px; /* Slight rounding on the corners */
+}
+
+.media-example:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
+}
+
+.media-example img {
+  width: 100%; /* Slightly wider than container to zoom in */
+  height: auto;
+  display: block;
+  transition: transform 0.4s ease; /* Smooth transition for hover effect */
+  margin: -1% 0; /* Negative margin to center the zoomed content */
+}
+
+.media-example:hover img {
+  transform: scale(1); /* Zoom in a bit more on hover */
+}
+
+/* Citation styling for terminology section */
+.terminology-citation {
+  text-align: right;
+  margin-top: 40px;
+  font-size: 14px;
+  font-style: italic;
+  opacity: 0.8;
+  color: rgba(128, 128, 128, 0.874);
+}
+
+.terminology-citation .citation-link {
+  color: rgba(8, 8, 8, 0.8);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-style: italic;
+}
+
+.terminology-citation .citation-link:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+/* Add more vertical space between main sections */
+.content-text + .horizontal-headlines-section {
+  margin-top: clamp(120px, 30vh, 400px); /* Significantly increased */
+}
+
+.horizontal-headlines-section + .bg2-section {
+  margin-top: clamp(120px, 30vh, 400px);
+}
+
+.bg2-section + .terminology-section {
+  margin-top: clamp(120px, 30vh, 400px); /* Significantly increased */
+}
+
 /* Media queries for responsive layout */
+@media (max-width: 1200px) {
+  .content-text {
+    width: 85%;
+  }
+
+  .bg2-section {
+    width: 90%;
+  }
+}
+
 @media (max-width: 992px) {
   .headlines-container {
     flex-direction: column;
     align-items: center;
-    margin: 0 auto 60px;
-    max-width: 600px;
+    margin: 0 auto 80px;
   }
 
   .headline-item {
-    width: 90%;
-    margin: -20px 0; /* Adjusted overlap */
-    max-width: 550px;
+    width: 100%;
+    max-width: 600px; /* Increased from 550px */
+    margin: 20px 0; /* Increased from 15px */
   }
 
-  /* Adjust z-index to ensure proper stacking */
-  .headline-item:nth-child(1) {
-    z-index: 3;
-    transform: translateY(0) rotate(-2deg);
-  }
-
-  .headline-item:nth-child(2) {
-    z-index: 2;
-    transform: translateY(0) rotate(1deg);
-  }
-
-  .headline-item:nth-child(3) {
-    z-index: 1;
-    transform: translateY(0) rotate(-1deg);
+  .horizontal-headlines-section {
+    margin-top: clamp(100px, 20vh, 250px);
+    margin-bottom: clamp(100px, 20vh, 250px);
   }
 }
 
 @media (max-width: 768px) {
-  .content-text,
-  .horizontal-headlines-section {
+  .content-container {
+    padding-top: 10vh; /* Reduced top padding */
+  }
+
+  .content-text {
     width: 90%;
+    margin-bottom: 3rem;
+  }
+
+  .headlines-title {
+    margin-bottom: 40px; /* Reduced spacing */
+  }
+
+  .terminology-section {
+    padding: 30px 20px;
   }
 
   .headline-item {
     width: 100%;
     max-width: 500px;
-    margin: -10px auto 20px; /* Adjusted for mobile */
+    margin: 10px auto; /* Adjusted for mobile */
   }
 
   .headline-image {
@@ -674,27 +943,29 @@ h3 {
   .content-text h3 {
     font-size: calc(0.9rem + 0.2vw);
   }
+}
 
-  .content-container {
-    padding-top: 30vh;
-  }
-
-  .bg2-section {
-    width: 90%;
-    margin: 120px auto 60px;
-    padding-left: 2%; /* Less padding on mobile */
-  }
-
-  .bg2-content-container {
-    width: 95%; /* Wider on mobile */
-  }
-
+/* Additional mobile optimizations */
+@media (max-width: 576px) {
+  .bg1-title,
   .backgroundTitle {
-    font-size: calc(2.2rem + 1vw);
+    font-size: calc(1.8rem + 1vw); /* Smaller title on very small screens */
   }
 
-  .paragraph-section {
-    font-size: 1rem;
+  .terminology-title {
+    font-size: 1.8rem;
+  }
+
+  .horizontal-headlines-section {
+    margin-top: 60px; /* Less spacing on small screens */
+  }
+
+  .terminology-section {
+    padding: 20px 15px;
+  }
+
+  .media-example {
+    margin-bottom: 15px;
   }
 }
 </style>

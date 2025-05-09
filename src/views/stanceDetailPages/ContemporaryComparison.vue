@@ -7,7 +7,7 @@
     <div @click="goBack" class="back-arrow">← Back</div>
 
     <div class="content-container">
-      <h1 class="centered-title">Modern Comparisons</h1>
+      <h1 class="centered-title">Contemporary Comparisons</h1>
 
       <div class="scrolling-comments-container">
         <div class="scrolling-comments" ref="scrollingComments">
@@ -16,22 +16,10 @@
             :key="index"
             class="comment"
             v-html="comment"
-          >
-          </span>
+          ></span>
           <span v-if="allCommentsVisible" class="end-message">End of Text</span>
         </div>
       </div>
-
-      <!-- <div class="controls">
-        <button
-          class="control-button"
-          @click="togglePause"
-          :aria-label="isPaused ? 'Play scrolling' : 'Pause scrolling'"
-        >
-          {{ isPaused ? "▶ Play" : "❚❚ Pause" }}
-        </button>
-        <div class="comment-counter">{{ comments.length }} comments</div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -84,7 +72,7 @@ export default defineComponent({
               const stance = (row.predicted_stance || "").trim().toLowerCase();
               return stance === "contemporary_comparison";
             })
-            .map((row) => {
+            .map((row, index) => {
               // Clean and process the text
               let cleanedText = (
                 row.cleaned_text || "No text available"
@@ -93,17 +81,18 @@ export default defineComponent({
               // Add a space between sentences if missing
               cleanedText = cleanedText.replace(/([.!?])([A-Z])/g, "$1 $2");
 
+              // Bold the word "sorry" and "apologize"
+              cleanedText = cleanedText
+                .replace(/sorry/gi, "<b>$&</b>")
+                .replace(/apologize/gi, "<b>$&</b>");
+
+              // Add a divider after the comment except for the last one
+              if (index < results.data.length - 1) {
+                cleanedText += '<span class="comment-divider">•</span>';
+              }
+
               return cleanedText;
             });
-
-          // Join comments with visual separators
-          this.formattedComments = this.comments.map((comment, index) => {
-            return `<span class="comment-text">${comment}</span>${
-              index < this.comments.length - 1
-                ? '<span class="comment-divider">•</span>'
-                : ""
-            }`;
-          });
 
           console.log("Filtered Apology comments:", this.comments.length);
           this.$nextTick(() => {
@@ -128,24 +117,23 @@ export default defineComponent({
       this.allCommentsVisible = false;
 
       this.scrollInterval = setInterval(() => {
-        if (this.isPaused || this.allCommentsVisible) return; // Skip if paused or all comments are visible
+        if (this.isPaused || this.allCommentsVisible) return;
 
-        const currentTop = parseFloat(scrollingElement.style.top) || 50;
-        const newTop = currentTop - 0.35; // Slower scroll for better readability
+        const scrollingElement = this.$refs.scrollingComments;
+        const currentTop = parseFloat(scrollingElement.style.top) || 0;
+        const newTop = currentTop - 1.5; // Slower scroll for better readability
 
-        scrollingElement.style.top = `${newTop}%`;
+        scrollingElement.style.top = `${newTop}px`;
 
-        // Reset when content scrolls completely off the top
+        const containerHeight = scrollingElement.parentElement.offsetHeight;
         const contentHeight = scrollingElement.offsetHeight;
-        const containerHeight =
-          this.$refs.scrollingComments.parentElement.offsetHeight;
-        const resetPoint = -100 * (contentHeight / containerHeight) * 1.5; // Adjust for content height
-        if (newTop < resetPoint) {
+
+        if (Math.abs(newTop) > contentHeight - containerHeight) {
           this.stopScrolling();
           this.allCommentsVisible = true;
-          scrollingElement.style.top = "50%"; // Reset to centered
+          scrollingElement.style.top = "0px"; // Reset
         }
-      }, 50);
+      }, 7);
     },
     stopScrolling() {
       if (this.scrollInterval) {
@@ -174,7 +162,8 @@ export default defineComponent({
   padding: 0;
   min-height: 100vh;
   color: white;
-  font-family: "Aktiv Grotesk", sans-serif;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  /* font-family: "Aktiv Grotesk", sans-serif; */
   position: relative;
   overflow: hidden;
 }
@@ -204,6 +193,7 @@ export default defineComponent({
   position: relative;
 }
 
+/* Make the title more prominent */
 .centered-title {
   font-size: 32px;
   text-align: center;
@@ -213,9 +203,10 @@ export default defineComponent({
   transform: translate(-50%, -50%);
   margin: 0;
   z-index: 5;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(144, 139, 139, 0.23); /* Increased opacity */
   padding: 20px 40px;
-  border-radius: 8px;
+  border-radius: 2px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Add text shadow for better visibility */
 }
 
 .scrolling-comments-container {
@@ -227,34 +218,44 @@ export default defineComponent({
   overflow: hidden;
 }
 
+/* Make scrolling comments more transparent */
 .scrolling-comments {
   position: absolute;
+  top: 0px;
   width: 100%;
-  padding: 0 20px;
+  padding: 0 30px;
   white-space: normal;
-  font-size: 14px;
-  line-height: 1.6; /* Increased line height for better readability */
-  opacity: 0.8; /* Slightly higher opacity */
-  text-align: center;
-  transform: translateY(-50%); /* Center content vertically */
-  letter-spacing: 0.2px; /* Better letter spacing */
-  word-spacing: 1px; /* Better word spacing */
+  font-size: 20px;
+  line-height: 1.6;
+  text-align: justify;
+  letter-spacing: 0.2px;
+  word-spacing: 1px;
+  transform: translateY(-50%);
+  opacity: 0.9; /* Make comments more transparent */
 }
 
+/* Update comments styling for alternating text colors - more transparent */
 .comment {
-  display: inline;
-  margin: 0 8px; /* Add margin between comments */
+  display: inline; /* Change from block to inline for continuous flow */
+  text-indent: 0; /* Remove indentation since we'll use colors */
+  margin: 0 3px; /* Small margin between comments */
 }
 
-.comment-text {
-  display: inline;
+/* Create alternating text color styles */
+.comment:nth-child(odd) {
+  color: rgba(255, 255, 255, 0.7); /* Reduced from 0.95 to 0.7 */
 }
 
+.comment:nth-child(even) {
+  color: rgba(255, 255, 255, 0.5); /* Reduced from 0.7 to 0.5 */
+}
+
+/* Make dividers more subtle between comments */
 .comment-divider {
-  display: inline-block;
-  margin: 0 12px;
-  opacity: 0.6;
-  font-size: 10px;
+  display: inline;
+  margin: 0 6px;
+  opacity: 0.4;
+  font-size: 8px;
   vertical-align: middle;
 }
 
@@ -283,9 +284,9 @@ export default defineComponent({
   padding: 10px 20px;
   cursor: pointer;
   color: rgba(255, 255, 255, 0.8);
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(142, 142, 142, 0.173);
   border: none;
-  border-radius: 4px;
+  border-radius: 2px;
   transition: background-color 0.3s ease;
 }
 
@@ -297,5 +298,11 @@ export default defineComponent({
   font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
   /* margin-right: 10px; */
+}
+
+/* Create a reveal effect when hovering over the container */
+.stance-page-container:hover .scrolling-comments {
+  opacity: 0.65; /* Slightly more visible on hover */
+  transition: opacity 0.5s ease;
 }
 </style>

@@ -205,7 +205,8 @@ import ErdoganLetter2025 from "../components/government-documents/ErdoganLetter2
 import JustinMcCarthy from "../components/government-documents/JustinMcCarthy.vue";
 import stancePhrases from "../assets/stancePhrases.json";
 import AnadoluAgencyCounter from "../components/government-documents/AnadoluAgencyCounter.vue";
-
+import Presentation from "../components/government-documents/Presentation.vue";
+import MessageTranslation from "../components/government-documents/MessageTranslation.vue";
 // Add this object near the top of your script section, after your imports
 const stanceDisplayNames = {
   Historical_Affirmation: "Historical Affirmation",
@@ -271,9 +272,8 @@ export default {
         },
         {
           id: "erdogan-letter-2025",
-          title:
-            "The Letter President Erdoğan Sent to Armenian Patriarch (2025)",
-          source: "Republic of Turkey Ministry of Foreign Affairs",
+          title: "The Letter President Erdoğan Sent to Armenian Patriarch ",
+          source: "Republic of Turkey Ministry of Foreign Affairs (2025)",
           sourceUrl:
             "The Letter President Recep Tayyip Erdoğan Sent to Armenian Patriarch of Turkey, Reverend Sahak Maşalyan (2025)",
           component: markRaw(ErdoganLetter2025), // Direct component reference
@@ -281,7 +281,7 @@ export default {
 
         {
           id: "justin-mccarthy",
-          title: "Presentation by Prof. Justin McCarthy (2001)",
+          title: "Presentation by Prof. Justin McCarthy ",
           source: "Republic of Turkey Ministry of Foreign Affairs",
           sourceUrl:
             "https://www.mfa.gov.tr/presentation-made-by-prof_-justin-mccarthy-_seminar-on-turkish-armenian-relations-organized-by-the-democratic-principles-association-15-march-2001-_istanbul_.en.mfa",
@@ -290,11 +290,30 @@ export default {
         {
           id: "anadolu-agency-counter",
           title:
-            "Turkish community in Washington holds counter-protest against Armenian demonstrators over 1915 events (2024)",
+            "Turkish community in Washington holds counter-protest against Armenian demonstrators over 1915 events ",
           source: "by Diyar Güldoğan of Anadolu Agency (April 25, 2024)",
           sourceUrl:
             "https://www.aa.com.tr/en/turkiye/turkish-community-in-washington-holds-counter-protest-against-armenian-demonstrators-over-1915-events/3201645",
           component: markRaw(AnadoluAgencyCounter),
+        },
+        {
+          id: "presentation",
+          title:
+            " Presentation by Ambassador Gündüz Aktan at the House Committee on International Relations ",
+          source:
+            "Republic of Turkey Ministry of Foreign Affairs, House Committee on International Relations, Subcommittee on International Operations and Human Rights (September 14, 2000) ",
+          sourceURL:
+            "https://www.mfa.gov.tr/presentation-by-ambassador-gunduz-aktan-at-the-house-committee-on-international-relations-on-september-14_-2000_.en.mfa",
+          component: markRaw(Presentation),
+        },
+        {
+          id: "message-translation",
+          title:
+            "The unofficial translation of the message of H.E. President Recep Tayyip Erdoğan, the then Prime Minister of the Republic of Turkey, on the events of 1915",
+          source: "Turkish Ministry of Foreign Affairs (April 23, 2014)",
+          sourceURL:
+            "https://www.mfa.gov.tr/turkish-prime-minister-mr_-recep-tayyip-erdo%C4%9Fan-published-a-message-on-the-events-of-1915_-23-april-2014.en.mfa",
+          component: markRaw(MessageTranslation),
         },
       ],
       activeDocument: null, // Track which document is currently selected
@@ -1168,22 +1187,22 @@ body,
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: white;
   cursor: pointer;
-  padding: 10px 35px 10px 0px; /* Adjusted right padding to make room for arrow */
+  padding: 10px 35px 10px 0px;
   margin-bottom: 10px;
   line-height: 1;
-  min-height: 50px; /* Ensure height for wrapped text */
+  min-height: 50px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  white-space: normal; /* Allow text wrapping */
+  white-space: normal;
   overflow: visible;
   text-overflow: clip;
 }
 
 .select-wrapper {
   position: relative;
-  width: 95%; /* Increased from 80% to 95% for more width */
-  max-width: 800px; /* Increased from 600px to 800px */
+  width: 95%;
+  max-width: 800px;
   margin: 0 auto;
   overflow: visible;
   top: 60px;
@@ -1197,8 +1216,8 @@ body,
   font-size: 20px;
   color: #000000;
   font-weight: 500;
-  margin-right: 10px; /* Add space between label and dropdown */
-  white-space: nowrap; /* Prevent label from wrapping */
+  margin-right: 10px;
+  white-space: nowrap;
 }
 
 .document-title-select {

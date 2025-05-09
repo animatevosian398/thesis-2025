@@ -3,7 +3,7 @@
   <router-view></router-view>
   <!-- <StanceLegend /> -->
   <Bg1 v-if="showBg1" @scrollToBg2="handleScrollToBg2" />
-  <Bg2 v-if="showBg2" @scrollToBg3="handleScrollToBg3" />
+  <!-- <Bg2 v-if="showBg2" @scrollToBg3="handleScrollToBg3" /> -->
   <!-- Other components... -->
 </template>
 

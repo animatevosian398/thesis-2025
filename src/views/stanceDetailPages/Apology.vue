@@ -133,7 +133,7 @@ export default defineComponent({
           this.allCommentsVisible = true;
           scrollingElement.style.top = "0px"; // Reset
         }
-      }, 1);
+      }, 7);
     },
     stopScrolling() {
       if (this.scrollInterval) {
@@ -202,9 +202,9 @@ export default defineComponent({
   transform: translate(-50%, -50%);
   margin: 0;
   z-index: 5;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(75, 75, 75, 0.2);
   padding: 20px 40px;
-  border-radius: 8px;
+  border-radius: 2px;
 }
 
 .scrolling-comments-container {

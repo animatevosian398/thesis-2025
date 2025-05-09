@@ -67,7 +67,7 @@
       <Bg1 />
     </div>
     <div id="bg2-section">
-      <Bg2 />
+      <!-- <Bg2 /> -->
     </div>
     <!-- <div id="bg3-section">
       <Bg3 />
@@ -81,7 +81,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import Bg1 from "@/components/Bg1.vue";
-import Bg2 from "@/components/Bg2.vue";
+// import Bg2 from "@/components/Bg2.vue";
 // import Bg3 from "../components/Bg3.vue";
 // import MediaCoveragePast from "../components/MediaCoveragePast.vue";
 import Framing from "../components/Framing.vue";
@@ -295,21 +295,20 @@ body,
   font-weight: 700;
   text-align: center;
   color: black;
-  /* font-family: "Neuton", serif; */
   position: relative;
   padding: 1px 20px;
-  border-radius: 5px;
   margin: 0;
   letter-spacing: 0.02em;
-  backdrop-filter: blur(2px); /* Reduced from 4px to 2px for softer effect */
-  -webkit-backdrop-filter: blur(2px);
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.08
-  ); /* Reduced opacity from 0.113 to 0.08 */
-  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.1); /* Reduced size and opacity of glow */
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background-color: rgba(255, 255, 255, 0.02);
+
+  box-shadow: 0 0 15px 15px rgba(195, 194, 194, 0.04);
+
+  transition: all 0.3s ease;
+
+  border-radius: 2px;
 }
 
 /* Highlight styling for "Denial" */
@@ -387,10 +386,10 @@ body,
   transition: filter 0.5s ease;
 }
 
-/* Home Scroll Container */
+/* Home Scroll Container - Moved further down */
 .home-scroll-container {
   text-align: center;
-  margin-top: 14vh;
+  margin-top: 20vh; /* Increased from 14vh to 20vh to move it down */
   padding-bottom: 50px;
   position: relative;
   z-index: 50 !important; /* Same high z-index as title */
@@ -676,7 +675,7 @@ body,
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  line-height: 1.3;
+  line-height: 1.1;
   overflow: hidden; /* Change from visible to hidden to hide overflow */
   pointer-events: none;
   display: flex;
