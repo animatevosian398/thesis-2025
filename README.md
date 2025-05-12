@@ -10,6 +10,7 @@ Genocide denial comments become data in this analysis of Armenian Genocide narra
 M.S. Data Visualization Candidate  
 Parsons School of Design  
 **Thesis Advisor:** Sam Lavigne
+
 **With assitance from:** Matias Aguilera
 
 Submitted in partial fulfillment of the requirements for the degree of Master of Science in Data Visualization at Parsons School of Design
