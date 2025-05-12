@@ -56,13 +56,13 @@ body {
 }
 
 /* Add this temporary code to hide elements for screenshots */
-/* /* .navbar {
+/* .navbar {
   display: none !important;
-} */
+}
 
 .home-scroll-container {
   display: none !important;
-}
+} */
 </style>
 
 <!-- <template>
