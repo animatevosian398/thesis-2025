@@ -121,7 +121,7 @@ export default defineComponent({
 
         const scrollingElement = this.$refs.scrollingComments;
         const currentTop = parseFloat(scrollingElement.style.top) || 0;
-        const newTop = currentTop - 1.5; // Slower scroll for better readability
+        const newTop = currentTop - 1; // Slower scroll for better readability
 
         scrollingElement.style.top = `${newTop}px`;
 
@@ -133,7 +133,7 @@ export default defineComponent({
           this.allCommentsVisible = true;
           scrollingElement.style.top = "0px"; // Reset
         }
-      }, 7);
+      }, 40);
     },
     stopScrolling() {
       if (this.scrollInterval) {
@@ -231,7 +231,7 @@ export default defineComponent({
   letter-spacing: 0.2px;
   word-spacing: 1px;
   transform: translateY(-50%);
-  opacity: 0.9; /* Make comments more transparent */
+  opacity: 0.9;
 }
 
 /* Update comments styling for alternating text colors - more transparent */

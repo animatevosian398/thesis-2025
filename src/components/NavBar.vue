@@ -67,8 +67,8 @@
   justify-content: flex-start !important; /* Start from left instead of space-between */
   align-items: center;
   width: 100%;
-  max-width: 1200px; /* Set a consistent max width */
-  padding: 0px 0px 0px 0px; /* Consistent padding on both sides */
+  max-width: 1600px; /* Increased from 1200px for wider screens */
+  padding: 0px 40px !important; /* Increased horizontal padding from 0px */
   margin: 0 auto;
   box-sizing: border-box; /* Include padding in width calculations */
 }
@@ -154,6 +154,29 @@
     margin-left: 0;
     margin-right: 10px;
     margin-bottom: 5px;
+  }
+}
+
+/* Add a specific media query for 1920x1080 screens */
+@media (width: 1920px) and (height: 1080px) {
+  .container {
+    padding: 0px 60px !important; /* Even more padding specifically for 1920x1080 */
+  }
+
+  .navbar-brand {
+    margin-left: 10px !important; /* Add some space to the left of the brand */
+  }
+
+  .navbar-nav {
+    margin-right: 10px !important; /* Add some space to the right of nav items */
+  }
+}
+
+/* Add a media query for ultrawide screens */
+@media (min-width: 2000px) {
+  .container {
+    max-width: 1800px; /* Even wider max-width for ultra-wide screens */
+    padding: 0px 80px !important; /* More generous padding for very wide screens */
   }
 }
 

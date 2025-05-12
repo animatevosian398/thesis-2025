@@ -7,25 +7,22 @@
           class="scrolling-content"
           :style="{ transform: `translateY(${-scrollPosition}px)` }"
         >
-          <p>
-            <span
-              v-for="(comment, index) in backgroundComments"
-              :key="index"
-              :class="comment.type"
-            >
-              {{ comment.text }} <span class="separator">•</span>
-            </span>
-          </p>
+          <span
+            v-for="(comment, index) in backgroundComments"
+            :key="index"
+            :class="comment.type"
+          >
+            {{ comment.text }} <span class="separator">•</span>
+          </span>
+
           <!-- Duplicate content for seamless looping -->
-          <p class="duplicate-content">
-            <span
-              v-for="(comment, index) in backgroundComments"
-              :key="'duplicate-' + index"
-              :class="comment.type"
-            >
-              {{ comment.text }} <span class="separator">•</span>
-            </span>
-          </p>
+          <span
+            v-for="(comment, index) in backgroundComments"
+            :key="'duplicate-' + index"
+            :class="comment.type"
+          >
+            {{ comment.text }} <span class="separator">•</span>
+          </span>
         </div>
       </div>
     </div>
@@ -126,7 +123,8 @@ const loadComments = () => {
             return (
               stance.includes("explicit_denial") ||
               stance.includes("justification_narrative") ||
-              stance.includes("sympathy_memorial_commemorative")
+              stance.includes("sympathy_memorial_commemorative") ||
+              stance.includes("discussion_about_denial")
             );
           });
 
@@ -299,9 +297,9 @@ body,
   padding: 1px 20px;
   margin: 0;
   letter-spacing: 0.02em;
-
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  /* 
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px); */
   background-color: rgba(255, 255, 255, 0.02);
 
   box-shadow: 0 0 15px 15px rgba(195, 194, 194, 0.04);
@@ -560,8 +558,8 @@ body,
   border-radius: 5px;
   margin: 0;
   letter-spacing: 0.02em;
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(2px);
+  /* backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(2px); */
 }
 
 /* Media queries for better responsiveness */
@@ -583,7 +581,7 @@ body,
 
 @media (max-height: 700px) {
   .title-container {
-    margin-top: 40vh; /* Still lower but accommodates smaller screens */
+    margin-top: 60vh; /* Still lower but accommodates smaller screens */
   }
 
   .home-scroll-container {
@@ -682,14 +680,20 @@ body,
   align-items: center;
   justify-content: center;
 }
-
-/* Add a top gradient mask to fade text as it scrolls behind the navbar */
+/*column vs. rows */
 .continuous-text {
   width: 100%;
   height: 110vh;
   overflow: hidden;
   opacity: 0.6;
   position: relative;
+  column-count: 9;
+  column-gap: 20px;
+  column-rule: none;
+  column-fill: auto;
+  padding: 0 2%;
+  text-align: left;
+  text-justify: inter-word;
 }
 
 /* Add a gradient overlay at the top */
@@ -730,18 +734,48 @@ body,
   pointer-events: none;
 }
 
+/* Modify the scrolling content to work with columns and justify text */
 .scrolling-content {
+  font-family: "Aktiv Grotesk", sans-serif;
   will-change: transform; /* Optimize for animation */
   transition: transform 0.1s linear; /* Smooth movement */
+  column-span: none; /* Allow text to flow in columns */
+  break-inside: avoid-word; /* Prevent awkward breaks mid-word */
+  text-align: justify; /* Justify the text */
+  hyphens: auto; /* Add hyphens for better text flow */
+  line-height: 1.2; /* Increased line height for better readability */
 }
 
-/* Style for comment types */
-.denial-comment,
-.justification-comment,
-.sympathy-comment,
-.other-comment {
-  color: #666666; /* Medium gray for all comments */
+/* Adjust paragraph styling */
+.scrolling-content p {
+  margin: 0;
+  padding: 0;
+  column-span: none; /* Ensure paragraphs don't span columns */
+}
+
+/* Style for spans (comments) to make them flow in columns with justified text */
+.scrolling-content span {
+  display: inline-block; /* Changed from inline to inline-block for better justification */
+  break-inside: avoid; /* Try to avoid breaking inside a comment */
+  margin-bottom: 2px; /* Add slight spacing between comments */
+  padding-right: 5px; /* Add slight padding between comments */
+}
+
+/* Add alternating colors for comments */
+.scrolling-content span:nth-child(odd) {
+  color: #40404086; /* Darker gray for odd comments */
+  opacity: 1;
+}
+
+.scrolling-content span:nth-child(even) {
+  color: #656565c0; /* Lighter gray for even comments */
   opacity: 0.7;
+}
+
+/* Add subtle transition between colors */
+.scrolling-content span {
+  transition: color 0.3s ease, opacity 0.3s ease;
+  display: inline; /* Ensure they flow together */
 }
 
 .separator {
@@ -768,7 +802,7 @@ body,
   .continuous-text p,
   .continuous-text .duplicate-content {
     column-count: 1;
-    column-gap: 50px;
+    column-gap: 40px;
   }
 }
 
@@ -800,5 +834,110 @@ body,
   padding-bottom: 0;
   height: 0.9em; /* Set a fixed height relative to the font size */
   line-height: 0.9; /* Match line-height to height */
+}
+
+/* Add this media query near your other responsive adjustments */
+
+/* Target portrait displays with approximately 1080x1920 dimensions */
+@media (max-width: 1080px) and (min-height: 1800px), (max-aspect-ratio: 9/16) {
+  .title-container {
+    margin-top: 35vh; /* Lower position for vertical displays */
+  }
+
+  .home-scroll-container {
+    margin-top: 15vh; /* Adjusted position for the scroll indicator */
+  }
+
+  .title {
+    font-size: 2.8rem; /* Slightly smaller font size for narrow displays */
+  }
+}
+
+/* Add another query for extremely tall displays */
+@media (max-aspect-ratio: 2/3) and (min-height: 1000px) {
+  .title-container {
+    margin-top: 30vh; /* Even lower position for very tall displays */
+  }
+}
+
+/* Remove all conflicting 1920x1080 media queries and replace with this single definitive one */
+@media (width: 1920px) and (height: 1080px) {
+  /* Title positioning */
+  .title-container {
+    margin-top: 60vh; /* Move both elements down more */
+  }
+
+  /* Scroll indicator positioning - increased vertical separation */
+  .home-scroll-container {
+    margin-top: 22vh; /* Much more space between title and scroll indicator */
+  }
+
+  /* Make the scroll indicator more visible */
+  .scroll-indicator {
+    padding: 20px 30px;
+    background-color: rgba(255, 255, 255, 0.05); /* Very subtle background */
+  }
+
+  /* Title font sizing */
+  .title {
+    font-size: 4.5rem; /* Larger font for 1920x1080 */
+  }
+
+  /* Ensure the scrolling content doesn't overlap with elements */
+  .continuous-text {
+    height: 105vh; /* Slightly shorter to prevent overflow */
+    padding-bottom: 10vh; /* Add padding at bottom */
+  }
+}
+
+/* For wider aspect ratios (ultrawide screens) */
+@media (min-aspect-ratio: 16/9) and (min-width: 1600px) {
+  .title-container {
+    margin-top: 64vh; /* Slightly higher than before (was 68vh) */
+  }
+
+  .home-scroll-container {
+    margin-top: 18vh; /* Increased from 10vh to 18vh to move it further down */
+  }
+
+  .title {
+    font-size: 5rem; /* Keep the larger font for wide screens */
+  }
+}
+
+/* Specifically target 1920x1080 displays */
+@media (width: 1920px) and (height: 1080px) {
+  .title-container {
+    margin-top: 65vh; /* Keep title position */
+  }
+
+  .home-scroll-container {
+    margin-top: 10vh; /* Reduced from 18vh to 10vh to move it closer to title */
+  }
+}
+
+/* For wider aspect ratios (ultrawide screens) */
+@media (min-aspect-ratio: 16/9) and (min-width: 1600px) {
+  .title-container {
+    margin-top: 68vh; /* Keep title position */
+  }
+
+  .home-scroll-container {
+    margin-top: 10vh; /* Reduced for better spacing */
+  }
+
+  .title {
+    font-size: 5rem; /* Larger font for wide screens */
+  }
+}
+
+/* For wider aspect ratios (ultrawide screens) */
+@media (min-aspect-ratio: 16/9) and (min-width: 1600px) {
+  .title-container {
+    margin-top: 68vh; /* Adjusted for ultrawide displays */
+  }
+  .title {
+    font-size: 5rem; /* Larger font for wide screens */
+  }
 }
 </style>

@@ -89,6 +89,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import ProceduralDeflection from "../views/stanceDetailPages/ProceduralDeflection.vue";
 
 const expandedStance = ref(null);
 const hoveredStance = ref(null);
@@ -105,9 +106,10 @@ const stanceColors = {
 
   //   Justification_Narrative: "#FBA423",
   Contemporary_Comparison: "#2E4D46",
-  Procedural_Deflection_Evidence_Archives: "#FBA423",
+  Procedural_Deflection_Evidence_Archives: "#CF7842",
+  // Procedural_Deflection_Evidence_Archives: "#FBA423",
 
-  //   Procedural_Deflection_Evidence_Archives: "#FBA423",
+  //   Procedural_Deflection_Evidence_Archi ves: "#FBA423",
   Competitive_Victimhood_Historical_Inversion: "#979C63",
   Sympathy_Memorial_Commemorative: "#40414A",
   Apology: "#2738EC",
@@ -123,8 +125,9 @@ const stanceDisplayNames = {
   Minimization_Reframing: "Minimization & Reframing",
   Justification_Narrative: "Justification Narrative",
   Contemporary_Comparison: "Contemporary Comparison",
-  Procedural_Deflection_Evidence_Archives: "Procedural Deflection",
-  Competitive_Victimhood_Historical_Inversion: "Historical Inversion",
+  Procedural_Deflection_Evidence_Archives: "Debating Evidence",
+  Competitive_Victimhood_Historical_Inversion:
+    "Competitive Victimhood & Historical Inversion",
   Sympathy_Memorial_Commemorative: "Sympathy & Memorial",
   Apology: "Apology",
   Discussion_About_Denial: "Discussion About Denial",
@@ -492,7 +495,7 @@ const getHoverBackgroundColor = (stance) => {
   const r = parseInt(color.slice(1, 3), 16);
   const g = parseInt(color.slice(3, 5), 16);
   const b = parseInt(color.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, 0.4)`; // Increased from 0.25 to 0.4
+  return `rgba(${r}, ${g}, ${b}, 0.7)`; // Increased from 0.25 to 0.4
 };
 
 // Toggle stance expansion
@@ -595,7 +598,7 @@ const getWordSize = (word, stance) => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 4rem 1rem;
-  font-family: "Times New Roman", serif;
+  font-family: "Georgia", serif;
 }
 
 /* Make header left-aligned */

@@ -23,7 +23,8 @@ export const stanceColors = {
 
   //   Justification_Narrative: "#FBA423",
   Contemporary_Comparison: "#2E4D46",
-  Procedural_Deflection_Evidence_Archives: "#FBA423",
+  Procedural_Deflection_Evidence_Archives: "#CF7842",
+  // Procedural_Deflection_Evidence_Archives: "#FBA423",
 
   //   Procedural_Deflection_Evidence_Archives: "#FBA423",
   Competitive_Victimhood_Historical_Inversion: "#979C63",

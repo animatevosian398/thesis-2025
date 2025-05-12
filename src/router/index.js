@@ -10,7 +10,6 @@ import Archive from "../views/Archive.vue";
 import DenialView from "../views/DenialView.vue";
 import CategoryBreakdown from "../components/CategoryBreakdown.vue";
 import Bg1 from "../components/Bg1.vue";
-import Bg3 from "../components/Bg3.vue";
 import Framing from "../components/Framing.vue";
 import YT_feature from "../components/YT_feature.vue";
 import NarrativesList from "../components/NarrativesList.vue";
@@ -95,11 +94,6 @@ const routes = [
     component: CategoryBreakdown,
   },
 
-  {
-    path: "/Bg3",
-    name: "Background3",
-    component: Bg3,
-  },
   {
     path: "/Framing",
     name: "Framing",

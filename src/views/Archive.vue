@@ -6,7 +6,7 @@
     </h1>
     <div class="subtitle">
       A digital repository of 10,393 online comments from Youtube published
-      under videos on the Armenian Genocide, categorized by narrative stance.
+      under videos on the Armenian Genocide, categorized by narrative.
     </div>
 
     <div class="main-content">
@@ -120,6 +120,25 @@
           <button class="reset-button" @click="resetFilters">
             Reset All Filters
           </button>
+        </div>
+
+        <!-- In your filters section -->
+        <div class="filter-options">
+          <div
+            v-for="stance in availableStances"
+            :key="stance"
+            class="filter-option"
+            :class="{ active: selectedStances.includes(stance) }"
+            @click="toggleStance(stance)"
+          >
+            <span
+              class="color-indicator"
+              :style="{ backgroundColor: getStanceColor(stance) }"
+            ></span>
+            <span>{{
+              stanceDisplayNames[stance] || formatStance(stance)
+            }}</span>
+          </div>
         </div>
       </div>
 
@@ -239,7 +258,7 @@
                       color: getTextColorForTag(tag),
                     }"
                   >
-                    {{ tag.replace(/-/g, " ") }}
+                    {{ formatTagDisplay(tag) }}
                   </span>
                 </td>
                 <td class="comment-likes" style="width: 150px">
@@ -288,34 +307,14 @@ export default {
         "Personal Testimony": "#7A485D",
         "Explicit Denial": "#E53734",
         "Minimization Reframing": "#658B88",
-        //   Justification_Narrative: "#FAFF6B",
-        // Justification_Narrative: "#FAFF6B",
         "Justification Narrative": "#C6B987",
-
-        //   Justification_Narrative: "#FBA423",
         "Contemporary Comparison": "#2E4D46",
-        "Procedural Deflection Evidence Archives": "#FBA423",
-
-        //   Procedural_Deflection_Evidence_Archives: "#FBA423",
+        "Debating Evidence": "#CF7842", // Changed name and color
         "Competitive Victimhood Historical Inversion": "#979C63",
         "Sympathy Memorial Commemorative": "#40414A",
         Apology: "#2738EC",
         "Discussion About Denial": "#841A26",
-        //   Reconciliation_Discourse: "#005477",
         "Reconciliation Discourse": "#005477",
-        // "Historical Affirmation": "#4CAF50",
-        // "Personal Testimony": "#7A485D",
-        // "Explicit Denial": "#E53734",
-        // "Minimization Reframing": "#658B88",
-        // "Justification Narrative": "#C6B987",
-        // // "Justification Narrative": "#FAFF6B",
-        // "Contemporary Comparison": "#2E4D46",
-        // "Procedural Deflection Evidence Archives": "#FBA423",
-        // "Competitive Victimhood Historical Inversion": "#979C63",
-        // "Sympathy Memorial Commemorative": "#40414A",
-        // Apology: "#2738EC",
-        // "Discussion About Denial": "#841A26",
-        // "Reconciliation Discourse": "#527c7995",
       },
       sortOptions: [
         { value: "likes", label: "LIKE COUNT" },
@@ -330,6 +329,20 @@ export default {
       selectedYear: "all",
       showYearDropdown: false,
       availableYears: [], // This will be populated in generateAvailableYears
+      stanceDisplayNames: {
+        Historical_Affirmation: "Historical Affirmation",
+        Personal_Testimony: "Personal Testimony",
+        Explicit_Denial: "Explicit Denial",
+        Minimization_Reframing: "Minimization & Reframing",
+        Justification_Narrative: "Justification Narrative",
+        Contemporary_Comparison: "Contemporary Comparison",
+        Procedural_Deflection_Evidence_Archives: "Debating Evidence", // Updated name
+        Competitive_Victimhood_Historical_Inversion: "Historical Inversion",
+        Sympathy_Memorial_Commemorative: "Sympathy & Memorial",
+        Apology: "Apology",
+        Discussion_About_Denial: "Discussion About Denial",
+        Reconciliation_Discourse: "Reconciliation Discourse",
+      },
     };
   },
 
@@ -444,9 +457,9 @@ export default {
         "minimization reframing": "Minimization Reframing",
         "justification narrative": "Justification Narrative",
         "contemporary comparison": "Contemporary Comparison",
-        "procedural deflection": "Procedural Deflection Evidence Archives",
-        "procedural deflection evidence archives":
-          "Procedural Deflection Evidence Archives",
+        "procedural deflection": "Debating Evidence",
+        "procedural deflection evidence archives": "Debating Evidence",
+        "debating evidence": "Procedural Deflection Evidence Archives", // Add this line
         "competitive victimhood": "Competitive Victimhood Historical Inversion",
         "historical inversion": "Competitive Victimhood Historical Inversion",
         "competitive victimhood historical inversion":
@@ -496,7 +509,24 @@ export default {
     toggleTag(tag) {
       console.log("Toggle tag:", tag);
 
-      // Check if this tag is already selected
+      // Special case for "Debating Evidence"
+      if (tag === "debating_evidence") {
+        const procedural_tag = "procedural_deflection_evidence_archives";
+
+        // Check if procedural tag is already selected
+        if (this.selectedTags.includes(procedural_tag)) {
+          // If it is, remove it
+          this.selectedTags = this.selectedTags.filter(
+            (t) => t !== procedural_tag
+          );
+        } else {
+          // If not, add it
+          this.selectedTags.push(procedural_tag);
+        }
+        return;
+      }
+
+      // Normal tag toggle behavior for other tags
       if (this.selectedTags.includes(tag)) {
         // If it is, remove it
         this.selectedTags = this.selectedTags.filter((t) => t !== tag);
@@ -603,7 +633,14 @@ export default {
       console.log("All available tags:", this.availableTags);
     },
 
+    // Update the getTextColor function to handle special cases
+
     getTextColor(hexColor) {
+      // Special case for Debating Evidence color
+      if (hexColor === "#CF7842") {
+        return "white"; // Force white text for this specific color
+      }
+
       // Convert hex to RGB
       let r = 0,
         g = 0,
@@ -784,6 +821,41 @@ export default {
       // Alert user of success
       alert(`Downloaded ${dataToDownload.length} comments to ${filename}`);
     },
+
+    // Add this method to your methods section:
+
+    formatTagDisplay(tag) {
+      if (
+        tag.includes("procedural-deflection") ||
+        tag.includes("procedural_deflection") ||
+        tag.includes("procedural deflection")
+      ) {
+        return "Debating Evidence";
+      }
+      return tag.replace(/-/g, " ");
+    },
+
+    getAvailableStances() {
+      // Get unique stances from your data
+      const stances = new Set();
+      this.commentsData.forEach((comment) => {
+        if (comment.stance) {
+          stances.add(comment.stance);
+        }
+      });
+
+      // Map any legacy names to the correct current names
+      const stanceMapping = {
+        procedural_deflection: "Procedural_Deflection_Evidence_Archives",
+        "procedural-deflection": "Procedural_Deflection_Evidence_Archives",
+        // Add any other mappings needed
+      };
+
+      // Return the normalized list of stances
+      return Array.from(stances).map(
+        (stance) => stanceMapping[stance] || stance
+      );
+    },
   },
 
   mounted() {
@@ -828,9 +900,9 @@ body {
   margin: 20px;
   margin: 0 auto;
   /* -webkit-font-smoothing: antialiased; */
-
+  /* 
   -webkit-font-smoothing: none;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale; */
   background: white;
   color: black;
   min-height: 100vh;
@@ -1169,7 +1241,7 @@ a:hover {
 }
 /* Add styling for video links */
 .video-link {
-  color: #065fd4; /* YouTube blue link color */
+  color: #065fd4;
   font-size: 90%;
   text-decoration: none;
   transition: color 0.2s;
@@ -1454,7 +1526,7 @@ h2 {
 }
 .comments-table thead th {
   position: sticky; /* Keep header sticky */
-  top: 0px; /* This needs to match the value in comments-table thead */
+  top: 0px; /* This needs to match the value of comments-table thead */
   z-index: 2;
   background-color: #f0f0f0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

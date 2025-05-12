@@ -91,6 +91,36 @@
         </div>
       </div>
 
+      <!-- Add this new section just before the bg2-section div -->
+      <div class="quote-transition-section" ref="quoteTransition">
+        <div class="quote-container">
+          <h2 class="date">Post-1915</h2>
+          <h1 class="backgroundTitle" ref="bg2Title">
+            Turkey's <span class="highlight-denial">Denial</span>
+          </h1>
+          <blockquote class="transition-quote">
+            Loss of life, regardless of numbers and regardless of possible guilt
+            on the part of the victims, is tragic and must be remembered.
+            However,
+            <span class="highlight-denial-quote"
+              >it is factually problematic, morally unsound and legally
+              unfounded to call this episode a "genocide."</span
+            >
+            <cite>
+              -
+              <a
+                href="https://www.mfa.gov.tr/the-events-of-1915-and-the-turkish-armenian-controversy-over-history_-an-overview.en.mfa"
+                target="_blank"
+                rel="noopener"
+                class="citation-link"
+              >
+                Republic of Turkey Ministry of Foreign Affairs
+              </a>
+            </cite>
+          </blockquote>
+        </div>
+      </div>
+
       <!-- Bg2 content section - integrated into the same page -->
       <div class="bg2-section" ref="bg2Section">
         <h2 class="date">Post-1915</h2>
@@ -110,9 +140,9 @@
               target="_blank"
               class="citation-link"
               >(Anadolu Agency, 2018)</a
-            >. The government also frames the events as justified due to
-            suspected Armenian alliances with Russia and also as a relocation
-            for the Armenian deportees' own safety. This relocation was
+            >. The government even frames the events as a relocation for the
+            Armenian deportees' own safety. This was justified due to the
+            suspected Armenian alliances with Russia. This relocation was
             essentially a death march through the Syrian desert, where many were
             killed and died from starvation, disease, and violence.
           </p>
@@ -263,6 +293,9 @@ const bg2Para4 = ref(null);
 // New terminology section reference
 const terminologySection = ref(null);
 
+// New quote transition section reference
+const quoteTransition = ref(null);
+
 // Flag to track if direct navigation occurred
 const isDirectNavigation = ref(false);
 
@@ -281,25 +314,27 @@ onMounted(() => {
   setTimeout(() => {
     initContentAnimations();
     setupHeadlinesAnimation();
+    setupQuoteTransitionAnimation(); // Add this line
     setupBg2Animations();
     setupTerminologyAnimation(); // Add new animation setup
 
     // Position the page properly when navigating directly to background
     if (isDirectNavigation.value) {
-      // Scroll to a specific position from the top of the page
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+      // Instead, immediately show the content without animations
+      gsap.set(contentText.value, { opacity: 1, y: 0 });
+      gsap.set(titleElement.value, { opacity: 1, y: 0 });
+      gsap.set(mainContent.value, { opacity: 1, y: 0 });
 
-      // Make content immediately visible without animation when directly navigating
-      gsap.to(titleElement.value, { opacity: 1, y: 0, duration: 0.5 });
-      gsap.to(mainContent.value, {
+      // Also make sure headlines section is visible
+      gsap.set(headlinesSection.value, { opacity: 1 });
+      gsap.set([headline1.value, headline2.value, headline3.value], {
         opacity: 1,
         y: 0,
-        duration: 0.5,
-        delay: 0.2,
+        scale: 1,
       });
+
+      // Also make sure quote transition is visible
+      gsap.set(quoteTransition.value, { opacity: 1, y: 0 });
     }
   }, 300);
 
@@ -373,6 +408,29 @@ function setupBg2Animations() {
       },
       "-=0.5"
     );
+}
+
+// Add a new function to set up quote transition animation
+function setupQuoteTransitionAnimation() {
+  // Set initial state
+  gsap.set(quoteTransition.value, { opacity: 0, y: 30 });
+
+  // Create timeline for quote transition
+  const quoteTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: quoteTransition.value,
+      start: "top 70%",
+      toggleActions: "play none play reverse",
+    },
+  });
+
+  // Animate the quote section
+  quoteTl.to(quoteTransition.value, {
+    opacity: 1,
+    y: 0,
+    duration: 1.2,
+    ease: "power2.out",
+  });
 }
 
 onUnmounted(() => {
@@ -526,7 +584,7 @@ function setupHeadlinesAnimation() {
 
 .headlines-title {
   font-family: "Times New Roman", serif;
-  font-size: calc(1.8rem + 0.5vw);
+  font-size: calc(2rem + 0.5vw);
   margin-bottom: 100px;
   text-align: center;
   color: #222;
@@ -704,14 +762,16 @@ h3 {
   margin-top: clamp(20px, 4vh, 60px); /* Responsive margin */
   width: 100%; /* Full width to avoid squishing */
   text-align: left;
+  color: black;
 }
 
 .paragraph-section {
   color: rgb(0, 0, 0);
   /* font-family: "Helvetica"; */
   font-family: "Times New Roman", serif;
-  font-size: 1.1rem;
-  line-height: 1.8;
+  /* font-family: "Helvetica", serif; */
+  font-size: 1.3rem;
+  line-height: 1.2;
   margin-bottom: 1rem;
   opacity: A0;
   text-align: left;
@@ -734,12 +794,17 @@ h3 {
   transform: translateY(0);
 }
 
+.highlight-denial-quote {
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  background-color: rgba(255, 27, 27, 0.24);
+}
+
 .highlight-denial {
   color: rgb(255, 255, 255);
   font-weight: 600;
-  background-color: black;
+  background-color: rgb(0, 0, 0);
 }
-
 .highlight-nyt {
   font-weight: 600;
   background-color: rgba(235, 235, 235, 0.5);
@@ -754,7 +819,7 @@ h3 {
 /* New terminology section styling - redesigned for better spacing */
 .terminology-section {
   width: 100%;
-  max-width: 1400px; /* Increased from 1200px */
+  max-width: 1400px;
   margin: clamp(60px, 10vh, 180px) auto clamp(40px, 6vh, 100px);
   padding: clamp(30px, 5vh, 80px) clamp(20px, 4vw, 60px); /* Responsive padding */
   background-color: #f5f5f7;
@@ -772,6 +837,7 @@ h3 {
   font-size: clamp(2rem, 5vw, 3rem);
   font-style: italic;
   font-weight: 400;
+  margin-top: 40px; /* Changed from 100px to 40px */
   margin-bottom: clamp(20px, 5vh, 60px);
   color: #000;
   text-align: left;
@@ -967,5 +1033,59 @@ h3 {
   .media-example {
     margin-bottom: 15px;
   }
+}
+
+/* Quote transition section styling */
+.quote-transition-section {
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: clamp(120px, 30vh, 400px) auto;
+  opacity: 0; /* Start hidden for animation */
+  transform: translateY(20px);
+}
+
+.quote-container {
+  width: clamp(300px, 85%, 900px);
+  text-align: center;
+  padding: 0 clamp(20px, 5vw, 80px);
+}
+
+.transition-quote {
+  font-family: "Times New Roman", serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1.4;
+  color: #000;
+  margin: 20px 0 40px;
+  position: relative;
+  font-style: italic;
+}
+
+.transition-quote::before {
+  content: "“";
+  font-size: 5rem;
+  position: absolute;
+  left: -30px;
+  top: -40px;
+  color: rgba(0, 0, 0, 0.1);
+}
+
+.transition-quote::after {
+  content: "”";
+  font-size: 5rem;
+  position: absolute;
+  right: -30px;
+  bottom: -80px;
+  color: rgba(0, 0, 0, 0.1);
+}
+
+.transition-quote cite {
+  display: block;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  margin-top: 30px;
+  font-style: normal;
+  opacity: 0.8;
 }
 </style>

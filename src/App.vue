@@ -54,6 +54,15 @@ body {
   padding: 0;
   height: auto;
 }
+
+/* Add this temporary code to hide elements for screenshots */
+/* .navbar {
+  display: none !important;
+}
+
+.home-scroll-container {
+  display: none !important;
+} */
 </style>
 
 <!-- <template>

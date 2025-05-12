@@ -1201,11 +1201,11 @@ body,
 
 .select-wrapper {
   position: relative;
-  width: 95%;
-  max-width: 800px;
+  width: 85%; /* Reduced from 95% */
+  max-width: 700px; /* Reduced from 800px */
   margin: 0 auto;
   overflow: visible;
-  top: 60px;
+  top: 80px; /* Reduced from 60px */
   min-height: 60px;
   display: flex; /* Add flex display */
   align-items: center; /* Center items vertically */
@@ -1231,14 +1231,16 @@ body,
   cursor: pointer;
   padding: 10px 35px 10px 10px; /* Adjust padding for better text alignment */
   margin-bottom: 10px;
-  line-height: 1;
+  line-height: 1.3; /* Increased from 1 */
+  font-size: 18px; /* Added font-size control */
   min-height: 50px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   white-space: normal;
   overflow: visible;
-  text-overflow: clip;
+  text-overflow: ellipsis; /* Changed from clip to ellipsis */
+  max-width: 600px; /* Added maximum width */
 }
 
 /* Adjust arrow position for the new layout */
@@ -1265,18 +1267,18 @@ body,
 }
 
 .document-title h3 {
-  font-size: 20px;
+  font-size: 18px; /* Reduced from 20px */
+  padding: 15px 30px; /* Added horizontal padding */
   margin: 0;
   position: sticky;
   text-align: center;
   font-family: "Times New Roman", Times, serif;
-
-  /* font-family: "Georgia", serif; */
-  line-height: 1.1;
+  line-height: 1.4; /* Increased from 1.1 */
   white-space: normal; /* Allow text to wrap */
   overflow: visible; /* Show all content */
   min-height: auto; /* Adjust height automatically */
-  padding: 0px 0 18px 0; /* Reduced bottom padding */
+  max-width: 90%; /* Limit width */
+  margin: 0 auto; /* Center the title */
 }
 
 .header-and-source {
@@ -1356,5 +1358,54 @@ body,
 .sort-select:focus {
   outline: none;
   border-bottom-color: #999;
+}
+
+/* Add these new styles to control option sizes in the dropdown */
+.document-title-select option {
+  font-size: 16px;
+  padding: 5px;
+  white-space: normal;
+  max-width: 100%;
+}
+
+/* For 1920x1080 resolution - adjust select wrapper positioning */
+@media (width: 1920px) and (height: 1080px) {
+  .select-wrapper {
+    top: 60px; /* Increased from 40px to move it lower */
+    margin-bottom: 60px; /* Add additional bottom margin */
+    padding-bottom: 20px; /* Add padding at the bottom */
+  }
+
+  /* Adjust the document section spacing */
+  .sections {
+    margin-top: 90px; /* Increased from 50px to add more space */
+  }
+
+  /* Increase container padding */
+  .text-visualizer {
+    padding: 0px 100px 60px 100px; /* Increased side padding from 80px/70px */
+  }
+}
+
+/* Handle zoomed state (when at 50% or other zoom levels) */
+@media (width: 1920px) and (height: 1080px) and (max-resolution: 1dppx) {
+  .select-wrapper {
+    top: 70px; /* Even more space when zoomed out */
+    margin-bottom: 70px;
+  }
+
+  .sections {
+    margin-top: 100px; /* More space when zoomed out */
+  }
+
+  /* Larger text for better readability when zoomed out */
+  .select-label {
+    font-size: 22px;
+  }
+
+  .document-title-select {
+    font-size: 20px;
+    padding-bottom: 15px;
+  }
 }
 </style>
