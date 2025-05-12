@@ -12,7 +12,7 @@
             :key="index"
             :class="comment.type"
           >
-            {{ comment.text }} <span class="separator">•</span>
+            {{ comment.text }} <span class="separator"> </span>
           </span>
 
           <!-- Duplicate content for seamless looping -->
@@ -284,7 +284,7 @@ body,
   justify-content: center;
   align-items: center;
   height: 10px;
-  margin-top: 55vh;
+  margin-top: 50vh; /* Starting baseline position at center of screen */
   margin-bottom: 50px;
 }
 /* Title styling */
@@ -685,10 +685,10 @@ body,
   width: 100%;
   height: 110vh;
   overflow: hidden;
-  opacity: 0.6;
+  opacity: 0.7; /* Slightly increased from 0.6 for better visibility */
   position: relative;
-  column-count: 9;
-  column-gap: 20px;
+  column-count: 11; /* Increased from 9 for more columns with smaller text */
+  column-gap: 15px; /* Reduced from 20px for more compact layout */
   column-rule: none;
   column-fill: auto;
   padding: 0 2%;
@@ -734,7 +734,7 @@ body,
   pointer-events: none;
 }
 
-/* Modify the scrolling content to work with columns and justify text */
+/* Base styling for scrolling content - make smaller overall */
 .scrolling-content {
   font-family: "Aktiv Grotesk", sans-serif;
   will-change: transform; /* Optimize for animation */
@@ -744,6 +744,8 @@ body,
   text-align: justify; /* Justify the text */
   hyphens: auto; /* Add hyphens for better text flow */
   line-height: 1.2; /* Increased line height for better readability */
+  font-size: 0.85rem; /* Reduced base font size */
+  letter-spacing: -0.01em; /* Slightly tighter letter spacing */
 }
 
 /* Adjust paragraph styling */
@@ -753,23 +755,23 @@ body,
   column-span: none; /* Ensure paragraphs don't span columns */
 }
 
-/* Style for spans (comments) to make them flow in columns with justified text */
+/* Make comments smaller and more compact */
 .scrolling-content span {
   display: inline-block; /* Changed from inline to inline-block for better justification */
   break-inside: avoid; /* Try to avoid breaking inside a comment */
-  margin-bottom: 2px; /* Add slight spacing between comments */
-  padding-right: 5px; /* Add slight padding between comments */
+  margin-bottom: 1px; /* Reduced from 2px */
+  padding-right: 4px; /* Reduced from 5px */
 }
 
-/* Add alternating colors for comments */
+/* Adjust color and opacity for better visibility while being smaller */
 .scrolling-content span:nth-child(odd) {
-  color: #40404086; /* Darker gray for odd comments */
-  opacity: 1;
+  color: #393838b9; /* Full black for better readability at smaller size */
+  opacity: 0.8;
 }
 
 .scrolling-content span:nth-child(even) {
-  color: #656565c0; /* Lighter gray for even comments */
-  opacity: 0.7;
+  color: #222222; /* Dark gray with better contrast */
+  opacity: 0.4;
 }
 
 /* Add subtle transition between colors */
@@ -887,6 +889,11 @@ body,
   .continuous-text {
     height: 105vh; /* Slightly shorter to prevent overflow */
     padding-bottom: 10vh; /* Add padding at bottom */
+    column-count: 12; /* More columns for projector/large display */
+  }
+
+  .scrolling-content {
+    font-size: 0.9rem; /* Slightly larger than base but still small */
   }
 }
 
@@ -938,6 +945,85 @@ body,
   }
   .title {
     font-size: 5rem; /* Larger font for wide screens */
+  }
+}
+
+/* Small laptops like MacBook Air/Pro 13-14" */
+@media (max-width: 1440px) and (max-height: 900px) {
+  .title-container {
+    margin-top: 55vh; /* Moves title slightly lower on smaller laptops */
+  }
+
+  .home-scroll-container {
+    margin-top: 15vh;
+  }
+
+  .title {
+    font-size: 3.5rem; /* Slightly smaller font */
+  }
+
+  .scrolling-content {
+    font-size: 0.8rem; /* Even smaller on small screens */
+  }
+
+  .continuous-text {
+    column-count: 10; /* Fewer columns for smaller screens */
+  }
+}
+
+/* Standard desktop monitors */
+@media (min-width: 1441px) and (max-width: 1919px) {
+  .title-container {
+    margin-top: 60vh; /* Moves title lower on standard monitors */
+  }
+
+  .home-scroll-container {
+    margin-top: 15vh;
+  }
+}
+
+/* 1920x1080 displays (standard HD) */
+@media (width: 1920px) and (height: 1080px) {
+  .title-container {
+    margin-top: 65vh; /* Moves title even lower on HD displays */
+  }
+
+  .home-scroll-container {
+    margin-top: 17vh;
+  }
+
+  .title {
+    font-size: 4.5rem;
+  }
+}
+
+/* Ultrawide screens */
+@media (min-width: 2000px), (min-aspect-ratio: 16/9) and (min-width: 1600px) {
+  .title-container {
+    margin-top: 68vh; /* Lowest position on ultrawide screens */
+  }
+
+  .home-scroll-container {
+    margin-top: 15vh;
+  }
+
+  .title {
+    font-size: 5rem;
+  }
+}
+
+/* Portrait/vertical displays */
+@media (max-aspect-ratio: 9/16) {
+  .title-container {
+    margin-top: 35vh; /* Higher position for vertical displays */
+  }
+
+  .home-scroll-container {
+    margin-top: 15vh;
+  }
+
+  .title {
+    font-size: 2.8rem;
   }
 }
 </style>

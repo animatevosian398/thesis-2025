@@ -535,6 +535,7 @@ function setupHeadlinesAnimation() {
   color: white;
   overflow: visible;
   background-color: white;
+  scroll-margin-top: 80px; /* This helps when navigating to the section */
 }
 
 .nyt-quote {
@@ -547,13 +548,8 @@ function setupHeadlinesAnimation() {
   z-index: 5;
   font-family: "Georgia", serif;
   color: black;
-  padding-top: clamp(
-    200px,
-    40vh,
-    500px
-  ); /* Significantly increased top padding */
-  /* Using clamp for responsive padding */
-  min-height: 150vh; /* Reduced from 200vh */
+  padding-top: clamp(80px, 15vh, 200px); /* REDUCED from 40vh to 15vh */
+  min-height: 150vh;
   width: 100%;
   max-width: 100%;
 }
@@ -709,12 +705,7 @@ h3 {
 .bg1-title {
   font-family: "Times New Roman", serif;
   font-size: calc(2.5rem + 1vw);
-  margin-top: clamp(
-    80px,
-    15vh,
-    200px
-  ); /* Added top margin to push down further */
-
+  margin-top: clamp(20px, 5vh, 80px); /* REDUCED from 15vh to 5vh */
   margin-bottom: 30px;
   width: 100%;
   color: black;
