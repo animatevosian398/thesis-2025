@@ -7,7 +7,7 @@
     <div @click="goBack" class="back-arrow">← Back</div>
 
     <div class="content-container">
-      <h1 class="centered-title">Historical Affirmation</h1>
+      <h1 class="centered-title">Genocide Recognition</h1>
 
       <div class="scrolling-comments-container">
         <div class="scrolling-comments" ref="scrollingComments">

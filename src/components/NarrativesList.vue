@@ -119,7 +119,7 @@ const stanceColors = {
 };
 
 const stanceDisplayNames = {
-  Historical_Affirmation: "Historical Affirmation",
+  Historical_Affirmation: "Genocide Recognition",
   Personal_Testimony: "Personal Testimony",
   Explicit_Denial: "Explicit Denial",
   Minimization_Reframing: "Minimization & Reframing",
