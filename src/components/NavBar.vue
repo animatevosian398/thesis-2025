@@ -2,7 +2,9 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-white px-0">
     <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom"> -->
     <div class="container">
-      <a class="navbar-brand" href="/">Narratives of Truth and Denial</a>
+      <router-link to="navbar-brand" class="nav-link"
+        >Narratives of Truth and Denial</router-link
+      >
       <button
         class="navbar-toggler"
         type="button"
@@ -18,16 +20,19 @@
               >Background</router-link
             >
           </li>
+
           <li class="nav-item">
-            <a class="nav-link" href="/GovVsComment"
-              >Government + Public Discourse</a
+            <router-link to="/GovVsComment" class="nav-link"
+              >Government + Public Discourse</router-link
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/Archive">Archive</a>
+            <router-link to="/Archive" class="nav-link">Archive</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/narratives-list">Narratives</a>
+            <router-link to="/narratives-list" class="nav-link"
+              >Narratives</router-link
+            >
             <!-- <a class="nav-link" href="/bubble-chart">Bubble Chart</a> -->
           </li>
           <!-- <li class="nav-item">

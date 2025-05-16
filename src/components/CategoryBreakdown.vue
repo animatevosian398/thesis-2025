@@ -32,11 +32,11 @@ const stanceColors = {
 };
 
 // Option 1: Using a static import if your build system supports it
-// import csvPath from '@/assets/stance_count.csv?url';
+// import csvPath from '@assets/stance_count.csv?url';
 
 const loadCSVData = async () => {
   try {
-    const csvPath = "/assets/stance_count.csv"; // Path relative to public directory
+    const csvPath = "assets/stance_count.csv"; // Path relative to public directory
     console.log("Loading CSV from:", csvPath);
 
     const response = await fetch(csvPath);

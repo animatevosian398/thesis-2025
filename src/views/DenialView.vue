@@ -35,8 +35,8 @@ export default {
   },
   async mounted() {
     try {
-      // Use the path in the public/assets folder
-      const csvPath = "/assets/Denial_comments_385_after10k.csv";
+      // Use the path in the publicassets folder
+      const csvPath = "assets/Denial_comments_385_after10k.csv";
       console.log("Attempting to load CSV from:", csvPath);
 
       const response = await axios.get(csvPath);

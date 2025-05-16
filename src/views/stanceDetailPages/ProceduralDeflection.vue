@@ -64,7 +64,7 @@ export default defineComponent({
   },
   methods: {
     loadCommentsFromCSV() {
-      Papa.parse("/assets/Classified_Comments.csv", {
+      Papa.parse("assets/Classified_Comments.csv", {
         download: true,
         header: true,
         complete: (results) => {

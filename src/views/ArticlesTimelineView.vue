@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import articlesData from "../assets/articles_with_scraped_dates.json";
+import articlesData from "..assets/articles_with_scraped_dates.json";
 
 const sortedArticles = ref([]);
 const articlePositions = ref([]);

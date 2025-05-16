@@ -16,7 +16,7 @@
     <!-- Background SVG image -->
     <div class="background-svg-container">
       <img
-        src="/assets/NorwayClipped.svg"
+        src="assets/NorwayClipped.svg"
         alt="Background pattern"
         class="background-svg"
       />
@@ -110,7 +110,7 @@ const getRandomPosition = () => {
 
 // Function to load and filter comments from CSV
 const loadComments = () => {
-  fetch("/assets/Classified_Comments.csv")
+  fetch("assets/Classified_Comments.csv")
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error ${response.status}`);

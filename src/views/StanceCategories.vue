@@ -357,14 +357,14 @@ export default {
 
 @font-face {
   font-family: "Liberation Sans";
-  src: url("@/assets/font/LiberationSans-Regular.ttf") format("truetype");
+  src: url("@assets/font/LiberationSans-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Liberation Sans";
-  src: url("@/assets/font/LiberationSans-Bold.ttf") format("truetype");
+  src: url("@assets/font/LiberationSans-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }

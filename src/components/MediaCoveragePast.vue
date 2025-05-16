@@ -69,13 +69,13 @@
           <!-- Headline collage section -->
           <div class="headline-collage" ref="headlineCollage">
             <div class="headline-image" ref="headline1">
-              <img src="/assets/NYTHeadline_4.png" alt="NYT Headline 1" />
+              <img src="assets/NYTHeadline_4.png" alt="NYT Headline 1" />
             </div>
             <div class="headline-image" ref="headline2">
-              <img src="/assets/NYTheadline1_horror.png" alt="NYT Headline 2" />
+              <img src="assets/NYTheadline1_horror.png" alt="NYT Headline 2" />
             </div>
             <div class="headline-image" ref="headline3">
-              <img src="/assets/NYTHeadline3.png" alt="NYT Headline 3" />
+              <img src="assets/NYTHeadline3.png" alt="NYT Headline 3" />
             </div>
           </div>
           <div class="citation-headlines-archive">
@@ -294,7 +294,7 @@ function initScrollAnimations() {
   height: 80px;
   border-radius: 50%;
   background-color: #ddd;
-  background-image: url("/assets/Morgenthau.png");
+  background-image: url("assets/Morgenthau.png");
   background-size: cover;
   background-position: center;
   margin-right: 20px;

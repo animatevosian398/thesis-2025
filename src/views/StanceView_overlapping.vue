@@ -143,7 +143,7 @@ const loadComments = async (stance) => {
   try {
     // In a real application, you would uncomment this code to load from the CSV
     /*
-      const response = await fetch("/assets/Classified_Comments.csv");
+      const response = await fetch("assets/Classified_Comments.csv");
       const csvText = await response.text();
   
       Papa.parse(csvText, {

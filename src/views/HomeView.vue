@@ -30,7 +30,7 @@
     <!-- Background SVG image remains the same -->
     <div class="background-svg-container">
       <img
-        src="/assets/full-width-desert.svg"
+        src="assets/full-width-desert.svg"
         alt="Background pattern"
         class="background-svg"
       />
@@ -105,7 +105,7 @@ const scrollToBg1 = () => {
 
 // Function to load and filter comments from CSV
 const loadComments = () => {
-  fetch("/assets/Classified_Comments.csv")
+  fetch("assets/Classified_Comments.csv")
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error ${response.status}`);

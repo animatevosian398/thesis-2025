@@ -550,7 +550,7 @@ export default {
 
     loadCommentsFromCSV() {
       console.log("Loading CSV data...");
-      fetch("/assets/Classified_Comments.csv")
+      fetch("assets/Classified_Comments.csv")
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error ${response.status}`);

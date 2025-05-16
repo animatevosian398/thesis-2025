@@ -43,19 +43,19 @@
         <div class="headlines-container">
           <div class="headline-item" ref="headline1">
             <div class="headline-image">
-              <img src="/assets/NYTHeadline_4.png" alt="NYT Headline 1" />
+              <img src="assets/NYTHeadline_4.png" alt="NYT Headline 1" />
             </div>
           </div>
 
           <div class="headline-item" ref="headline2">
             <div class="headline-image">
-              <img src="/assets/NYTheadline1_horror.png" alt="NYT Headline 2" />
+              <img src="assets/NYTheadline1_horror.png" alt="NYT Headline 2" />
             </div>
           </div>
 
           <div class="headline-item" ref="headline3">
             <div class="headline-image">
-              <img src="/assets/NYTHeadline3.png" alt="NYT Headline 3" />
+              <img src="assets/NYTHeadline3.png" alt="NYT Headline 3" />
             </div>
           </div>
         </div>
@@ -208,19 +208,19 @@
             <div class="media-examples">
               <div class="media-example">
                 <img
-                  src="/assets/AA_4_headline_2.png"
+                  src="assets/AA_4_headline_2.png"
                   alt="Example of denial terminology in media"
                 />
               </div>
               <div class="media-example">
                 <img
-                  src="/assets/AA_2_headline.png"
+                  src="assets/AA_2_headline.png"
                   alt="Official statement using distancing language"
                 />
               </div>
               <div class="media-example">
                 <img
-                  src="/assets/AA_3_headline.png"
+                  src="assets/AA_3_headline.png"
                   alt="International coverage of terminology debate"
                 />
               </div>

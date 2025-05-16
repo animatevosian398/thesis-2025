@@ -203,7 +203,7 @@ import Papa from "papaparse";
 import GovernmentText from "../components/government-documents/GovernmentText.vue";
 import ErdoganLetter2025 from "../components/government-documents/ErdoganLetter2025.vue";
 import JustinMcCarthy from "../components/government-documents/JustinMcCarthy.vue";
-import stancePhrases from "../assets/stancePhrases.json";
+import stancePhrases from "..assets/stancePhrases.json";
 import AnadoluAgencyCounter from "../components/government-documents/AnadoluAgencyCounter.vue";
 import Presentation from "../components/government-documents/Presentation.vue";
 import MessageTranslation from "../components/government-documents/MessageTranslation.vue";
@@ -440,7 +440,7 @@ export default {
       this.isLoading = true;
 
       try {
-        fetch("/assets/Classified_Comments.csv")
+        fetch("assets/Classified_Comments.csv")
           .then((response) => {
             if (!response.ok) {
               throw new Error("CSV file not found");
